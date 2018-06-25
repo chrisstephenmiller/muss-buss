@@ -1,7 +1,7 @@
 {
-  "name": "boilermaker",
+  "name": "muss-buss",
   "version": "1.0.0",
-  "description": "Some boilerplate code to get you started - get shakin'!",
+  "description": "muss-buss",
   "engines": {
     "node": ">= 7.0.0"
   },
