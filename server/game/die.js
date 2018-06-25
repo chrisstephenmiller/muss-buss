@@ -5,13 +5,16 @@ class Die {
     constructor() {
         this.value = random()
         this.status = `live`
+        this.pointer = false
     }
 
-    roll() { 
+    roll() {
         this.status === `live` ? this.value = random() : this.status = `banked`
     }
 
-    toggle() { this.status = this.status === `live` ? `held` : `live` }
+    toggle() {
+        this.status = this.pointer && this.status === `live` ? `held` : `live`
+    }
 }
 
 module.exports = Die
