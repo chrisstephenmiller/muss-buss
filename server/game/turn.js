@@ -8,9 +8,19 @@ const calcPointers = dice => {
     })
     dice.forEach(die => { if (die.value === 1 || die.value === 5 || totals[die.value - 1] > 2) die.pointer = true })
     totals.filter(total => total === 1).length === 6 && dice.forEach(die => { die.pointer = true })
+    return dice
 }
 
-const calcScore = (dice, score, status) => {
+const calcStatus = (dice, status) => {
+    if (dice.filter(die => die.pointer === true).length === 6) {
+        dice.forEach(die => { die.status = `banked` })
+        return `fill`
+    } 
+    if (status === `live` && dice.filter(die => die.status === `live` && die.pointer === true).length === 0) return `bust`
+    return `live`
+}
+
+const calcTotalScore = (dice, score, status) => {
     if (status === `bust`) return 0
     const pointers = Array(6).fill(0)
     dice.forEach(die => { if (die.status === `banked`) pointers[die.value - 1]++ })
@@ -27,31 +37,26 @@ const calcScore = (dice, score, status) => {
     return score
 }
 
-const calcStatus = (dice, status) => {
-    if (dice.filter(die => die.pointer === true).length === 6) {
-        dice.forEach(die => { die.status = `banked` })
-        return `fill`
-    } 
-    if (status === `live` && dice.filter(die => die.status === `live` && die.pointer === true).length === 0) return `bust`
-    return `live`
-}
-
 class Turn {
 
-    constructor(score = 0, card) {
-        this.dice = [new Die, new Die, new Die, new Die, new Die, new Die,]
+    constructor(score = 0) {
+        this.dice = [new Die, new Die, new Die, new Die, new Die, new Die]
         this.status = `live`
-        this.score = score
-        this.card = card
-
+        this.totalScore = score
         this.roll()
     }
 
     roll() {
         this.dice.forEach(die => die.roll())
-        calcPointers(this.dice)
+        this.dice = calcPointers(this.dice)
         this.status = calcStatus(this.dice, this.status)
-        this.score = calcScore(this.dice, this.score, this.status)
+        this.totalScore = calcTotalScore(this.dice, this.totalScore, this.status)
+    }
+
+    stop() {
+        this.dice = calcPointers(this.dice)
+        this.totalScore = calcTotalScore(this.dice, this.totalScore, this.status)
+        this.status = `done`
     }
 
 }
