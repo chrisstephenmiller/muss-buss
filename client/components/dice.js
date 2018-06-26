@@ -1,26 +1,21 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-/**
- * COMPONENT
- */
+import die from '../die.png'
+
 export const Dice = props => {
-  const { email } = props
+
+  const { dice } = props
 
   return (
     <div>
-      <img src={`https://cdn2.iconfinder.com/data/icons/dice-roll/100/dice_${1}-256.png`} />
+      <img src={die} />
     </div>
   )
 }
 
-/**
- * CONTAINER
- */
 const mapState = state => {
-  return {
-    email: state.user.email
-  }
+  return { dice: state.dice }
 }
 
 export default connect(mapState)(Dice)
