@@ -1,9 +1,12 @@
+const shortid = require('shortid')
+
 class Die {
 
     constructor() {
         this.value = null
         this.status = `live`
         this.pointer = false
+        this.id = shortid.generate()
     }
 
     roll() {

@@ -20,6 +20,19 @@ module.exports = {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[path][name]-[hash:8].[ext]',
+              outputPath: 'public',
+              publicPath: '/'
+            }
+          }
+        ]
       }
     ]
   }
