@@ -2,9 +2,9 @@ const Die = require('./die')
 
 const calcPointers = dice => {
     const totals = Array(6).fill(0)
-    dice.forEach(die => { 
+    dice.forEach(die => {
         die.pointer = false
-        totals[die.value - 1]++ 
+        totals[die.value - 1]++
     })
     dice.forEach(die => { if (die.value === 1 || die.value === 5 || totals[die.value - 1] > 2) die.pointer = true })
     totals.filter(total => total === 1).length === 6 && dice.forEach(die => { die.pointer = true })
@@ -13,17 +13,17 @@ const calcPointers = dice => {
 
 const calcStatus = (dice, status) => {
     if (dice.filter(die => die.pointer === true).length === 6) {
-        dice.forEach(die => { die.status = `banked` })
+        dice.forEach(die => { die.scored = true })
         return `fill`
-    } 
-    if (status === `live` && dice.filter(die => die.status === `live` && die.pointer === true).length === 0) return `bust`
+    }
+    if (status === `live` && dice.filter(die => die.held === false && die.pointer === true).length === 0) return `bust`
     return `live`
 }
 
 const calcTotalScore = (dice, score, status) => {
     if (status === `bust`) return 0
     const pointers = Array(6).fill(0)
-    dice.forEach(die => { if (die.status === `banked`) pointers[die.value - 1]++ })
+    dice.forEach(die => { if (die.scored === true) pointers[die.value - 1]++ })
     pointers.forEach((pointer, idx) => {
         if (idx === 0) {
             pointer > 2 ? score += 1000 * (pointer - 2) : score += 100 * pointer

@@ -1,16 +1,14 @@
-const shortid = require('shortid')
-
 class Die {
 
     constructor() {
         this.value = null
-        this.status = `live`
+        this.held = false
+        this.scored = false
         this.pointer = false
-        this.id = shortid.generate()
     }
 
     roll() {
-        this.status === `live` ? this.value = Math.floor(Math.random() * 6) + 1 : this.status = `banked`
+        this.held ? this.scored = true : this.value = Math.floor(Math.random() * 6) + 1
     }
 }
 
