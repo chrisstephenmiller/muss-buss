@@ -10,14 +10,14 @@ import d6 from '../../assets/d6.png'
 const Die = props => {
 
   const dieImages = [d1, d2, d3, d4, d5, d6]
-  const { die } = props
+  const { die, onClick } = props
   return (
     <div key={die.id}
       style={{ display: `flex`, flexDirection: `column`, textAlign: `center` }}>
       <img src={dieImages[die.value - 1]}
         alt={`die-${die.value}`}
-        style={{ height: 125, width: 125 }} 
-        onClick={die.toggle}/>
+        style={{ height: 125, width: 125 }}
+        onClick={onClick} />
       <span style={{ fontSize: 24 }}>
         {die.status}
       </span>
