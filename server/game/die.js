@@ -1,5 +1,5 @@
 class Die {
-
+    
     constructor() {
         this.value = null
         this.held = false

@@ -37,6 +37,10 @@ const calcTotalScore = (dice, score, status) => {
     return score
 }
 
+const roll = die => {
+    die.held ? die.scored = true : die.value = Math.floor(Math.random() * 6) + 1
+}
+
 class Turn {
 
     constructor(score = 0) {
@@ -47,7 +51,7 @@ class Turn {
     }
 
     roll() {
-        this.dice.forEach(die => die.roll())
+        this.dice.forEach(die => roll(die))
         this.dice = calcPointers(this.dice)
         this.status = calcStatus(this.dice, this.status)
         this.totalScore = calcTotalScore(this.dice, this.totalScore, this.status)

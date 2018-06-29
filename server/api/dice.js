@@ -21,10 +21,8 @@ router.post('/', async (req, res, next) => {
       await Die.create(turn.dice[i])
     }
     const dice = await Roll.findById(roll.id, {
-      include: [{ model: Die, as: `dice`, attributes: { exclude: [`createdAt`, `updatedAt`, `rollId`] } }],
-      attributes: {
-        exclude: [`createdAt`, `updatedAt`],
-      }
+      attributes: { exclude: [`createdAt`, `updatedAt`] },
+      include: [{ model: Die, as: `dice`, attributes: { exclude: [`createdAt`, `updatedAt`, `rollId`] } }]
     })
     res.send(dice)
   } catch (err) {
@@ -32,9 +30,15 @@ router.post('/', async (req, res, next) => {
   }
 })
 
-router.put('/', (req, res, next) => {
+router.put('/', async (req, res, next) => {
   try {
-    turn.dice.forEach((die, idx) => die.value = req.body[idx])
+    const heldDice = req.body
+    const prevRoll = await Roll.findById(1, {
+      attributes: { exclude: [`createdAt`, `updatedAt`] },
+      include: [{ model: Die, as: `dice`, attributes: { exclude: [`createdAt`, `updatedAt`, `rollId`] } }]
+    })
+    turn.dice = prevRoll.toJSON().dice
+    turn.dice.forEach((die, idx) => { die.held = heldDice[idx].held })
     turn.roll()
     const { dice } = turn
     res.send(dice)
