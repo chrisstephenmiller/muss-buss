@@ -25,8 +25,8 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     toggleDie: (dice, die) => {
-      if (die.pointer && die.status !== `banked`) {
-        die.status = die.status === `live` ? `held` : `live`
+      if (die.pointer && !die.scored) {
+        die.held = !die.held
         const newDice = [...dice]
         dispatch(getDice(newDice))
       }

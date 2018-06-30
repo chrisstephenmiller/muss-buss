@@ -5,7 +5,6 @@ import axios from 'axios'
  */
 
 const GET_DICE = `GET_DICE`
-const ROLL_DICE = `ROLL DICE`
 
 /**
  * INITIAL STATE
@@ -24,6 +23,15 @@ export const fetchDice = () => async dispatch => {
   try {
     const res = await axios.get(`/api/dice`)
     dispatch(getDice(res.data || defaultDice))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const createDice = () => async dispatch => {
+  try {
+    const res = await axios.post(`/api/dice`)
+    dispatch(getDice(res.data.dice || defaultDice))
   } catch (err) {
     console.error(err)
   }

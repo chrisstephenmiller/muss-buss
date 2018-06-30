@@ -38,8 +38,17 @@ router.put('/', async (req, res, next) => {
       include: [{ model: Die, as: `dice`, attributes: { exclude: [`createdAt`, `updatedAt`, `rollId`] } }]
     })
     turn.dice = prevRoll.toJSON().dice
-    turn.dice.forEach((die, idx) => { die.held = heldDice[idx].held })
+    for (let i = 0; i < turn.dice.length; i++) {
+      const die = turn.dice[i]
+      die.held = heldDice[i].held
+      console.log(die)
+      const newDie = await Die.update(die, { where: { id: die.id }, returning: true, })
+      console.log(newDie[1][0].dataValues)
+    }
     turn.roll()
+    turn.dice.forEach(die => {
+      Die.update(die, { where: { id: die.id }, returning: true, })
+    })
     const { dice } = turn
     res.send(dice)
   } catch (err) {
