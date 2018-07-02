@@ -18,6 +18,14 @@ const Die = db.define('die', {
     type: Sequelize.BOOLEAN,
     allowNull: false
   },
+  placeId: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  },
+  rollId: {
+    type: Sequelize.INTEGER,
+    allowNull: false
+  }
 }, { tableName: `dice` })
 
 module.exports = Die

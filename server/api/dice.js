@@ -41,9 +41,7 @@ router.put('/', async (req, res, next) => {
     for (let i = 0; i < turn.dice.length; i++) {
       const die = turn.dice[i]
       die.held = heldDice[i].held
-      console.log(die)
-      const newDie = await Die.update(die, { where: { id: die.id }, returning: true, })
-      console.log(newDie[1][0].dataValues)
+      await Die.update(die, { where: { id: die.id }, returning: true, })
     }
     turn.roll()
     turn.dice.forEach(die => {
