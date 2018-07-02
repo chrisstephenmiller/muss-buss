@@ -1,9 +1,11 @@
-const User = require('./user')
-const Roll = require('./roll')
+const Game = require('./game')
+const Player = require('./player')
 const Die = require('./die')
+const User = require('./user')
 
-Roll.hasMany(Die, {as: `dice`})
+Game.hasMany(Die, {as: `dice`})
+Game.hasMany(Player)
 
 module.exports = {
-  User, Die, Roll
+  User, Die, Player, Game
 }
