@@ -4,8 +4,9 @@ const random = () => Math.floor(Math.random() * 6) + 1
 
 class Die {
 
-    constructor() {
+    constructor(id = null) {
 
+        this.id = id
         this.value = random()
         this.held = false
         this.scored = false

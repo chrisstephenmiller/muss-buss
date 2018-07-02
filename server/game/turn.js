@@ -14,7 +14,7 @@ class Turn {
     roll() {
         this.dice = this.dice.map(die => {
             if (die && die.held) die.scored = true
-            return die.held ? die : new Die()
+            return die.held ? die : new Die(die.id)
         })
         this.calcPointers()
         this.calcStatus()

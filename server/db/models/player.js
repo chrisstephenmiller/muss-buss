@@ -3,7 +3,8 @@ const Sequelize = require('sequelize')
 
 const Player = db.define('player', {
     name: {
-        type: Sequelize.JSON,
+        type: Sequelize.STRING,
+        defaultValue: `chris`,
         allowNull: false,
     },
     score: {

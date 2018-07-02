@@ -3,7 +3,8 @@ const Player = require('../db/models/player')
 
 router.post(`/`, async (req, res, next) => {
   try {
-    const player = await Player.create({...req.body, playerId: req.game.id})
+    const gameId = req.game.id
+    const player = await Player.create({ ...req.body, gameId })
     res.send(player)
   }
   catch (err) { next(err) }
