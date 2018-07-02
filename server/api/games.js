@@ -3,7 +3,8 @@ const Game = require('../db/models/game')
 
 router.post(`/`, async (req, res, next) => {
   try {
-    const game = await Game.create(req.body)
+    const { winScore } = req.body
+    const game = await Game.create({ winScore })
     res.send(game)
   }
   catch (err) { next(err) }
