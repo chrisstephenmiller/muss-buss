@@ -1,26 +1,32 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Die, Roll, Score } from '../components'
+import { Die, Roll, Score, FillOrBust } from '../components'
 import { getDice } from '../store';
+
+const sortById = (dieA, dieB) => dieA.id - dieB.id
 
 const Dice = props => {
 
-  const { game, dice, toggleDie, roll } = props
+  const { dice, toggleDie, turn } = props
   return (
-    <div style={{ display: `flex` }}>
-      {dice.map((die => {
-        return <Die key={die.id}
-          die={die}
-          onClick={() => toggleDie(dice, die)} />
-      }))}
+    <div style={{ display: `flex`, flexDirection: `column` }} >
+      <div style={{ display: `flex` }}>
+        {dice.sort(sortById).map((die => {
+          return <Die key={die.id}
+            die={die}
+            onClick={() => toggleDie(dice, die)} />
+        }))}
+      </div>
       <Roll />
+      <Score score={turn.score} />
+      <FillOrBust fillOrBust={[turn.fill, turn.bust]} />
     </div>
   )
 }
 
 const mapState = state => {
-  const { dice, game } = state
-  return { dice, game }
+  const { dice, game, turn } = state
+  return { dice, game, turn }
 }
 
 const mapDispatch = dispatch => {

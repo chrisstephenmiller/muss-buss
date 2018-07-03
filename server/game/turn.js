@@ -14,7 +14,6 @@ class Turn {
     roll() {
         if (this.bust) return
         this.dice = this.dice.map(die => {
-            if (die && die.held) die.scored = true
             return die.held ? die : new Die(die.id)
         })
         this.calcPointers()
@@ -35,9 +34,17 @@ class Turn {
     }
     
     calcScore() {
-        if (this.bust) this.score = 0
+        if (this.bust) {
+            this.score = 0
+            return
+        }
         const pointers = Array(6).fill(0)
-        this.dice.forEach(die => { if (!die.scored) pointers[die.value - 1]++ })
+        this.dice.forEach(die => { 
+            if (die.held && !die.scored) {
+                die.scored = true
+                pointers[die.value - 1]++
+            }
+        })
         pointers.forEach((pointer, idx) => {
             if (idx === 0) {
                 pointer > 2 ? this.score += 1000 * (pointer - 2) : this.score += 100 * pointer

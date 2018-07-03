@@ -7,7 +7,7 @@ const Roll = props => {
   const { game, dice, roll } = props
   return (
     <div style={{ display: `flex` }}>
-      <span onClick={() => roll(game.id, 1, dice)}>ROLL</span>
+      <button type="button" onClick={() => roll(game.id, 1, dice)}>ROLL</button>
     </div>
   )
 }
