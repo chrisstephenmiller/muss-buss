@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {withRouter, Route, Switch} from 'react-router-dom'
 import PropTypes from 'prop-types'
 import {Login, Signup, UserHome, Dice} from './components'
-import {me, createDice} from './store'
+import {me, createDice, newGame, newPlayer} from './store'
 
 /**
  * COMPONENT
@@ -49,9 +49,11 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    loadInitialData() {
+    async loadInitialData() {
       dispatch(me())
-      dispatch(createDice())
+      await dispatch(newGame())
+      await dispatch(newPlayer())
+      await dispatch(createDice(1, 1))
     }
   }
 }

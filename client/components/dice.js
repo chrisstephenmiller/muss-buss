@@ -1,11 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Die } from '../components'
-import { getDice, rollDice } from '../store';
+import { Die, Roll, Score } from '../components'
+import { getDice } from '../store';
 
 const Dice = props => {
 
-  const { dice, toggleDie, throwDice } = props
+  const { game, dice, toggleDie, roll } = props
   return (
     <div style={{ display: `flex` }}>
       {dice.map((die => {
@@ -13,13 +13,14 @@ const Dice = props => {
           die={die}
           onClick={() => toggleDie(dice, die)} />
       }))}
-      <span onClick={() => throwDice(dice)}>ROLL</span>
+      <Roll />
     </div>
   )
 }
 
 const mapState = state => {
-  return { dice: state.dice }
+  const { dice, game } = state
+  return { dice, game }
 }
 
 const mapDispatch = dispatch => {
@@ -27,13 +28,9 @@ const mapDispatch = dispatch => {
     toggleDie: (dice, die) => {
       if (die.pointer && !die.scored) {
         die.held = !die.held
-        const newDice = [...dice]
-        dispatch(getDice(newDice))
+        dispatch(getDice([...dice]))
       }
     },
-    throwDice: dice => {
-      dispatch(rollDice(dice))
-    }
   }
 }
 

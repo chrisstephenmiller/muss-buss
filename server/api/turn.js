@@ -10,11 +10,6 @@ router.get(`/`, async (req, res, next) => {
   try {
     const getTurn = await TurnModel.findById(turnId, {
       attributes: { exclude: [`createdAt`, `updatedAt`] },
-      include: {
-        model: DieModel, as: `dice`, attributes: {
-          exclude: [`createdAt`, `updatedAt`]
-        }
-      },
     })
     res.send(getTurn)
   }
@@ -45,10 +40,11 @@ router.put(`/`, async (req, res, next) => {
   try {
     const turnId = req.game.id
     const newDice = req.body
-    turn.dice = await DieModel.findAll({ 
-      where: { turnId }, 
+    turn.dice = await DieModel.findAll({
+      where: { turnId },
       raw: true,
-      attributes: { exclude: [`createdAt`, `updatedAt`] }, })
+      attributes: { exclude: [`createdAt`, `updatedAt`] },
+    })
     turn.dice.forEach(die => { die.held = newDice.find(newDie => newDie.id === die.id).held })
     turn.roll()
     for (let i = 0; i < turn.dice.length; i++) {

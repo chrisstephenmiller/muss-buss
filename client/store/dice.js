@@ -19,28 +19,20 @@ export const getDice = dice => ({type: GET_DICE, dice})
 /**
  * THUNK CREATORS
  */
-export const fetchDice = () => async dispatch => {
-  try {
-    const res = await axios.get(`/api/dice`)
-    dispatch(getDice(res.data || defaultDice))
-  } catch (err) {
-    console.error(err)
-  }
-}
 
-export const createDice = () => async dispatch => {
+export const createDice = (gameId, playerId) => async dispatch => {
   try {
-    const res = await axios.post(`/api/dice`)
+    const res = await axios.post(`/api/games/${gameId}/players/${playerId}/turn`)
     dispatch(getDice(res.data.dice || defaultDice))
   } catch (err) {
     console.error(err)
   }
 }
 
-export const rollDice = dice => async dispatch => {
+export const rollDice = (gameId, playerId, dice) => async dispatch => {
   try {
-    const res = await axios.put(`/api/dice`, dice)
-    dispatch(getDice(res.data || defaultDice))
+    const res = await axios.put(`/api/games/${gameId}/players/${playerId}/turn`, dice)
+    dispatch(getDice(res.data.dice || defaultDice))
   } catch (err) {
     console.error(err)
   }

@@ -12,6 +12,7 @@ class Turn {
     }
     
     roll() {
+        if (this.bust) return
         this.dice = this.dice.map(die => {
             if (die && die.held) die.scored = true
             return die.held ? die : new Die(die.id)
