@@ -12,6 +12,7 @@ router.get(`/`, async (req, res, next) => {
 
 router.post(`/`, async (req, res, next) => {
   try {
+    console.log(`req.body`)
     const gameId = req.game.id
     const players = req.body
     for (const name of players) {
