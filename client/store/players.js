@@ -20,9 +20,18 @@ export const getPlayers = players => ({type: GET_PLAYERS, players})
  * THUNK CREATORS
  */
 
-export const newPlayer = player => async dispatch => {
+export const fetchPlayers = gameId => async dispatch => {
   try {
-    const res = await axios.post(`/api/games/1/players`, player)
+    const res = await axios.get(`/api/games/${gameId}/players`)
+    dispatch(getPlayers(res.data || defaultPlayers))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const newPlayers = (players, gameId) => async dispatch => {
+  try {
+    const res = await axios.post(`/api/games/${gameId}/players`, players)
     dispatch(getPlayers(res.data || defaultPlayers))
   } catch (err) {
     console.error(err)

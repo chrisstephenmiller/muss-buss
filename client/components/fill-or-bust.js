@@ -3,7 +3,6 @@ import React from 'react'
 const FillOrBust = props => {
 
   const { fillOrBust } = props
-  console.log(fillOrBust)
   return (
     <div>
       <span style={{ fontSize: 24 }}>

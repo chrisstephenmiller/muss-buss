@@ -7,7 +7,7 @@ const Roll = props => {
   const { game, dice, roll } = props
   return (
     <div style={{ display: `flex` }}>
-      <button type="button" onClick={() => roll(game.id, 1, dice)}>ROLL</button>
+      <button type="button" onClick={() => roll(game.id, game.currentPlayer, dice)}>ROLL</button>
     </div>
   )
 }
@@ -20,8 +20,8 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     roll: async (gameId, playerId, dice) => {
-      await dispatch(rollDice(gameId, playerId, dice))
-      await dispatch(fetchTurn())
+      await dispatch(rollDice(gameId, 1, dice))
+      await dispatch(fetchTurn(1))
     }
   }
 }
