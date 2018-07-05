@@ -5,7 +5,7 @@ router.post(`/`, async (req, res, next) => {
   try {
     const { winScore } = req.body
     const game = await Game.create({ winScore })
-    res.send({winScore: game.winScore, id: game.id, currentPlayer: game.currentPlayer})
+    res.send({ winScore: game.winScore, id: game.id, currentPlayer: game.currentPlayer })
   }
   catch (err) { next(err) }
 })

@@ -31,7 +31,6 @@ export const fetchPlayers = gameId => async dispatch => {
 
 export const newPlayers = (gameId, players) => async dispatch => {
   try {
-    console.log(gameId)
     const res = await axios.post(`/api/games/${gameId}/players`, players)
     dispatch(getPlayers(res.data || defaultPlayers))
   } catch (err) {

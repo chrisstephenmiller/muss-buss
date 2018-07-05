@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {newPlayers} from './players'
 
 /**
  * ACTION TYPES
@@ -9,7 +10,7 @@ const GET_GAME = `GET_GAME`
 /**
  * INITIAL STATE
  */
-const defaultGame = []
+const defaultGame = {}
 
 /**
  * ACTION CREATORS
@@ -20,10 +21,12 @@ export const getGame = game => ({type: GET_GAME, game})
  * THUNK CREATORS
  */
 
-export const newGame = winScore => async dispatch => {
+export const newGame = (winScore, players) => async dispatch => {
   try {
     const res = await axios.post(`/api/games`, winScore)
-    dispatch(getGame(res.data || defaultGame))
+    const game = res.data
+    dispatch(getGame(game || defaultGame))
+    dispatch(newPlayers(game.id, players))
   } catch (err) {
     console.error(err)
   }

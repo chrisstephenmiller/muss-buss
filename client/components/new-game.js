@@ -32,22 +32,18 @@ class NewGame extends Component {
     }
   }
 
-  submit = async (event, gameId) => {
+  submit = async (event) => {
     event.preventDefault()
-    const {createGame, createPlayers, game} = this.props
-    await createGame(this.state.winScore)
+    const { createGame } = this.props
     const players = []
-    for (const key in this.state) { if (key.slice(0,4) === `name`) players.push(this.state[key])}
-    console.log(game.id)
-    await createPlayers(game.id, players)
+    for (const key in this.state) { if (key.slice(0, 4) === `name`) players.push(this.state[key]) }
+    await createGame(this.state.winScore, players)
   }
 
   render = () => {
-    const gameId = this.props.game.id
-    console.log(this.props.game)
     return (
       <div style={{ display: `flex` }}>
-        <form name="players" onChange={this.update} onSubmit={(event) => this.submit(event, gameId)}>
+        <form name="players" onChange={this.update} onSubmit={(event) => this.submit(event)}>
           <label>
             Points to win: <select name="winScore" defaultValue="10000">
               {[`5000`, `7500`, `10000`, `20000`].map(score => <option key={score} value={score}>{score}</option>)}
@@ -81,12 +77,9 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    createGame: async () => {
-      await dispatch(newGame())
+    createGame: async (winScore, players) => {
+      await dispatch(newGame(winScore, players))
     },
-    createPlayers: async (gameId, players) => {
-      await dispatch(newPlayers(gameId, players))
-    }
   }
 }
 
