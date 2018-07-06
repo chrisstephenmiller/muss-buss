@@ -1,12 +1,14 @@
 import axios from 'axios'
 
 const GET_TURN = `GET_TURN`
+const TOGGLE_DICE = `TOGGLE_DICE`
 
 const defaultTurn = {
   dice: [],
 }
 
 export const getTurn = turn => ({ type: GET_TURN, turn })
+export const toggleDice = dice => ({ type: TOGGLE_DICE, dice })
 
 export const fetchTurn = game => async dispatch => {
   const gameId = game.id
@@ -52,6 +54,8 @@ export default function (state = defaultTurn, action) {
   switch (action.type) {
     case GET_TURN:
       return action.turn
+    case TOGGLE_DICE:
+      return {...state, dice: action.dice}
     default:
       return state
   }

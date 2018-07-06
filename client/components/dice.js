@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Die } from '../components'
-import { getDice } from '../store'
+import { toggleDice } from '../store'
 
 const sortById = (dieA, dieB) => dieA.id - dieB.id
 
@@ -20,15 +20,20 @@ const Dice = props => {
   )
 }
 
+const mapState = state => {
+  const { game } = state
+  return { game }
+}
+
 const mapDispatch = dispatch => {
   return {
     toggleDie: (dice, die) => {
       if (die.pointer && !die.scored) {
         die.held = !die.held
-        dispatch(getDice([...dice]))
+        dispatch(toggleDice([...dice]))
       }
     },
   }
 }
 
-export default connect(mapDispatch)(Dice)
+export default connect(mapState, mapDispatch)(Dice)

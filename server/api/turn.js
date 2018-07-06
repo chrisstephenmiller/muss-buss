@@ -31,7 +31,7 @@ router.post(`/`, async (req, res, next) => {
     turn.dice.forEach(die => { die.turnId = turnId })
     for (let i = 0; i < turn.dice.length; i++) {
       const die = turn.dice[i]
-      await Die.upsert(die, { where: { id: die.id } })
+      await Die.create(die)
     }
     const postTurn = await Turn.findById(turnId, {
       attributes: { exclude: [`createdAt`, `updatedAt`,`gameId`] },
