@@ -3,25 +3,24 @@ import { connect } from 'react-redux'
 import { rollDice, fetchTurn } from '../store';
 
 const Roll = props => {
-
   const { game, dice, roll } = props
   return (
     <div style={{ display: `flex` }}>
-      <button type="button" onClick={() => roll(game.id, game.currentPlayer, dice)}>ROLL</button>
+      <button type="button" onClick={() => roll(game, dice)}>ROLL</button>
     </div>
   )
 }
 
 const mapState = state => {
-  const { dice, game } = state
-  return { dice, game }
+  const { game } = state
+  return { game }
 }
 
 const mapDispatch = dispatch => {
   return {
-    roll: async (gameId, playerId, dice) => {
-      await dispatch(rollDice(gameId, 1, dice))
-      await dispatch(fetchTurn(1))
+    roll: (game, dice) => {
+      dispatch(rollDice(game, dice))
+      dispatch(fetchTurn(game))
     }
   }
 }

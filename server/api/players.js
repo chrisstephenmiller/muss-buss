@@ -17,7 +17,7 @@ router.post(`/`, async (req, res, next) => {
     for (const name of players) {
       await Player.create({ name, gameId })
     }
-    const newPlayers = await Player.findAll({ where: { gameId }, attributes: [`name`, `score`] })
+    const newPlayers = await Player.findAll({ where: { gameId }, attributes: [`id`,`name`, `score`] })
     res.send(newPlayers)
   }
   catch (err) { next(err) }

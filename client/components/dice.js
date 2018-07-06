@@ -1,13 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Die, Roll, Score, FillOrBust, Scores, Stop, NewGame } from '../components'
+import { Die } from '../components'
 import { getDice } from '../store'
 
 const sortById = (dieA, dieB) => dieA.id - dieB.id
 
 const Dice = props => {
-
-  const { dice, toggleDie, turn, players } = props
+  const { dice, toggleDie } = props
   return (
     <div style={{ display: `flex`, flexDirection: `column` }} >
       <div style={{ display: `flex` }}>
@@ -17,18 +16,8 @@ const Dice = props => {
             onClick={() => toggleDie(dice, die)} />
         }))}
       </div>
-      <Roll />
-      <Stop />
-      <Score score={turn.score} />
-      <FillOrBust fillOrBust={[turn.fill, turn.bust]} />
-      <Scores players={players}/>
     </div>
   )
-}
-
-const mapState = state => {
-  const { dice, game, turn, players } = state
-  return { dice, game, turn, players }
 }
 
 const mapDispatch = dispatch => {
@@ -42,4 +31,4 @@ const mapDispatch = dispatch => {
   }
 }
 
-export default connect(mapState, mapDispatch)(Dice)
+export default connect(mapDispatch)(Dice)

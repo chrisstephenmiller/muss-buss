@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { newGame, newPlayers } from '../store';
+import { newGame } from '../store';
 
 class NewGame extends Component {
 
@@ -32,18 +32,23 @@ class NewGame extends Component {
     }
   }
 
-  submit = async (event) => {
+  submit = event => {
     event.preventDefault()
     const { createGame } = this.props
     const players = []
     for (const key in this.state) { if (key.slice(0, 4) === `name`) players.push(this.state[key]) }
-    await createGame(this.state.winScore, players)
+    createGame(this.state.winScore, players)
+  }
+
+  componentDidUpdate = () => {
+    const { game, history } = this.props
+    if (game.id) history.push(`/games/${game.id}`)
   }
 
   render = () => {
     return (
       <div style={{ display: `flex` }}>
-        <form name="players" onChange={this.update} onSubmit={(event) => this.submit(event)}>
+        <form name="players" onChange={this.update} onSubmit={this.submit}>
           <label>
             Points to win: <select name="winScore" defaultValue="10000">
               {[`5000`, `7500`, `10000`, `20000`].map(score => <option key={score} value={score}>{score}</option>)}
@@ -77,8 +82,8 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    createGame: async (winScore, players) => {
-      await dispatch(newGame(winScore, players))
+    createGame: (winScore, players) => {
+      dispatch(newGame(winScore, players))
     },
   }
 }

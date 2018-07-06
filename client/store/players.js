@@ -1,24 +1,10 @@
 import axios from 'axios'
 
-/**
- * ACTION TYPES
- */
-
 const GET_PLAYERS = `GET_PLAYERS`
 
-/**
- * INITIAL STATE
- */
 const defaultPlayers = []
 
-/**
- * ACTION CREATORS
- */
 export const getPlayers = players => ({type: GET_PLAYERS, players})
-
-/**
- * THUNK CREATORS
- */
 
 export const fetchPlayers = gameId => async dispatch => {
   try {
@@ -38,9 +24,6 @@ export const newPlayers = (gameId, players) => async dispatch => {
   }
 }
 
-/**
- * REDUCER
- */
 export default function(state = defaultPlayers, action) {
   switch (action.type) {
     case GET_PLAYERS:

@@ -3,12 +3,10 @@ const Die = require('./die')
 class Turn {
 
     constructor(inheritance = 0) {
-        this.dice = Array(6).fill({})
+        this.dice = Array(6).fill(new Die(null, 0))
         this.score = inheritance
         this.fill = false
         this.bust = false
-
-        this.roll()
     }
 
     roll() {

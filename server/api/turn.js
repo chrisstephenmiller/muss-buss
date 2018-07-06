@@ -11,7 +11,12 @@ router.get(`/`, async (req, res, next) => {
   const turnId = req.game.id
   try {
     const getTurn = await Turn.findById(turnId, {
-      attributes: { exclude: [`createdAt`, `updatedAt`] },
+      attributes: { exclude: [`createdAt`, `updatedAt`,`gameId`] },
+      include: {
+        model: Die, as: `dice`, attributes: {
+          exclude: [`createdAt`, `updatedAt`]
+        }
+      },
     })
     res.send(getTurn)
   }
@@ -29,7 +34,7 @@ router.post(`/`, async (req, res, next) => {
       await Die.upsert(die, { where: { id: die.id } })
     }
     const postTurn = await Turn.findById(turnId, {
-      attributes: { exclude: [`createdAt`, `updatedAt`] },
+      attributes: { exclude: [`createdAt`, `updatedAt`,`gameId`] },
       include: {
         model: Die, as: `dice`, attributes: {
           exclude: [`createdAt`, `updatedAt`]
