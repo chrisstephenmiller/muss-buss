@@ -21,7 +21,9 @@ export const fetchTurn = game => async dispatch => {
   }
 }
 
-export const newTurn = (gameId, playerId) => async dispatch => {
+export const newTurn = game => async dispatch => {
+  const gameId = game.id
+  const playerId = game.currentPlayer
   try {
     const res = await axios.post(`/api/games/${gameId}/players/${playerId}/turn`)
     dispatch(getTurn(res.data || defaultTurn))

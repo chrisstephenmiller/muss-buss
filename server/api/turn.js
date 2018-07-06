@@ -5,8 +5,6 @@ const Turn = require('../db/models/turn')
 const Player = require('../db/models/player')
 const Game = require('../db/models/game')
 
-const turn = new TurnClass()
-
 router.get(`/`, async (req, res, next) => {
   const turnId = req.game.id
   try {
@@ -24,6 +22,7 @@ router.get(`/`, async (req, res, next) => {
 })
 
 router.post(`/`, async (req, res, next) => {
+  const turn = new TurnClass()
   try {
     const turnId = req.game.id
     turn.gameId = turnId
@@ -47,6 +46,7 @@ router.post(`/`, async (req, res, next) => {
 })
 
 router.put(`/`, async (req, res, next) => {
+  const turn = new TurnClass()
   try {
     const turnId = req.game.id
     const newDice = req.body
