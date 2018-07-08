@@ -7,21 +7,21 @@ import { fetchGame } from '../store'
 class Game extends Component {
 
   componentDidMount = () => {
-    const { getGame, match, history} = this.props
+    const { getGame, match } = this.props
     const gameId = match.params.id
-    console.log(history)
     getGame(gameId)
   }
 
   render() {
     const { turn, players } = this.props
+    const { dice, score, fill, bust } = turn
     return (
       <div>
-        <Dice dice={turn.dice}/>
-        <Roll dice={turn.dice} />
+        <Dice />
+        <Roll />
         <Stop />
-        <Score score={turn.score} />
-        <FillOrBust fillOrBust={[turn.fill, turn.bust]} />
+        <Score score={score} />
+        <FillOrBust fillOrBust={[fill, bust]} />
         <Scores players={players} />
       </div>
     )

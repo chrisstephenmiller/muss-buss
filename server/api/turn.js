@@ -5,65 +5,33 @@ const Turn = require('../db/models/turn')
 const Player = require('../db/models/player')
 const Game = require('../db/models/game')
 
-router.get(`/`, async (req, res, next) => {
-  const turnId = req.game.id
-  try {
-    const getTurn = await Turn.findById(turnId, {
-      attributes: { exclude: [`createdAt`, `updatedAt`,`gameId`] },
-      include: {
-        model: Die, as: `dice`, attributes: {
-          exclude: [`createdAt`, `updatedAt`]
-        }
-      },
-    })
-    res.send(getTurn)
-  }
+router.get(`/`, (req, res, next) => {
+  try { res.send(req.game.turn) }
   catch (err) { next(err) }
 })
 
 router.post(`/`, async (req, res, next) => {
-  const turn = new TurnClass()
   try {
-    const turnId = req.game.id
-    turn.gameId = turnId
-    await Turn.create(turn)
-    turn.dice.forEach(die => { die.turnId = turnId })
-    for (let i = 0; i < turn.dice.length; i++) {
-      const die = turn.dice[i]
-      await Die.create(die)
-    }
-    const postTurn = await Turn.findById(turnId, {
-      attributes: { exclude: [`createdAt`, `updatedAt`,`gameId`] },
-      include: {
-        model: Die, as: `dice`, attributes: {
-          exclude: [`createdAt`, `updatedAt`]
-        }
-      },
-    })
-    res.send(postTurn)
+    const gameId = req.game.id
+    const turn = new TurnClass(gameId)
+    const newTurn = await Turn.create(turn)
+    res.send(newTurn)
   }
   catch (err) { next(err) }
 })
 
 router.put(`/`, async (req, res, next) => {
-  const turn = new TurnClass()
   try {
-    const turnId = req.game.id
-    const newDice = req.body
-    turn.dice = await Die.findAll({
-      where: { turnId },
-      raw: true,
-      attributes: { exclude: [`createdAt`, `updatedAt`] },
-    })
-    turn.dice.forEach(die => { die.held = newDice.find(newDie => newDie.id === die.id).held })
+    const gameId = req.game.id
+    const turn = new TurnClass(gameId, req.game.dice)
     turn.roll()
-    for (let i = 0; i < turn.dice.length; i++) {
-      const die = turn.dice[i]
-      await Die.update(die, { where: { id: die.id } })
-    }
+    if (roll) {
+      turn.roll()
+      for (const die of turn.dice) { await Die.update(die, { where: { id: die.id } }) }
+    } else { turn.calcScore() }
     await Turn.update(turn, { where: { id: turnId } })
     const putTurn = await Turn.findById(turnId, {
-      attributes: { exclude: [`createdAt`, `updatedAt`] },
+      attributes: { exclude: [`createdAt`, `updatedAt`, `gameId`] },
       include: {
         model: Die, as: `dice`, attributes: {
           exclude: [`createdAt`, `updatedAt`]
@@ -76,6 +44,7 @@ router.put(`/`, async (req, res, next) => {
 })
 
 router.delete(`/`, async (req, res, next) => {
+  const turn = new TurnClass()
   try {
     const turnId = req.game.id
     turn.dice = await Die.findAll({

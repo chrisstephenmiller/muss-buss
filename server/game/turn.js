@@ -1,40 +1,50 @@
-const Die = require('./die')
+const DieClass = require('./die')
+const DiceClass = require('./dice')
 
 class Turn {
 
-    constructor(inheritance = 0) {
-        this.dice = Array(6).fill(new Die(null, 0))
-        this.score = inheritance
+    constructor(gameId, dice, inheritance ) {
+        // this.dice = dice || new DiceClass(gameId)
+        this.score = inheritance || 0
         this.fill = false
         this.bust = false
+        this.gameId = gameId
+        this.turnId = gameId
     }
 
     roll() {
         if (this.bust) return
-        if (this.fill) this.dice.map(die => new Die(die.id))
+        if (this.fill) this.dice.forEach(die => new DieClass(die.id))
         this.dice = this.dice.map(die => {
-            return die.held ? die : new Die(die.id)
+            return die.held ? die : new DieClass(die.id)
         })
+        this.dice.forEach(die => { if (die.held) die.scored = true })
         this.calcPointers()
         this.calcStatus()
-        this.calcScore()
+        // this.calcScore()
     }
 
     stop() {
         this.dice.forEach(die => { if (die.pointer) die.scored = true })
         this.calcPointers()
         this.calcStatus()
-        this.calcScore()    
+        this.calcScore()
     }
 
     calcStatus() {
-        if (!this.dice.find(die => !die.pointer)) this.fill = true
+        if (!this.dice.find(die => !die.pointer)) {
+            this.dice.forEach(die => { die.held = true })
+            this.fill = true
+        }
         if (!this.fill && !this.dice.find(die => !die.held && die.pointer)) this.bust = true
     }
 
     calcPointers() {
         const totals = Array(6).fill(0)
-        this.dice.forEach(die => { if (!die.held) totals[die.value - 1]++ })
+        this.dice.forEach(die => { 
+            die.pointer = false
+            if (!die.held && !die.scored) totals[die.value - 1]++ 
+        })
         this.dice.forEach(die => { if (die.value === 1 || die.value === 5 || totals[die.value - 1] > 2) die.pointer = true })
         totals.filter(total => total === 1).length === 6 && this.dice.forEach(die => { die.pointer = true })
     }
@@ -47,7 +57,6 @@ class Turn {
         const pointers = Array(6).fill(0)
         this.dice.forEach(die => {
             if (die.held && !die.scored) {
-                die.scored = true
                 pointers[die.value - 1]++
             }
         })

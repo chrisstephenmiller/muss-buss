@@ -4,8 +4,9 @@ const Turn = require('./turn')
 const Die = require('./die')
 const User = require('./user')
 
-Game.hasMany(Player)
 Game.hasOne(Turn)
+Game.hasMany(Player)
+Game.hasMany(Die, {as: `dice`})
 Turn.hasMany(Die, {as: `dice`})
 
 module.exports = {

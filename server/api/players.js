@@ -1,23 +1,22 @@
 const router = require('express').Router()
 const Player = require('../db/models/player')
 
-router.get(`/`, async (req, res, next) => {
-  try {
-    const gameId = req.game.id
-    const players = await Player.findAll({ where: { gameId } })
-    res.send(players)
-  }
+router.get(`/`, (req, res, next) => {
+  try { res.send(req.game.players) }
+  catch (err) { next(err) }
+})
+
+router.get(`/:playerId`, async (req, res, next) => {
+  try { res.send(req.player) }
   catch (err) { next(err) }
 })
 
 router.post(`/`, async (req, res, next) => {
   try {
     const gameId = req.game.id
-    const players = req.body
-    for (const name of players) {
-      await Player.create({ name, gameId })
-    }
-    const newPlayers = await Player.findAll({ where: { gameId }, attributes: [`id`,`name`, `score`] })
+    const names = req.body
+    for (const name of names) { await Player.create({ gameId, name }) }
+    const newPlayers = await Player.findAll({ where: { gameId } })
     res.send(newPlayers)
   }
   catch (err) { next(err) }
@@ -30,7 +29,5 @@ router.param(`playerId`, async (req, res, next, playerId) => {
   }
   catch (err) { next(err) }
 })
-
-router.use('/:playerId/turn', require('./turn'))
 
 module.exports = router

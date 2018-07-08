@@ -41,8 +41,8 @@ class NewGame extends Component {
   }
 
   componentDidUpdate = () => {
-    const { game, history } = this.props
-    if (game.id) history.push(`/games/${game.id}`)
+    const { game, dice, history } = this.props
+    if (dice.length) history.push(`/games/${game.id}`)
   }
 
   render = () => {
@@ -76,8 +76,8 @@ class NewGame extends Component {
 }
 
 const mapState = state => {
-  const { game } = state
-  return { game }
+  const { game, dice } = state
+  return { game, dice }
 }
 
 const mapDispatch = dispatch => {

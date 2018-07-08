@@ -6,8 +6,7 @@ const defaultPlayers = []
 
 export const getPlayers = players => ({type: GET_PLAYERS, players})
 
-export const fetchPlayers = game => async dispatch => {
-  const gameId = game.id
+export const fetchPlayers = gameId => async dispatch => {
   try {
     const res = await axios.get(`/api/games/${gameId}/players`)
     dispatch(getPlayers(res.data || defaultPlayers))
@@ -16,8 +15,7 @@ export const fetchPlayers = game => async dispatch => {
   }
 }
 
-export const newPlayers = (game, players) => async dispatch => {
-  const gameId = game.id
+export const newPlayers = (gameId, players) => async dispatch => {
   try {
     const res = await axios.post(`/api/games/${gameId}/players`, players)
     dispatch(getPlayers(res.data || defaultPlayers))

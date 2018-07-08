@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { rollDice, fetchTurn } from '../store';
+import { rollDice } from '../store';
 
 const Roll = props => {
-  const { game, dice, roll } = props
+  const { game, roll } = props
   return (
     <div style={{ display: `flex` }}>
-      <button type="button" onClick={() => roll(game, dice)}>ROLL</button>
+      <button type="button" onClick={() => roll(game.id)}>ROLL</button>
     </div>
   )
 }
@@ -18,9 +18,8 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    roll: (game, dice) => {
-      dispatch(rollDice(game, dice))
-      dispatch(fetchTurn(game))
+    roll: gameId => {
+      dispatch(rollDice(gameId))
     }
   }
 }
