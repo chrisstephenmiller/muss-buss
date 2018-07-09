@@ -1,5 +1,7 @@
 const DieClass = require('../game/die')
 
+const roll = (gameId, dice) => dice.forEach((die, idx) => { if (!die.held) dice[idx] = new DieClass(gameId, die.id) })
+
 const pointers = dice => {
     const totals = Array(6).fill(0)
     dice.forEach(die => { if (!die.held && !die.scored) totals[die.value - 1]++ })
@@ -14,6 +16,7 @@ class Dice {
         this.gameId = gameId
         this.turnId = gameId
 
+        roll(this.gameId, this.dice)
         pointers(this.dice)
     }
 
