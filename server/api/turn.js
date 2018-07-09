@@ -23,21 +23,9 @@ router.post(`/`, async (req, res, next) => {
 router.put(`/`, async (req, res, next) => {
   try {
     const gameId = req.game.id
-    const turn = new TurnClass(gameId, req.game.dice)
-    turn.roll()
-    if (roll) {
-      turn.roll()
-      for (const die of turn.dice) { await Die.update(die, { where: { id: die.id } }) }
-    } else { turn.calcScore() }
-    await Turn.update(turn, { where: { id: turnId } })
-    const putTurn = await Turn.findById(turnId, {
-      attributes: { exclude: [`createdAt`, `updatedAt`, `gameId`] },
-      include: {
-        model: Die, as: `dice`, attributes: {
-          exclude: [`createdAt`, `updatedAt`]
-        }
-      },
-    })
+    const turn = new TurnClass(gameId, 0, req.game.dice)
+    await Turn.update(turn, { where: { gameId } })
+    const putTurn = await Turn.findById(gameId)
     res.send(putTurn)
   }
   catch (err) { next(err) }
