@@ -16,7 +16,7 @@ class Dice {
         this.gameId = gameId
         this.turnId = gameId
 
-        roll(this.gameId, this.dice)
+        if (dice) roll(this.gameId, this.dice)
         pointers(this.dice)
     }
 
