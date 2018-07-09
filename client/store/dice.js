@@ -31,8 +31,7 @@ export const rollDice = gameId => async dispatch => {
   try {
     const res = await axios.put(`/api/games/${gameId}/dice`)
     await dispatch(getDice(res.data || defaultDice))
-    res.data.forEach(die => console.log(die.pointer))
-    // dispatch(rollTurn(gameId))
+    dispatch(rollTurn(gameId))
   } catch (err) {
     console.error(err)
   }

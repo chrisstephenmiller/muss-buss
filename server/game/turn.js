@@ -1,8 +1,7 @@
 const calcStatus = (turn, dice) => {
     if (!dice) return
-    if (!dice.find(die => !die.pointer)) { turn.fill = true }
-    if (!turn.fill && dice.find(die => !die.held && die.pointer) < 0) turn.bust = true
-    console.log(`status`)
+    if (dice.every(die => die.pointer)) turn.fill = true
+    if (!turn.fill && !dice.some(die => !die.held && die.pointer)) turn.bust = true
 }
 
 const calcScore = (turn, dice) => {
@@ -21,7 +20,7 @@ const calcScore = (turn, dice) => {
             pointer > 2 && (turn.score += (idx + 1) * 100 * (pointer - 2))
         }
     })
-    pointers.find(pointer => pointer !== 1) < 0 && (this.score = 1500)
+    pointers.every(pointer => pointer === 1) && (this.score = 1500)
 }
 
 class Turn {
