@@ -5,6 +5,7 @@ const calcStatus = (turn, dice) => {
 }
 
 const calcScore = (turn, dice) => {
+    if (!dice) return
     if (turn.bust) {
         turn.score = 0
         return
@@ -33,7 +34,7 @@ class Turn {
         this.turnId = gameId
 
         calcStatus(this, dice)
-        // calcScore(this, dice)
+        calcScore(this, dice)
     }
 
 }

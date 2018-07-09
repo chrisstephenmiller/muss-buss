@@ -14,7 +14,7 @@ class Game extends Component {
 
   render() {
     const { turn, players } = this.props
-    const { dice, score, fill, bust } = turn
+    const { score, fill, bust } = turn
     return (
       <div>
         <Dice />

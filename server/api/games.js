@@ -7,7 +7,7 @@ const Die = require('../db/models/die')
 router.get(`/:gameId`, async (req, res, next) => {
   try {
     const gameId = req.game.id
-    const game = await Game.findById(gameId)
+    const game = await Game.findById(gameId, { include: [Turn, Player, { model: Die, as: `dice` }] })
     res.send(game)
   }
   catch (err) { next(err) }
@@ -24,7 +24,8 @@ router.post(`/`, async (req, res, next) => {
 
 router.param(`gameId`, async (req, res, next, gameId) => {
   try {
-    req.game = await Game.findById(gameId, { include: [Turn, Player, { model: Die, as: `dice` }] })
+    const game = await Game.findById(gameId, { include: [Turn, Player, { model: Die, as: `dice` }] })
+    req.game = game.get({ plain: true })
     next()
   }
   catch (err) { next(err) }
