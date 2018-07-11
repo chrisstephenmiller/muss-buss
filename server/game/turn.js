@@ -1,40 +1,48 @@
 const calcStatus = (turn, dice) => {
     if (!dice) return
-    if (dice.every(die => die.pointer)) turn.fill = true
-    if (!turn.fill && !dice.some(die => !die.held && die.pointer)) turn.bust = true
+    if (dice.every(die => die.scored || die.pointer)) turn.fill = true
+    if (!turn.fill && !dice.some(die => die.pointer)) turn.bust = true
 }
 
-const calcScore = (turn, dice) => {
-    if (!dice) return
-    if (turn.bust) {
-        turn.score = 0
-        return
-    }
+const calcScore = dice => {
+    if (!dice) return 0
+    let points = 0
     const pointers = Array(6).fill(0)
-    dice.forEach(die => { if (die.held && !die.scored) pointers[die.value - 1]++ })
-    pointers.forEach((pointer, idx) => {
+    dice.forEach(die => { if (die.held && die.pointer) pointers[die.value - 1]++ })
+    pointers.forEach((die, idx) => {
         if (idx === 0) {
-            pointer > 2 ? turn.score += 1000 * (pointer - 2) : turn.score += 100 * pointer
+            die > 2 ? points += 1000 * (die - 2) : points += 100 * die
         } else if (idx === 4) {
-            pointer > 2 ? turn.score += 500 * (pointer - 2) : turn.score += 50 * pointer
+            die > 2 ? points += 500 * (die - 2) : points += 50 * die
         } else {
-            pointer > 2 && (turn.score += (idx + 1) * 100 * (pointer - 2))
+            die > 2 && (points += (idx + 1) * 100 * (die - 2))
         }
     })
-    pointers.every(pointer => pointer === 1) && (this.score = 1500)
+    pointers.every(pointer => pointer === 1) && (points = 1500)
+    return points
 }
 
 class Turn {
 
-    constructor(gameId, inheritance, dice) {
-        this.score = inheritance || 0
+    constructor(gameId, turn, dice, die) {
         this.fill = false
         this.bust = false
         this.gameId = gameId
         this.turnId = gameId
-
         calcStatus(this, dice)
-        calcScore(this, dice)
+        if (die) {
+            if (!die.id) { //roll
+                this.inheritance = turn.score
+                this.score = this.inheritance + calcScore(dice)
+            } else { //toggle
+                this.inheritance = turn.inheritance
+                this.score = this.inheritance + calcScore(dice)
+            }
+        }
+        if (this.bust) {
+            this.score = 0
+            this.inheritance = 0
+        }
     }
 
 }

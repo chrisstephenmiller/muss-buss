@@ -1,5 +1,4 @@
 const router = require('express').Router()
-const Die = require('../db/models/die')
 const TurnClass = require('../game/turn')
 const Turn = require('../db/models/turn')
 const Player = require('../db/models/player')
@@ -23,7 +22,7 @@ router.post(`/`, async (req, res, next) => {
 router.put(`/`, async (req, res, next) => {
   try {
     const gameId = req.game.id
-    const turn = new TurnClass(gameId, 0, req.game.dice)
+    const turn = new TurnClass(gameId, req.game.turn, req.game.dice, req.body)
     await Turn.update(turn, { where: { gameId } })
     const putTurn = await Turn.findById(gameId)
     res.send(putTurn)
@@ -32,21 +31,12 @@ router.put(`/`, async (req, res, next) => {
 })
 
 router.delete(`/`, async (req, res, next) => {
-  const turn = new TurnClass()
   try {
-    const turnId = req.game.id
-    turn.dice = await Die.findAll({
-      where: { turnId },
-      raw: true,
-      attributes: { exclude: [`createdAt`, `updatedAt`] },
-    })
-    turn.stop()
-    const game = await Game.findById(1, { include: Player })
-    await Player.update({ score: turn.score }, { where: { id: game.currentPlayer } })
-    await Die.destroy({ where: { turnId } })
+    const game = req.game
+    await Player.update({ score: game.turn.score }, { where: { id: game.currentPlayer } })
     const nextPlayer = game.currentPlayer % game.players.length + 1
-    game.update({ currentPlayer: nextPlayer })
-    res.send(turn)
+    Game.update({ currentPlayer: nextPlayer }, { where: { id: game.id } })
+    res.send(game.turn)
   }
   catch (err) { next(err) }
 })

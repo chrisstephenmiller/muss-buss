@@ -9,7 +9,6 @@ export const getDice = dice => ({ type: GET_DICE, dice })
 
 export const fetchDice = gameId => async dispatch => {
   try {
-    await axios.get(`/api/games/${gameId}/dice/`)
     const res = await axios.get(`/api/games/${gameId}/dice`)
     dispatch(getDice(res.data || defaultDice))
   } catch (err) {
@@ -19,8 +18,7 @@ export const fetchDice = gameId => async dispatch => {
 
 export const newDice = gameId => async dispatch => {
   try {
-    await axios.post(`/api/games/${gameId}/dice/`)
-    const res = await axios.get(`/api/games/${gameId}/dice`)
+    const res = await axios.post(`/api/games/${gameId}/dice`)
     await dispatch(getDice(res.data || defaultDice))
   } catch (err) {
     console.error(err)
@@ -39,9 +37,11 @@ export const rollDice = gameId => async dispatch => {
 
 export const toggleDie = die => async dispatch => {
   try {
-    await axios.put(`/api/games/${die.gameId}/dice/${die.id}`)
-    const res = await axios.get(`/api/games/${die.gameId}/dice`)
-    dispatch(getDice(res.data || defaultDice))
+    const { gameId } = die
+    await axios.put(`/api/games/${gameId}/dice/${die.id}`)
+    const res = await axios.get(`/api/games/${gameId}/dice`)
+    await dispatch(getDice(res.data || defaultDice))
+    dispatch(rollTurn(gameId, die))
   } catch (err) {
     console.error(err)
   }

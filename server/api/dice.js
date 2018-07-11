@@ -10,7 +10,7 @@ router.get(`/`, (req, res, next) => {
 router.post(`/`, async (req, res, next) => {
   try {
     const gameId = req.game.id
-    const { dice } = new DiceClass(gameId)
+    const { dice } = new DiceClass(gameId, req.game.turn)
     for (const die of dice) { await Die.create(die) }
     const newDice = await Die.findAll({ where: { gameId } })
     res.send(newDice)
@@ -21,11 +21,8 @@ router.post(`/`, async (req, res, next) => {
 router.put(`/`, async (req, res, next) => {
   try {
     const gameId = req.game.id
-    const { dice } = new DiceClass(gameId, req.game.dice)
-    for (const die of dice) {
-      const newDie = await Die.update(die, { where: { id: die.id }, returning: true })
-    }
-
+    const { dice } = new DiceClass(gameId, req.game.turn, req.game.dice)
+    for (const die of dice) { await Die.update(die, { where: { id: die.id } }) }
     const newDice = await Die.findAll({ where: { gameId } })
     res.send(newDice)
   }

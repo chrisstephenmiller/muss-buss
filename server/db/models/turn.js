@@ -17,6 +17,11 @@ const Turn = db.define('turn', {
         defaultValue: 0,
         allowNull: false
     },
+    inheritance: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+        allowNull: false
+    },
 
 })
 

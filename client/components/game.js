@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Dice, Roll, Stop, Score, FillOrBust, Scores } from '../components'
+import { Dice, Roll, Stop, Score, Turn, Scores } from '../components'
 import { fetchGame } from '../store'
 
 class Game extends Component {
@@ -13,24 +13,22 @@ class Game extends Component {
   }
 
   render() {
-    const { turn, players } = this.props
-    const { score, fill, bust } = turn
     return (
       <div>
         <Dice />
         <Roll />
         <Stop />
-        <Score score={score} />
-        <FillOrBust fillOrBust={[fill, bust]} />
-        <Scores players={players} />
+        <Score />
+        <Turn />
+        <Scores/>
       </div>
     )
   }
 }
 
 const mapState = state => {
-  const { turn, players } = state
-  return { turn, players }
+  const { turn } = state
+  return { turn }
 }
 
 const mapDispatch = dispatch => {

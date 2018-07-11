@@ -28,7 +28,7 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     toggleDice: die => {
-      if (die.pointer && !die.scored) {
+      if (die.pointer) {
         dispatch(toggleDie(die))
       }
     },
