@@ -19,7 +19,6 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     roll: (gameId, dice) => {
-
       dispatch(dice.length ? rollDice(gameId) : newDice(gameId))
     }
   }

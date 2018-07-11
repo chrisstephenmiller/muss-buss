@@ -2,7 +2,6 @@ const router = require('express').Router()
 const TurnClass = require('../game/turn')
 const Turn = require('../db/models/turn')
 const Player = require('../db/models/player')
-const Game = require('../db/models/game')
 
 router.get(`/`, (req, res, next) => {
   try { res.send(req.game.turn) }
@@ -32,11 +31,12 @@ router.put(`/`, async (req, res, next) => {
 
 router.delete(`/`, async (req, res, next) => {
   try {
-    const game = req.game
-    await Player.update({ score: game.turn.score }, { where: { id: game.currentPlayer } })
-    const nextPlayer = game.currentPlayer % game.players.length + 1
-    Game.update({ currentPlayer: nextPlayer }, { where: { id: game.id } })
-    res.send(game.turn)
+    const { game } = req
+    const { players, turn } = game
+    turn.score += players.find(player => player.id === game.currentPlayer).score
+    await Player.update({ score: turn.score }, { where: { id: game.currentPlayer } })
+    const newTurn = await Turn.findById(turn.id)
+    res.send(newTurn)
   }
   catch (err) { next(err) }
 })

@@ -1,6 +1,6 @@
 const DieClass = require('../game/die')
 
-const roll = (gameId, turn, dice) => dice.forEach((die, idx) => { if (!die.held || turn.fill) dice[idx] = new DieClass(gameId, die.id) })
+const roll = (gameId, turn, dice) => dice.forEach((die, idx) => { if (!die.held || turn.fill || turn.bust) dice[idx] = new DieClass(gameId, die.id) })
 
 const pointers = dice => {
     const totals = Array(6).fill(0)

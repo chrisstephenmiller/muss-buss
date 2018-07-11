@@ -7,7 +7,7 @@ const Die = require('../db/models/die')
 router.get(`/:gameId`, async (req, res, next) => {
   try {
     const gameId = req.game.id
-    const game = await Game.findById(gameId, { include: [Turn, Player, { model: Die, as: `dice` }] })
+    const game = await Game.findById(gameId)
     res.send(game)
   }
   catch (err) { next(err) }
@@ -18,6 +18,21 @@ router.post(`/`, async (req, res, next) => {
     const { winScore } = req.body
     const newGame = await Game.create({ winScore })
     res.send(newGame)
+  }
+  catch (err) { next(err) }
+})
+
+router.put(`/:gameId`, async (req, res, next) => {
+  try {
+    const { game } = req
+    const players = await Player.findAll({ where: { gameId: game.id } })
+    const playerIds = players.map(player => player.id)
+    const firstPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.min(prevPlayer, nextPlayer))
+    const lastPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.max(prevPlayer, nextPlayer))
+    const nextPlayer = game.currentPlayer === lastPlayer ? firstPlayer : game.currentPlayer + 1
+    await Game.update({ currentPlayer: nextPlayer }, { where: { id: game.id } })
+    const putGame = await Game.findById(game.id)
+    res.send(putGame)
   }
   catch (err) { next(err) }
 })

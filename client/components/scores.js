@@ -8,9 +8,9 @@ const Scores = props => {
   return (
     <div>
       {players.sort(sortById).map(player => {
-        // if player.id=
+        const bold = player.id === game.currentPlayer ? `underline` : `none`
         return (
-          <span key={player.id} style={{ fontSize: 24 }}>
+          <span key={player.id} style={{ fontSize: 24, textDecoration: `${bold}` }}>
             {`${player.name} - ${player.score} `}
           </span>
         )

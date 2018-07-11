@@ -20,6 +20,16 @@ export const fetchGame = gameId => async dispatch => {
   }
 }
 
+export const nextPlayer = gameId => async dispatch => {
+  try {
+    const res = await axios.put(`/api/games/${gameId}`)
+    const game = res.data
+    dispatch(getGame(game || defaultGame))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 export const newGame = (winScore, players) => async dispatch => {
   try {
     const res = await axios.post(`/api/games`, winScore)
@@ -28,6 +38,7 @@ export const newGame = (winScore, players) => async dispatch => {
     await dispatch(newPlayers(game.id, players))
     await dispatch(newTurn(game.id))
     await dispatch(newDice(game.id))
+
   } catch (err) {
     console.error(err)
   }

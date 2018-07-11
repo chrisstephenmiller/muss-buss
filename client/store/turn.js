@@ -1,5 +1,7 @@
 import axios from 'axios'
 import { fetchPlayers } from './players';
+import { nextPlayer } from './game';
+import { rollDice } from './dice';
 
 const GET_TURN = `GET_TURN`
 
@@ -25,20 +27,22 @@ export const newTurn = gameId => async dispatch => {
   }
 }
 
-export const rollTurn = (gameId, die) => async dispatch => {
+export const endTurn = gameId => async dispatch => {
   try {
-    const res = await axios.put(`/api/games/${gameId}/turn`, die)
+    const res = await axios.delete(`/api/games/${gameId}/turn`)
     dispatch(getTurn(res.data || defaultTurn))
+    dispatch(nextPlayer(gameId))
+    dispatch(fetchPlayers(gameId))
+    console.log(res.data)
   } catch (err) {
     console.error(err)
   }
 }
 
-export const endTurn = (gameId) => async dispatch => {
+export const rollTurn = (gameId, die) => async dispatch => {
   try {
-    const res = await axios.delete(`/api/games/${gameId}/turn`)
-    dispatch(getTurn(res.data || defaultTurn))
-    dispatch(fetchPlayers(gameId))
+    const res = await axios.put(`/api/games/${gameId}/turn`, die)
+    dispatch(res.data.bust ? endTurn(gameId) : getTurn(res.data || defaultTurn))
   } catch (err) {
     console.error(err)
   }
