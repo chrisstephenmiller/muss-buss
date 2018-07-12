@@ -16,10 +16,10 @@ class Game extends Component {
     return (
       <div>
         <Dice />
-        <Roll />
-        <Stop />
         <Score />
         <Turn />
+        <Roll />
+        <Stop />
         <Scores/>
       </div>
     )

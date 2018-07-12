@@ -12,17 +12,17 @@ const Die = props => {
 
   const dieImages = [d0, d1, d2, d3, d4, d5, d6]
   const { die, onClick } = props
-  
+
   return (
     <div key={die.id}
-      style={{ display: `flex`, flexDirection: `column`, textAlign: `center` }}>
+      style={{ display: `flex`, flexDirection: `column`, textAlign: `center`, height: 175}}>
+      <span style={{ fontSize: 24 }}>
+        {die.held ? `held` : ``}
+      </span>
       <img src={dieImages[die.value]}
         alt={`die-${die.value}`}
         style={{ height: 125, width: 125 }}
         onClick={onClick} />
-      <span style={{ fontSize: 24 }}>
-        {die.held ? `held` : `live`}
-      </span>
     </div>
   )
 }

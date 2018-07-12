@@ -3,10 +3,11 @@ import { connect } from 'react-redux'
 
 const Turn = props => {
   const { fill, bust } = props.turn
+  const status = !fill && !bust ? `Live` : (fill ? `Fill` : `Bust`)
   return (
     <div>
       <span style={{ fontSize: 24 }}>
-        {`Fill: ${fill} - Bust: ${bust}`}
+        {status}
       </span>
     </div>
   )
