@@ -35,6 +35,15 @@ export const rollDice = gameId => async dispatch => {
   }
 }
 
+export const passDice = gameId => async dispatch => {
+  try {
+    const res = await axios.delete(`/api/games/${gameId}/dice`)
+    dispatch(getDice(res.data || defaultDice))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 export const toggleDie = die => async dispatch => {
   try {
     const { gameId } = die

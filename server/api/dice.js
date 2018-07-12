@@ -29,6 +29,17 @@ router.put(`/`, async (req, res, next) => {
   catch (err) { next(err) }
 })
 
+router.delete(`/`, async (req, res, next) => {
+  try {
+    const gameId = req.game.id
+    const { dice } = req.game
+    for (const die of dice) { await Die.update({ ...die, scored: true }, { where: { id: die.id } }) }
+    const newDice = await Die.findAll({ where: { gameId } })
+    res.send(newDice)
+  }
+  catch (err) { next(err) }
+})
+
 router.put(`/:dieId`, async (req, res, next) => {
   try {
     const gameId = req.game.id
