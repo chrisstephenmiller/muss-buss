@@ -24,14 +24,14 @@ router.post(`/`, async (req, res, next) => {
 
 router.put(`/:gameId`, async (req, res, next) => {
   try {
-    const { game } = req
-    const players = await Player.findAll({ where: { gameId: game.id } })
+    const { id, dice } = req.game
+    const players = await Player.findAll({ where: { gameId: id } })
     const playerIds = players.map(player => player.id)
     const firstPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.min(prevPlayer, nextPlayer))
     const lastPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.max(prevPlayer, nextPlayer))
-    const nextPlayer = game.currentPlayer === lastPlayer ? firstPlayer : game.currentPlayer + 1
-    await Game.update({ currentPlayer: nextPlayer }, { where: { id: game.id } })
-    const putGame = await Game.findById(game.id)
+    const nextPlayer = req.game.currentPlayer === lastPlayer ? firstPlayer : req.game.currentPlayer + 1
+    if (!dice.every(die => die.scored)) await Game.update({ currentPlayer: nextPlayer }, { where: { id } })
+    const putGame = await Game.findById(id)
     res.send(putGame)
   }
   catch (err) { next(err) }

@@ -31,7 +31,7 @@ export const endTurn = gameId => async dispatch => {
   try {
     const res = await axios.delete(`/api/games/${gameId}/turn`)
     dispatch(getTurn(res.data || defaultTurn))
-    dispatch(passDice(gameId)) 
+    dispatch(passDice(gameId))
     dispatch(nextPlayer(gameId))
     dispatch(fetchPlayers(gameId))
   } catch (err) {

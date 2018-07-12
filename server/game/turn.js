@@ -1,6 +1,6 @@
 const calcStatus = (turn, dice) => {
     if (!dice) return
-    if (dice.every(die => die.scored || die.pointer)) turn.fill = true
+    if (!turn.bust && dice.every(die => die.scored || die.pointer)) turn.fill = true
     if (!turn.fill && !dice.some(die => die.pointer)) turn.bust = true
 }
 

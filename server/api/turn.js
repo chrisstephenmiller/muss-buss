@@ -33,11 +33,11 @@ router.delete(`/`, async (req, res, next) => {
   try {
     const { game } = req
     const { players, turn, dice } = game
-    if (dice.every(die => die.scored)) console.log(`FOREGO THE INHERITANCE`)
+    if (dice.every(die => die.scored)) turn.score = 0
     const score = turn.score + players.find(player => player.id === game.currentPlayer).score
     await Player.update({ score }, { where: { id: game.currentPlayer } })
     await Turn.update(turn, { where: { gameId: game.id } })
-    const newTurn = await Turn.findById(turn.id)
+    const newTurn = await Turn.findById(turn.id, { raw: true })
     res.send(newTurn)
   }
   catch (err) { next(err) }

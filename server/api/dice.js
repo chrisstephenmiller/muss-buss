@@ -21,8 +21,10 @@ router.post(`/`, async (req, res, next) => {
 router.put(`/`, async (req, res, next) => {
   try {
     const gameId = req.game.id
-    const { dice } = new DiceClass(gameId, req.game.turn, req.game.dice)
-    for (const die of dice) { await Die.update(die, { where: { id: die.id } }) }
+    if (req.game.dice.some(die => !die.value || (die.held && die.pointer) || req.game.turn.bust)) {
+      const { dice } = new DiceClass(gameId, req.game.turn, req.game.dice)
+      for (const die of dice) { await Die.update(die, { where: { id: die.id } }) }
+    }
     const newDice = await Die.findAll({ where: { gameId } })
     res.send(newDice)
   }
@@ -33,6 +35,10 @@ router.delete(`/`, async (req, res, next) => {
   try {
     const gameId = req.game.id
     const { dice } = req.game
+    if (dice.every(die => die.scored)) dice.forEach(die => {
+      die.held = false
+      die.value = 0
+    })
     for (const die of dice) { await Die.update({ ...die, scored: true }, { where: { id: die.id } }) }
     const newDice = await Die.findAll({ where: { gameId } })
     res.send(newDice)
