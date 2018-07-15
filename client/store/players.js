@@ -6,18 +6,18 @@ const defaultPlayers = []
 
 export const getPlayers = players => ({type: GET_PLAYERS, players})
 
-export const fetchPlayers = gameId => async dispatch => {
+export const newPlayersThunk = (gameId, players) => async dispatch => {
   try {
-    const res = await axios.get(`/api/games/${gameId}/players`)
+    const res = await axios.post(`/api/games/${gameId}/players`, players)
     dispatch(getPlayers(res.data || defaultPlayers))
   } catch (err) {
     console.error(err)
   }
 }
 
-export const newPlayers = (gameId, players) => async dispatch => {
+export const getPlayersThunk = gameId => async dispatch => {
   try {
-    const res = await axios.post(`/api/games/${gameId}/players`, players)
+    const res = await axios.get(`/api/games/${gameId}/players`)
     dispatch(getPlayers(res.data || defaultPlayers))
   } catch (err) {
     console.error(err)

@@ -10,21 +10,27 @@ router.get(`/`, (req, res, next) => {
 
 router.post(`/`, async (req, res, next) => {
   try {
-    const gameId = req.game.id
-    const turn = new TurnClass(gameId)
-    const newTurn = await Turn.create(turn)
-    res.send(newTurn)
+    const { id } = req.game
+    const newDice = await Turn.create(new TurnClass(id))
+    res.send(newDice)
+  }
+  catch (err) { next(err) }
+})
+
+router.patch(`/`, async (req, res, next) => {
+  try {
+    const { id, turn, dice } = req.game
+    const newDice = await Turn.update(new TurnClass(id, turn, dice), { where: { id }, returning: true })
+    res.send(newDice[1][0])
   }
   catch (err) { next(err) }
 })
 
 router.put(`/`, async (req, res, next) => {
   try {
-    const gameId = req.game.id
-    const turn = new TurnClass(gameId, req.game.turn, req.game.dice, req.body)
-    await Turn.update(turn, { where: { gameId } })
-    const putTurn = await Turn.findById(gameId)
-    res.send(putTurn)
+    const { id, turn, dice } = req.game
+    const newDice = await Turn.update(new TurnClass(id, turn, dice, req.body), { where: { id }, returning: true })
+    res.send(newDice[1][0])
   }
   catch (err) { next(err) }
 })

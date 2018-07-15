@@ -15,8 +15,8 @@ router.get(`/:gameId`, async (req, res, next) => {
 
 router.post(`/`, async (req, res, next) => {
   try {
-    const { winScore } = req.body
-    const newGame = await Game.create({ winScore })
+    const { score } = req.body
+    const newGame = await Game.create({ score })
     res.send(newGame)
   }
   catch (err) { next(err) }
@@ -30,7 +30,7 @@ router.put(`/:gameId`, async (req, res, next) => {
     const firstPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.min(prevPlayer, nextPlayer))
     const lastPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.max(prevPlayer, nextPlayer))
     const nextPlayer = req.game.currentPlayer === lastPlayer ? firstPlayer : req.game.currentPlayer + 1
-    if (!dice.every(die => die.scored)) await Game.update({ currentPlayer: nextPlayer }, { where: { id } })
+    if (dice.every(die => die.scored) && !dice.every(die => !die.held)) await Game.update({ currentPlayer: nextPlayer }, { where: { id } })
     const putGame = await Game.findById(id)
     res.send(putGame)
   }

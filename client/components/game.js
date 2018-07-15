@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Dice, Roll, Stop, Score, Turn, Scores } from '../components'
-import { fetchGame } from '../store'
+import { getGameThunk } from '../store'
 
 class Game extends Component {
 
@@ -34,7 +34,7 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     getGame: gameId => {
-      dispatch(fetchGame(gameId))
+      dispatch(getGameThunk(gameId))
     }
   }
 }

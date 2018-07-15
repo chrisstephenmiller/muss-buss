@@ -1,19 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Die } from '../components'
-import { toggleDie } from '../store'
+import { toggleDieThunk } from '../store'
 
 const sortById = (dieA, dieB) => dieA.id - dieB.id
 
 const Dice = props => {
-  const { dice, toggleDice } = props
+  const { dice, toggleDie } = props
   return (
     <div style={{ display: `flex`, flexDirection: `column` }} >
       <div style={{ display: `flex` }}>
         {dice.sort(sortById).map((die => {
           return <Die key={die.id}
             die={die}
-            onClick={() => toggleDice(die)} />
+            onClick={() => toggleDie(die)} />
         }))}
       </div>
     </div>
@@ -27,9 +27,9 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    toggleDice: die => {
+    toggleDie: die => {
       if (die.pointer) {
-        dispatch(toggleDie(die))
+        dispatch(toggleDieThunk(die))
       }
     },
   }

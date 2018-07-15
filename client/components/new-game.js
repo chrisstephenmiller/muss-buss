@@ -8,7 +8,7 @@ class NewGame extends Component {
     super()
 
     this.state = {
-      winScore: 10000,
+      score: 10000,
       numPlayers: [1, 2, 3, 4],
       name1: `Player 1`,
       name2: `Player 2`,
@@ -37,7 +37,7 @@ class NewGame extends Component {
     const { createGame } = this.props
     const players = []
     for (const key in this.state) { if (key.slice(0, 4) === `name`) players.push(this.state[key]) }
-    createGame(this.state.winScore, players)
+    createGame(this.state.score, players)
   }
 
   componentDidUpdate = () => {
@@ -50,7 +50,7 @@ class NewGame extends Component {
       <div style={{ display: `flex` }}>
         <form name="players" onChange={this.update} onSubmit={this.submit}>
           <label>
-            Points to win: <select name="winScore" defaultValue="10000">
+            Points to win: <select name="score" defaultValue="10000">
               {[`5000`, `7500`, `10000`, `20000`].map(score => <option key={score} value={score}>{score}</option>)}
             </select>
           </label>
@@ -82,8 +82,8 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    createGame: (winScore, players) => {
-      dispatch(newGame(winScore, players))
+    createGame: (score, players) => {
+      dispatch(newGame(score, players))
     },
   }
 }

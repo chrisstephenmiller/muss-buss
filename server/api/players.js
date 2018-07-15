@@ -7,11 +7,6 @@ router.get(`/`, (req, res, next) => {
   catch (err) { next(err) }
 })
 
-router.get(`/:playerId`, (req, res, next) => {
-  try { res.send(req.player) }
-  catch (err) { next(err) }
-})
-
 router.post(`/`, async (req, res, next) => {
   try {
     const gameId = req.game.id
@@ -23,6 +18,11 @@ router.post(`/`, async (req, res, next) => {
     Game.update({ currentPlayer }, { where: { id: gameId } })
     res.send(newPlayers)
   }
+  catch (err) { next(err) }
+})
+
+router.get(`/:playerId`, (req, res, next) => {
+  try { res.send(req.player) }
   catch (err) { next(err) }
 })
 
