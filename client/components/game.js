@@ -16,16 +16,16 @@ class Game extends Component {
     return (
       <div id="game">
         <Dice />
+        <Score />
         <div style={{ display: `inline-flex` }}>
           <Roll />
           <Stop />
-          <Score />
-          <Turn />
-          </div>
+        </div>
         <Scores />
       </div>
     )
   }
+  // <Turn />
 }
 
 const mapState = state => {

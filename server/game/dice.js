@@ -21,7 +21,7 @@ class Dice {
 
     if (dice) {
       if (!turn.pass) roll(gameId, dice, turn)
-      if (turn.pass && turn.stop) stop(gameId, dice)
+      if (turn.pass && turn.stop & !turn.bust) stop(gameId, dice)
       pointers(dice)
     }
 
