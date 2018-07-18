@@ -14,13 +14,15 @@ class Game extends Component {
 
   render() {
     return (
-      <div>
+      <div id="game">
         <Dice />
-        <Score />
-        <Turn />
-        <Roll />
-        <Stop />
-        <Scores/>
+        <div style={{ display: `inline-flex` }}>
+          <Roll />
+          <Stop />
+          <Score />
+          <Turn />
+          </div>
+        <Scores />
       </div>
     )
   }

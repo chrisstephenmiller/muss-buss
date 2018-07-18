@@ -11,7 +11,12 @@ const Game = db.define('game', {
         type: Sequelize.INTEGER,
         defaultValue: 1,
         allowNull: false,
-    }
+    },
+    currentWinner: {
+        type: Sequelize.INTEGER,
+        defaultValue: 1,
+        allowNull: false,
+    },
 })
 
 module.exports = Game

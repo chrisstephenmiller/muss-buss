@@ -8,14 +8,12 @@ const sortById = (dieA, dieB) => dieA.id - dieB.id
 const Dice = props => {
   const { dice, toggleDie } = props
   return (
-    <div style={{ display: `flex`, flexDirection: `column` }} >
       <div style={{ display: `flex` }}>
         {dice.sort(sortById).map((die => {
           return <Die key={die.id}
             die={die}
             onClick={() => toggleDie(die)} />
         }))}
-      </div>
     </div>
   )
 }

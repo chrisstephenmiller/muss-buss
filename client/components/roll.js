@@ -6,7 +6,9 @@ const Roll = props => {
   const { game, dice, rollDice } = props
   return (
     <div style={{ display: `flex` }}>
-      <button type="button" onClick={() => rollDice(game.id, dice)}>ROLL</button>
+      <button type="button"
+      style={{height: 50, width: 100, margin: 10, borderRadius: 5, fontSize: 20, border: `1px solid black`}}
+      onClick={() => rollDice(game.id, dice)}>ROLL</button>
     </div>
   )
 }

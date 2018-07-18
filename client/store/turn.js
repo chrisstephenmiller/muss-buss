@@ -51,11 +51,9 @@ export const rollTurnThunk = gameId => async dispatch => {
     const res = await axios.put(`/api/games/${gameId}/turn`)
     const turn = res.data
     if (turn.bust) {
-      alert(`You busted.`)
       dispatch(bustTurn(turn || defaultTurn))
       dispatch(nextPlayerThunk(gameId))
     } else if (turn.fill) {
-      alert(`You filled!`)
       dispatch(fillTurn(turn || defaultTurn))
     } else { dispatch(rollTurn(turn || defaultTurn)) }
   } catch (err) {
