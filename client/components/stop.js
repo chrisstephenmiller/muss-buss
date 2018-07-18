@@ -1,28 +1,28 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { endTurn } from '../store';
+import { passDiceThunk } from '../store';
 
 const Stop = props => {
 
-  const { stop, game } = props
-  return (
-    <div style={{ display: `flex` }}>
-      <button type="button" onClick={() => stop(game.id, game.currentPlayer)}>STOP</button>
-    </div>
-  )
+    const { nextPlayer, game } = props
+    return (
+        <div style={{ display: `flex` }}>
+            <button type="button" onClick={() => nextPlayer(game.id)}>STOP</button>
+        </div>
+    )
 }
 
 const mapState = state => {
-  const { game } = state
-  return { game }
+    const { game } = state
+    return { game }
 }
 
 const mapDispatch = dispatch => {
-  return {
-    stop: async (gameId, playerId) => {
-      await dispatch(endTurn(gameId, playerId))
+    return {
+        nextPlayer: async gameId => {
+            await dispatch(passDiceThunk(gameId))
+        }
     }
-  }
 }
 
 export default connect(mapState, mapDispatch)(Stop)

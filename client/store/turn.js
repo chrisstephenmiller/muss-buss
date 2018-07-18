@@ -1,6 +1,7 @@
 import axios from 'axios'
-import { passDice } from './dice';
+import { nextPlayerThunk, scorePlayersThunk } from '../store';
 
+const NEW_TURN = `NEW_TURN`
 const GET_TURN = `GET_TURN`
 const TOGGLE_TURN = `TOGGLE_TURN`
 const ROLL_TURN = `ROLL_TURN`
@@ -10,6 +11,7 @@ const BUST_TURN = `BUST_TURN`
 
 const defaultTurn = {}
 
+export const newTurn = turn => ({ type: NEW_TURN, turn })
 export const getTurn = turn => ({ type: GET_TURN, turn })
 export const toggleTurn = turn => ({ type: TOGGLE_TURN, turn })
 export const rollTurn = turn => ({ type: ROLL_TURN, turn })
@@ -20,7 +22,7 @@ export const endTurn = turn => ({ type: END_TURN, turn })
 export const newTurnThunk = gameId => async dispatch => {
   try {
     const res = await axios.post(`/api/games/${gameId}/turn`)
-    dispatch(getTurn(res.data || defaultTurn))
+    dispatch(newTurn(res.data || defaultTurn))
   } catch (err) {
     console.error(err)
   }
@@ -48,9 +50,14 @@ export const rollTurnThunk = gameId => async dispatch => {
   try {
     const res = await axios.put(`/api/games/${gameId}/turn`)
     const turn = res.data
-    if (turn.bust) { console.log(`bust`) }
-    else if (turn.fill) { console.log(`fill`) }
-    else { dispatch(rollTurn(res.data || defaultTurn)) }
+    if (turn.bust) {
+      alert(`You busted.`)
+      dispatch(bustTurn(turn || defaultTurn))
+      dispatch(nextPlayerThunk(gameId))
+    } else if (turn.fill) {
+      alert(`You filled!`)
+      dispatch(fillTurn(turn || defaultTurn))
+    } else { dispatch(rollTurn(turn || defaultTurn)) }
   } catch (err) {
     console.error(err)
   }
@@ -59,26 +66,12 @@ export const rollTurnThunk = gameId => async dispatch => {
 export const endTurnThunk = gameId => async dispatch => {
   try {
     const res = await axios.delete(`/api/games/${gameId}/turn`)
-    dispatch(getTurn(res.data || defaultTurn))
-    dispatch(passDice(gameId))
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-export const fillTurnThunk = (gameId, die) => async dispatch => {
-  try {
-    const res = await axios.put(`/api/games/${gameId}/turn`, die)
-    dispatch(fillTurn(res.data || defaultTurn))
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-export const bustTurnThunk = (gameId, die) => async dispatch => {
-  try {
-    const res = await axios.put(`/api/games/${gameId}/turn`, die)
-    dispatch(bustTurn(res.data || defaultTurn))
+    const turn = res.data
+    dispatch(endTurn(turn || defaultTurn))
+    if (turn.stop && !turn.bust && turn.score) {
+      await dispatch(scorePlayersThunk(gameId))
+      await dispatch(nextPlayerThunk(gameId))
+    }
   } catch (err) {
     console.error(err)
   }

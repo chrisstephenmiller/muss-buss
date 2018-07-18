@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { newGame } from '../store';
+import { newGameThunk } from '../store';
 
 class NewGame extends Component {
 
@@ -8,7 +8,7 @@ class NewGame extends Component {
     super()
 
     this.state = {
-      score: 10000,
+      winScore: 10000,
       numPlayers: [1, 2, 3, 4],
       name1: `Player 1`,
       name2: `Player 2`,
@@ -34,10 +34,10 @@ class NewGame extends Component {
 
   submit = event => {
     event.preventDefault()
-    const { createGame } = this.props
+    const { newGame } = this.props
     const players = []
     for (const key in this.state) { if (key.slice(0, 4) === `name`) players.push(this.state[key]) }
-    createGame(this.state.score, players)
+    newGame(this.state.winScore, players)
   }
 
   componentDidUpdate = () => {
@@ -82,8 +82,8 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    createGame: (score, players) => {
-      dispatch(newGame(score, players))
+    newGame: (winScore, players) => {
+      dispatch(newGameThunk(winScore, players))
     },
   }
 }

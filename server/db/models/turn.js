@@ -12,6 +12,11 @@ const Turn = db.define('turn', {
         defaultValue: false,
         allowNull: false
     },
+    stop: {
+      type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: false
+    },
     score: {
         type: Sequelize.INTEGER,
         defaultValue: 0,

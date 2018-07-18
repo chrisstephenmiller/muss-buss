@@ -15,22 +15,35 @@ router.get(`/:gameId`, async (req, res, next) => {
 
 router.post(`/`, async (req, res, next) => {
   try {
-    const { score } = req.body
-    const newGame = await Game.create({ score })
+    const { winScore } = req.body
+    const newGame = await Game.create({ winScore })
     res.send(newGame)
+  }
+  catch (err) { next(err) }
+})
+
+router.patch(`/:gameId`, async (req, res, next) => {
+  try {
+    const { game } = req
+    const { id, players } = game
+    const playerIds = players.map(player => player.id)
+    const firstPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.min(prevPlayer, nextPlayer))
+    await Game.update({ currentPlayer: firstPlayer }, { where: { id } })
+    const putGame = await Game.findById(id)
+    res.send(putGame)
   }
   catch (err) { next(err) }
 })
 
 router.put(`/:gameId`, async (req, res, next) => {
   try {
-    const { id, dice } = req.game
-    const players = await Player.findAll({ where: { gameId: id } })
+    const { game } = req
+    const { id, turn, players } = game
     const playerIds = players.map(player => player.id)
     const firstPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.min(prevPlayer, nextPlayer))
     const lastPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.max(prevPlayer, nextPlayer))
-    const nextPlayer = req.game.currentPlayer === lastPlayer ? firstPlayer : req.game.currentPlayer + 1
-    if (dice.every(die => die.scored) && !dice.every(die => !die.held)) await Game.update({ currentPlayer: nextPlayer }, { where: { id } })
+    const nextPlayer = game.currentPlayer === lastPlayer ? firstPlayer : game.currentPlayer + 1
+    if (turn.stop && !turn.bust || turn.bust && !turn.stop) await Game.update({ currentPlayer: nextPlayer }, { where: { id } })
     const putGame = await Game.findById(id)
     res.send(putGame)
   }

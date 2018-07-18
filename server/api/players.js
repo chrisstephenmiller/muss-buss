@@ -9,13 +9,27 @@ router.get(`/`, (req, res, next) => {
 
 router.post(`/`, async (req, res, next) => {
   try {
-    const gameId = req.game.id
     const names = req.body
-    for (const name of names) { await Player.create({ gameId, name }) }
-    const newPlayers = await Player.findAll({ where: { gameId } })
+    const { id } = req.game
+    for (const name of names) { await Player.create({ gameId: id, name }) }
+    const newPlayers = await Player.findAll({ where: { gameId: id } })
     const playerIds = newPlayers.map(player => player.id)
     const currentPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.min(prevPlayer, nextPlayer))
-    Game.update({ currentPlayer }, { where: { id: gameId } })
+    Game.update({ currentPlayer }, { where: { id } })
+    res.send(newPlayers)
+  }
+  catch (err) { next(err) }
+})
+
+router.put(`/`, async (req, res, next) => {
+  try {
+    const { game } = req
+    const { id, turn } = game
+    const playerId = game.currentPlayer
+    const player = await Player.findById(playerId)
+    const score = turn.score + player.score
+    if (!turn.bust) await Player.update({ score }, { where: { id: playerId } })
+    const newPlayers = await Player.findAll({ where: { gameId: id } })
     res.send(newPlayers)
   }
   catch (err) { next(err) }
@@ -25,6 +39,7 @@ router.get(`/:playerId`, (req, res, next) => {
   try { res.send(req.player) }
   catch (err) { next(err) }
 })
+
 
 router.param(`playerId`, async (req, res, next, playerId) => {
   try {

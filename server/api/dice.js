@@ -10,7 +10,7 @@ router.get(`/`, (req, res, next) => {
 router.post(`/`, async (req, res, next) => {
   try {
     const { id, turn } = req.game
-    for (const die of new DiceClass(id, turn)) { await Die.create(die) }
+    for (const die of new DiceClass(id).dice) { await Die.create(die) }
     const newDice = await Die.findAll({ where: { gameId: id } })
     res.send(newDice)
   }
@@ -20,23 +20,8 @@ router.post(`/`, async (req, res, next) => {
 router.put(`/`, async (req, res, next) => {
   try {
     const { id, dice, turn } = req.game
-    const validRoll = dice.some(die => !die.value || (die.held && die.pointer)) || turn.bust
-    if (validRoll) for (const die of new DiceClass(id, turn, dice)) { await Die.update(die, { where: { id: die.id } }) }
-    const newDice = await Die.findAll({ where: { gameId: id } })
-    res.send(newDice)
-  }
-  catch (err) { next(err) }
-})
-
-router.delete(`/`, async (req, res, next) => {
-  try {
-    const { id, dice, turn } = req.game
-    if (dice.every(die => die.scored)) dice.forEach(die => {
-      die.held = false
-      die.value = 0
-    })
-    const validStop = dice.some(die => die.held && die.pointer) || turn.bust || dice.every(die => !die.held)
-    if (validStop) for (const die of dice) { await Die.update({ ...die, scored: true }, { where: { id: die.id } }) }
+    const validRoll = dice.some(die => !die.value || (die.held && die.pointer)) || turn.bust || turn.stop
+    if (validRoll) for (const die of new DiceClass(id, dice, turn).dice) { await Die.update(die, { where: { id: die.id } }) }
     const newDice = await Die.findAll({ where: { gameId: id } })
     res.send(newDice)
   }
@@ -45,9 +30,28 @@ router.delete(`/`, async (req, res, next) => {
 
 router.put(`/:dieId`, async (req, res, next) => {
   try {
-    const { id } = req.game
+    const { id, dice } = req.game
+    const pointers = Array(6).fill(0)
+    dice.forEach(die => { if (die.pointer) pointers[die.value - 1]++ })
     const die = req.die
-    await Die.update({ held: !die.held }, { where: { id: die.id } })
+    if (pointers.every(pointer => pointer === 1)) {
+      await Die.update({ held: !die.held }, { where: { gameId: id } })
+    } else if (pointers[die.value - 1] > 2) {
+      await Die.update({ held: !die.held }, { where: { gameId: id, value: die.value } })
+    } else {
+      await Die.update({ held: !die.held }, { where: { id: die.id } })
+    }
+    const newDice = await Die.findAll({ where: { gameId: id } })
+    res.send(newDice)
+  }
+  catch (err) { next(err) }
+})
+
+router.patch(`/`, async (req, res, next) => {
+  try {
+    const { id, dice, turn } = req.game
+    turn.pass = true
+    for (const die of new DiceClass(id, dice, turn).dice) { await Die.update(die, { where: { id: die.id } }) }
     const newDice = await Die.findAll({ where: { gameId: id } })
     res.send(newDice)
   }

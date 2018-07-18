@@ -7,7 +7,6 @@ const User = require('./user')
 Game.hasOne(Turn)
 Game.hasMany(Player)
 Game.hasMany(Die, {as: `dice`})
-Turn.hasMany(Die, {as: `dice`})
 
 module.exports = {
   User, Game, Player, Turn, Die
