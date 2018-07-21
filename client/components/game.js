@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Dice, Roll, Stop, Score, Turn, Scores } from '../components'
 import { getGameThunk } from '../store'
+import socket from '../socket'
 
 class Game extends Component {
 
@@ -10,6 +11,7 @@ class Game extends Component {
     const { getGame, match } = this.props
     const gameId = match.params.id
     getGame(gameId)
+    socket.on(`updateIn`, () => getGame(gameId))
   }
 
   render() {
@@ -25,7 +27,6 @@ class Game extends Component {
       </div>
     )
   }
-  // <Turn />
 }
 
 const mapState = state => {

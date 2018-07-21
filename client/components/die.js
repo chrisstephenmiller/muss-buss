@@ -14,13 +14,14 @@ const Die = props => {
   const { die, onClick, turn } = props
   const held = !turn.bust && die.held ? 0 : 25
   const type = !turn.bust && (die.pointer || die.held) ? `green` : `red`
+  const pointer = die.pointer ? 3 : 0
 
   return (
     <div key={die.id}
       style={{ display: `flex`, flexDirection: `column`, textAlign: `center`, height: 160, marginTop: 5 }}>
       <img src={dieImages[die.value]}
         alt={`die-${die.value}`}
-        style={{ height: 125, width: 125, margin: `${held}px 5px 0px`, border: `2px solid ${type}`, borderRadius: 22 }}
+        style={{ height: 125, width: 125, margin: `${held}px 5px 0px`, border: `2px solid ${type}`, borderRadius: 22, boxShadow: `${pointer}px ${pointer}px ${pointer}px black` }}
         onClick={onClick} />
     </div>
   )

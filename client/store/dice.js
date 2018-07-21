@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { toggleTurnThunk, scorePlayersThunk, nextPlayerThunk, rollTurnThunk, endTurnThunk } from '../store';
+import { toggleTurnThunk, rollTurnThunk, endTurnThunk } from '../store';
+import socket from '../socket'
 
 const NEW_DICE = `NEW_DICE`
 const GET_DICE = `GET_DICE`
@@ -73,10 +74,13 @@ export default function (state = defaultDice, action) {
     case GET_DICE:
       return action.dice
     case TOGGLE_DIE:
+    socket.emit(`updateOut`)
       return action.dice
     case ROLL_DICE:
+    socket.emit(`updateOut`)
       return action.dice
     case PASS_DICE:
+    socket.emit(`updateOut`)
       return action.dice
     default:
       return state
