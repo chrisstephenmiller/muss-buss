@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { nextPlayerThunk, scorePlayersThunk } from '../store';
+import { nextTurnThunk, scorePlayersThunk } from '../store';
 
 const NEW_TURN = `NEW_TURN`
 const GET_TURN = `GET_TURN`
@@ -52,7 +52,7 @@ export const rollTurnThunk = gameId => async dispatch => {
     const turn = res.data
     if (turn.bust) {
       dispatch(bustTurn(turn || defaultTurn))
-      dispatch(nextPlayerThunk(gameId))
+      dispatch(nextTurnThunk(gameId))
     } else if (turn.fill) {
       dispatch(fillTurn(turn || defaultTurn))
     } else { dispatch(rollTurn(turn || defaultTurn)) }
@@ -68,7 +68,7 @@ export const endTurnThunk = gameId => async dispatch => {
     dispatch(endTurn(turn || defaultTurn))
     if (turn.stop && !turn.bust && turn.score) {
       await dispatch(scorePlayersThunk(gameId))
-      await dispatch(nextPlayerThunk(gameId))
+      await dispatch(nextTurnThunk(gameId))
     }
   } catch (err) {
     console.error(err)

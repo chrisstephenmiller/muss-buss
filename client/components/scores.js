@@ -6,15 +6,15 @@ const sortById = (dieA, dieB) => dieA.id - dieB.id
 const Scores = props => {
   const { players, game } = props
   return (
-    <div style={{ display: `flex`}}>
+    <div style={{ display: `flex`, flexDirection: `column` }}>
       {players.sort(sortById).map(player => {
         const border = player.id === game.currentPlayer ? `black` : `white`
         return (
-          <div key={player.id} style={{ display: `flex`, flexDirection: `column`, width: 88, margin: 10, padding: 5, border: `1px solid ${border}` }}>
+          <div key={player.id} style={{ display: `flex`, flexDirection: `column`, width: 300, margin: 10, padding: 5, border: `2px solid ${border}` }}>
             <span style={{ fontSize: 20, textDecoration: `underline` }}>
               {`${player.name}`}
             </span>
-            <span style={{ fontSize: 20}}>
+            <span style={{ fontSize: 20 }}>
               {`${player.score}`}
             </span>
           </div>

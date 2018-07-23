@@ -2,6 +2,8 @@ import axios from 'axios'
 import { toggleTurnThunk, rollTurnThunk, endTurnThunk } from '../store';
 import socket from '../socket'
 
+const gameUpdate = gameId => socket.emit(`updateOut`, gameId)
+
 const NEW_DICE = `NEW_DICE`
 const GET_DICE = `GET_DICE`
 const TOGGLE_DIE = `TOGGLE_DIE`
@@ -41,6 +43,7 @@ export const toggleDieThunk = die => async dispatch => {
     const res = await axios.get(`/api/games/${gameId}/dice`)
     dispatch(toggleDie(res.data || defaultDice))
     dispatch(toggleTurnThunk(gameId))
+    gameUpdate(gameId)
   } catch (err) {
     console.error(err)
   }
@@ -51,6 +54,7 @@ export const rollDiceThunk = gameId => async dispatch => {
     const res = await axios.put(`/api/games/${gameId}/dice`)
     dispatch(rollDice(res.data || defaultDice))
     dispatch(rollTurnThunk(gameId))
+    gameUpdate(gameId)
   } catch (err) {
     console.error(err)
   }
@@ -74,13 +78,10 @@ export default function (state = defaultDice, action) {
     case GET_DICE:
       return action.dice
     case TOGGLE_DIE:
-    socket.emit(`updateOut`)
       return action.dice
     case ROLL_DICE:
-    socket.emit(`updateOut`)
       return action.dice
     case PASS_DICE:
-    socket.emit(`updateOut`)
       return action.dice
     default:
       return state

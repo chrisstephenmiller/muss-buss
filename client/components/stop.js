@@ -4,19 +4,21 @@ import { passDiceThunk } from '../store';
 
 const Stop = props => {
 
-  const { nextPlayer, game } = props
+  const { nextPlayer, game, players, user } = props
+  const currentPlayer = players.find(player => player.id === game.currentPlayer)
+  const permission = currentPlayer && currentPlayer.userId === user.id
   return (
     <div style={{ display: `flex` }}>
       <button type="button"
-        style={{ height: 50, width: 100, margin: 10, borderRadius: 5, fontSize: 20, border: `1px solid black`}}
-        onClick={() => nextPlayer(game.id)}>STOP</button>
+        style={{ height: 50, width: 100, margin: 10, borderRadius: 5, fontSize: 20, border: `1px solid black` }}
+        onClick={() => { if (permission) nextPlayer(game.id) }}>STOP</button>
     </div>
   )
 }
 
 const mapState = state => {
-  const { game } = state
-  return { game }
+  const { game, players, user } = state
+  return { game, players, user }
 }
 
 const mapDispatch = dispatch => {

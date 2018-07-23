@@ -6,22 +6,24 @@ import { toggleDieThunk } from '../store'
 const sortById = (dieA, dieB) => dieA.id - dieB.id
 
 const Dice = props => {
-  const { dice, toggleDie, turn } = props
+  const { dice, toggleDie, turn, game, players, user } = props
+  const currentPlayer = players.find(player => player.id === game.currentPlayer)
+  const permission = currentPlayer && currentPlayer.userId === user.id
   return (
-      <div style={{ display: `flex` }}>
-        {dice.sort(sortById).map((die => {
-          return <Die key={die.id}
-            die={die}
-            turn={turn}
-            onClick={() => toggleDie(die)} />
-        }))}
+    <div style={{ display: `flex` }}>
+      {dice.sort(sortById).map((die => {
+        return <Die key={die.id}
+          die={die}
+          turn={turn}
+          onClick={() => { if (permission) toggleDie(die) }} />
+      }))}
     </div>
   )
 }
 
 const mapState = state => {
-  const { dice, turn } = state
-  return { dice, turn }
+  const { dice, turn, game, players, user } = state
+  return { dice, turn, game, players, user }
 }
 
 const mapDispatch = dispatch => {

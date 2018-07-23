@@ -43,7 +43,7 @@ router.put(`/:gameId`, async (req, res, next) => {
     const firstPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.min(prevPlayer, nextPlayer))
     const lastPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.max(prevPlayer, nextPlayer))
     const currentPlayer = game.currentPlayer === lastPlayer ? firstPlayer : game.currentPlayer + 1
-    const currentWinner = players.reduce((currentWinner, nextPlayer) => nextPlayer.score > currentWinner.score ? nextPlayer : currentWinner).id
+    const currentWinner = players.reduce((prevPlayer, nextPlayer) => nextPlayer.score > prevPlayer.score ? nextPlayer : prevPlayer).id
     if (turn.stop && !turn.bust || turn.bust && !turn.stop) await Game.update({ currentPlayer, currentWinner }, { where: { id } })
     const putGame = await Game.findById(id)
     res.send(putGame)

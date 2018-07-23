@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { newGameThunk } from '../store';
+import { newGameThunk, fetchUsers } from '../store';
 
 class NewGame extends Component {
 
@@ -10,25 +10,28 @@ class NewGame extends Component {
     this.state = {
       winScore: 10000,
       numPlayers: [1, 2, 3, 4],
-      name1: `Player 1`,
-      name2: `Player 2`,
-      name3: `Player 3`,
-      name4: `Player 4`,
+      user1: `Player 1`,
+      user2: `Player 2`,
+      user3: `Player 3`,
+      user4: `Player 4`,
     }
   }
 
-  update = event => {
-    const { name, value } = event.target
+  update = async event => {
+    const { name, childNodes } = event.target
+    const value = +event.target.value
     if (name === `numPlayers`) {
       const numPlayers = []
       for (let i = 1; i <= value; i++) {
         numPlayers.push(i)
-        if (!this.state[`name${i}`]) (this.setState({ [`name${i}`]: `Player ${i}` }))
+        if (!this.state[`user${i}`]) (this.setState({ [`user${i}`]: `Player ${i}` }))
       }
       for (const key in this.state) { if (key.slice(4) > value) delete this.state[key] }
       this.setState({ numPlayers })
     } else {
-      this.setState({ [name]: value })
+      const { id, text } = childNodes[value - 1]
+      await this.setState({ [`${name}${id}`]: { name: text, id: value } })
+      console.log(this.state)
     }
   }
 
@@ -36,8 +39,12 @@ class NewGame extends Component {
     event.preventDefault()
     const { newGame } = this.props
     const players = []
-    for (const key in this.state) { if (key.slice(0, 4) === `name`) players.push(this.state[key]) }
+    for (const key in this.state) { if (key.slice(0, 4) === `user`) players.push(this.state[key]) }
     newGame(this.state.winScore, players)
+  }
+
+  componentDidMount = () => {
+    this.props.getUsers()
   }
 
   componentDidUpdate = () => {
@@ -46,6 +53,7 @@ class NewGame extends Component {
   }
 
   render = () => {
+    const { users } = this.props
     return (
       <div style={{ display: `flex` }}>
         <form name="players" onChange={this.update} onSubmit={this.submit}>
@@ -61,8 +69,10 @@ class NewGame extends Component {
           </label>
           {this.state.numPlayers.map(num => {
             return (
-              <label key={`name${num}`}>
-                Name: <input type="text" name={`name${num}`} placeholder={`Player ${num}`} />
+              <label key={num}>
+                Player: <select name="user" defaultValue="">
+                  {users.map(user => <option key={user.id} id={num} value={user.id}>{user.email}</option>)}
+                </select>
               </label>
             )
           })}
@@ -76,8 +86,8 @@ class NewGame extends Component {
 }
 
 const mapState = state => {
-  const { game, dice } = state
-  return { game, dice }
+  const { game, dice, users } = state
+  return { game, dice, users }
 }
 
 const mapDispatch = dispatch => {
@@ -85,6 +95,9 @@ const mapDispatch = dispatch => {
     newGame: (winScore, players) => {
       dispatch(newGameThunk(winScore, players))
     },
+    getUsers: () => {
+      dispatch(fetchUsers())
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { newPlayersThunk, getPlayersThunk, newTurnThunk, getTurnThunk, newDiceThunk, getDiceThunk } from '../store'
+import { me, newPlayersThunk, getPlayersThunk, newTurnThunk, getTurnThunk, newDiceThunk, getDiceThunk } from '../store'
+import socket from '../socket'
 
 const NEW_GAME = `NEW_GAME`
 const GET_GAME = `GET_GAME`
@@ -7,9 +8,11 @@ const NEXT_TURN = `NEXT_TURN`
 
 const defaultGame = {}
 
+const gameUpdate = gameId => socket.emit(`updateOut`, gameId)
+
 export const newGame = game => ({ type: NEW_GAME, game })
 export const getGame = game => ({ type: GET_GAME, game })
-export const nextPlayer = game => ({ type: NEXT_TURN, game })
+export const nextTurn = game => ({ type: NEXT_TURN, game })
 
 export const newGameThunk = (winScore, players) => async dispatch => {
   try {
@@ -43,15 +46,17 @@ export const getGameThunk = gameId => async dispatch => {
     dispatch(getPlayersThunk(game.id))
     dispatch(getTurnThunk(game.id))
     dispatch(getDiceThunk(game.id))
+    dispatch(me())
   } catch (err) {
     console.error(err)
   }
 }
 
-export const nextPlayerThunk = gameId => async dispatch => {
+export const nextTurnThunk = gameId => async dispatch => {
   try {
     const res = await axios.put(`/api/games/${gameId}`)
-    dispatch(nextPlayer(res.data || defaultGame))
+    dispatch(nextTurn(res.data || defaultGame))
+    gameUpdate()
   } catch (err) {
     console.error(err)
   }

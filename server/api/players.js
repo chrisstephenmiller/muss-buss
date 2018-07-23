@@ -9,13 +9,13 @@ router.get(`/`, (req, res, next) => {
 
 router.post(`/`, async (req, res, next) => {
   try {
-    const names = req.body
-    const { id } = req.game
-    for (const name of names) { await Player.create({ gameId: id, name }) }
-    const newPlayers = await Player.findAll({ where: { gameId: id } })
+    const gameId = req.game.id
+    const players = req.body
+    for (const player of players) { await Player.create({ gameId, name: player.name, userId: player.id }) }
+    const newPlayers = await Player.findAll({ where: { gameId } })
     const playerIds = newPlayers.map(player => player.id)
     const currentPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.min(prevPlayer, nextPlayer))
-    Game.update({ currentPlayer }, { where: { id } })
+    Game.update({ currentPlayer }, { where: { id: gameId } })
     res.send(newPlayers)
   }
   catch (err) { next(err) }

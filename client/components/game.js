@@ -11,7 +11,9 @@ class Game extends Component {
     const { getGame, match } = this.props
     const gameId = match.params.id
     getGame(gameId)
-    socket.on(`updateIn`, () => getGame(gameId))
+    socket.on(`updateIn`, () => {
+      getGame(gameId)
+    })
   }
 
   render() {
