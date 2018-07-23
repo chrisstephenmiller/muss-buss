@@ -10,10 +10,10 @@ class NewGame extends Component {
     this.state = {
       winScore: 10000,
       numPlayers: [1, 2, 3, 4],
-      user1: `Player 1`,
-      user2: `Player 2`,
-      user3: `Player 3`,
-      user4: `Player 4`,
+      user1: ``,
+      user2: ``,
+      user3: ``,
+      user4: ``,
     }
   }
 
@@ -24,19 +24,20 @@ class NewGame extends Component {
       const numPlayers = []
       for (let i = 1; i <= value; i++) {
         numPlayers.push(i)
-        if (!this.state[`user${i}`]) (this.setState({ [`user${i}`]: `Player ${i}` }))
+        if (!this.state[`user${i}`]) (this.setState({ [`user${i}`]: `` }))
       }
       for (const key in this.state) { if (key.slice(4) > value) delete this.state[key] }
       this.setState({ numPlayers })
     } else {
       const { id, text } = childNodes[value - 1]
       await this.setState({ [`${name}${id}`]: { name: text, id: value } })
-      console.log(this.state)
     }
+    console.log(this.state)
   }
 
   submit = event => {
     event.preventDefault()
+    if (Object.values(this.state).some(value => value === ``)) return
     const { newGame } = this.props
     const players = []
     for (const key in this.state) { if (key.slice(0, 4) === `user`) players.push(this.state[key]) }

@@ -31,7 +31,7 @@ export const newGameThunk = (winScore, players) => async dispatch => {
 export const firstTurnThunk = gameId => async dispatch => {
   try {
     const res = await axios.patch(`/api/games/${gameId}`,)
-    dispatch(nextPlayer(res.data || defaultGame))
+    dispatch(nextTurn(res.data || defaultGame))
   } catch (err) {
     console.error(err)
   }
