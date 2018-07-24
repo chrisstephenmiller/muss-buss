@@ -10,10 +10,10 @@ class NewGame extends Component {
     this.state = {
       winScore: 10000,
       numPlayers: [1, 2, 3, 4],
-      user1: ``,
-      user2: ``,
-      user3: ``,
-      user4: ``,
+      user1: {name: "chris.stephen.miller@gmail.com", id: 2},
+      user2: {name: "csmiller4567@gmail.com", id: 1},
+      user3: {name: "chris.stephen.miller@gmail.com", id: 2},
+      user4: {name: "csmiller4567@gmail.com", id: 1},
     }
   }
 
@@ -32,12 +32,10 @@ class NewGame extends Component {
       const { id, text } = childNodes[value - 1]
       await this.setState({ [`${name}${id}`]: { name: text, id: value } })
     }
-    console.log(this.state)
   }
 
   submit = event => {
     event.preventDefault()
-    if (Object.values(this.state).some(value => value === ``)) return
     const { newGame } = this.props
     const players = []
     for (const key in this.state) { if (key.slice(0, 4) === `user`) players.push(this.state[key]) }
@@ -71,7 +69,7 @@ class NewGame extends Component {
           {this.state.numPlayers.map(num => {
             return (
               <label key={num}>
-                Player: <select name="user" defaultValue="">
+                Player: <select name="user">
                   {users.map(user => <option key={user.id} id={num} value={user.id}>{user.email}</option>)}
                 </select>
               </label>
