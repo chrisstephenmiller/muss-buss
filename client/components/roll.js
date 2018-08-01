@@ -5,7 +5,8 @@ import { rollDiceThunk, newDiceThunk } from '../store';
 const Roll = props => {
   const { game, dice, players, user, rollDice } = props
   const currentPlayer = players.find(player => player.id === game.currentPlayer)
-  const permission = currentPlayer && currentPlayer.userId === user.id
+  // const permission = currentPlayer && currentPlayer.userId === user.id
+  const permission = true
   return (
     <div style={{ display: `flex` }}>
       <button type="button"

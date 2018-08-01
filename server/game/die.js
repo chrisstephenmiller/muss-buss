@@ -8,7 +8,6 @@ class Die {
         this.scored = false
         this.pointer = false
         this.gameId = gameId
-        this.turnId = gameId
     }
 }
 

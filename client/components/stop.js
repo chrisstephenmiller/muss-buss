@@ -6,7 +6,8 @@ const Stop = props => {
 
   const { nextPlayer, game, players, user } = props
   const currentPlayer = players.find(player => player.id === game.currentPlayer)
-  const permission = currentPlayer && currentPlayer.userId === user.id
+  // const permission = currentPlayer && currentPlayer.userId === user.id
+  const permission = true
   return (
     <div style={{ display: `flex` }}>
       <button type="button"

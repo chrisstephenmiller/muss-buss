@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Dice, Roll, Stop, Score, Turn, Scores } from '../components'
+import { Dice, Roll, Stop, Score, Scores, Card } from '../components'
 import { getGameThunk } from '../store'
 import socket from '../socket'
 
@@ -19,6 +19,7 @@ class Game extends Component {
   render() {
     return (
       <div id="game">
+      <Card />
         <Dice />
         <Score />
         <div style={{ display: `inline-flex` }}>

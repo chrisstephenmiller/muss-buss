@@ -8,7 +8,8 @@ const sortById = (dieA, dieB) => dieA.id - dieB.id
 const Dice = props => {
   const { dice, toggleDie, turn, game, players, user } = props
   const currentPlayer = players.find(player => player.id === game.currentPlayer)
-  const permission = currentPlayer && currentPlayer.userId === user.id
+  // const permission = currentPlayer && currentPlayer.userId === user.id
+  const permission = true
   return (
     <div style={{ display: `flex` }}>
       {dice.sort(sortById).map((die => {
