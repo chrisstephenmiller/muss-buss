@@ -1,51 +1,36 @@
 import axios from 'axios'
 
-/**
- * ACTION TYPES
- */
-const GET_CARD = 'GET_CARD'
-const NEW_CARD = 'NEW_CARD'
+const NEW_CARD = `NEW_CARD`
+const GET_CARD = `GET_CARD`
 
-/**
- * INITIAL STATE
- */
 const defaultCard = []
 
-/**
- * ACTION CREATORS
- */
-const getCard = card => ({type: GET_CARD, card})
-const newCard = card => ({type: NEW_CARD, card})
+export const newCard = card => ({type: NEW_CARD, card})
+export const getCard = card => ({type: GET_CARD, card})
 
-/**
- * THUNK CREATORS
- */
-export const fetchCard = () => async dispatch => {
+export const newCardThunk = (gameId, card) => async dispatch => {
   try {
-    // const res = await axios.get('/api/users')
-    dispatch(getCard(res.data || defaultCard))
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-export const fipCard = () => async dispatch => {
-  try {
-    // const res = await axios.get('/api/users')
+    const res = await axios.post(`/api/games/${gameId}/card`, card)
     dispatch(newCard(res.data || defaultCard))
   } catch (err) {
     console.error(err)
   }
 }
 
-/**
- * REDUCER
- */
+export const getCardThunk = gameId => async dispatch => {
+  try {
+    const res = await axios.get(`/api/games/${gameId}/card`)
+    dispatch(getCard(res.data || defaultCard))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
 export default function(state = defaultCard, action) {
   switch (action.type) {
-    case GET_CARD:
-      return action.card
     case NEW_CARD:
+      return action.card
+    case GET_CARD:
       return action.card
     default:
       return state

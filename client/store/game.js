@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { me, newPlayersThunk, getPlayersThunk, newTurnThunk, getTurnThunk, newDiceThunk, getDiceThunk } from '../store'
+import { me, newPlayersThunk, getPlayersThunk, newTurnThunk, getTurnThunk, newDiceThunk, getDiceThunk, newCardThunk, getCardThunk } from '../store'
 import socket from '../socket'
 
 const NEW_GAME = `NEW_GAME`
@@ -19,6 +19,7 @@ export const newGameThunk = (winScore, players) => async dispatch => {
     const res = await axios.post(`/api/games`, winScore)
     const game = res.data
     await dispatch(newGame(game || defaultGame))
+    await dispatch(newCardThunk(game.id))
     await dispatch(newPlayersThunk(game.id, players))
     await dispatch(newTurnThunk(game.id))
     await dispatch(newDiceThunk(game.id))
@@ -43,6 +44,7 @@ export const getGameThunk = gameId => async dispatch => {
     const res = await axios.get(`/api/games/${gameId}`)
     const game = res.data
     dispatch(getGame(game || defaultGame))
+    dispatch(getCardThunk(game.id))
     dispatch(getPlayersThunk(game.id))
     dispatch(getTurnThunk(game.id))
     dispatch(getDiceThunk(game.id))

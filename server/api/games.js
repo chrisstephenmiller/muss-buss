@@ -3,6 +3,7 @@ const Game = require('../db/models/game')
 const Player = require('../db/models/player')
 const Turn = require('../db/models/turn')
 const Die = require('../db/models/die')
+const Deck = require('../db/models/deck')
 
 router.get(`/:gameId`, async (req, res, next) => {
   try {
@@ -53,7 +54,7 @@ router.put(`/:gameId`, async (req, res, next) => {
 
 router.param(`gameId`, async (req, res, next, gameId) => {
   try {
-    const game = await Game.findById(gameId, { include: [Turn, Player, { model: Die, as: `dice` }] })
+    const game = await Game.findById(gameId, { include: [Turn, Player, Deck, { model: Die, as: `dice` }] })
     req.game = game.get({ plain: true })
     next()
   }
@@ -63,6 +64,7 @@ router.param(`gameId`, async (req, res, next, gameId) => {
 router.use('/:gameId/players', require('./players'))
 router.use('/:gameId/turn', require('./turn'))
 router.use('/:gameId/dice', require('./dice'))
+router.use('/:gameId/card', require('./card'))
 
 
 module.exports = router

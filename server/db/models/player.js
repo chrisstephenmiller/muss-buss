@@ -12,7 +12,7 @@ const Player = db.define('player', {
         defaultValue: 0,
         allowNull: false
     },
-    
+
 })
 
 module.exports = Player
