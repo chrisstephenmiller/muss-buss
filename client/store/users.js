@@ -1,5 +1,4 @@
 import axios from 'axios'
-import history from '../history'
 
 /**
  * ACTION TYPES
@@ -22,7 +21,7 @@ const getUsers = users => ({type: GET_USERS, users})
 export const fetchUsers = () => async dispatch => {
   try {
     const res = await axios.get('/api/users')
-    dispatch(getUsers(res.data || defaultUser))
+    dispatch(getUsers(res.data || defaultUsers))
   } catch (err) {
     console.error(err)
   }

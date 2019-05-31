@@ -1,40 +1,34 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { Die } from '../components'
-import { toggleDieThunk } from '../store'
-
-const sortById = (dieA, dieB) => dieA.id - dieB.id
+import { holdDiceThunk } from '../store';
 
 const Dice = props => {
-  const { dice, toggleDie, turn, game, players, user } = props
-  const currentPlayer = players.find(player => player.id === game.currentPlayer)
-  // const permission = currentPlayer && currentPlayer.userId === user.id
-  const permission = true
+  const { holdDice, dice, match } = props
+  const gameId = match.params.id
   return (
     <div style={{ display: `flex` }}>
-      {dice.sort(sortById).map((die => {
+      {dice.map((die => {
         return <Die key={die.id}
-          die={die}
-          turn={turn}
-          onClick={() => { if (permission) toggleDie(die) }} />
+          holdDice={() => holdDice(gameId, die.id)}
+          die={die} />
       }))}
     </div>
   )
 }
 
 const mapState = state => {
-  const { dice, turn, game, players, user } = state
-  return { dice, turn, game, players, user }
+  const { game } = state
+  return { game }
 }
 
 const mapDispatch = dispatch => {
   return {
-    toggleDie: die => {
-      if (die.pointer) {
-        dispatch(toggleDieThunk(die))
-      }
-    },
+    holdDice: (gameId, dieId) => {
+      dispatch(holdDiceThunk(gameId, dieId))
+    }
   }
 }
 
-export default connect(mapState, mapDispatch)(Dice)
+export default withRouter(connect(mapState, mapDispatch)(Dice))

@@ -9,11 +9,9 @@ class NewGame extends Component {
 
     this.state = {
       winScore: 10000,
-      numPlayers: [1, 2, 3, 4],
-      user1: {name: "chris.stephen.miller@gmail.com", id: 2},
-      user2: {name: "csmiller4567@gmail.com", id: 1},
-      user3: {name: "chris.stephen.miller@gmail.com", id: 2},
-      user4: {name: "csmiller4567@gmail.com", id: 1},
+      numPlayers: [1, 2],
+      user2: "csmiller4567@gmail.com",
+      user1: "csmiller4567@gmail.com",
     }
   }
 
@@ -46,23 +44,18 @@ class NewGame extends Component {
     this.props.getUsers()
   }
 
-  componentDidUpdate = () => {
-    const { game, dice, history } = this.props
-    if (dice.length) history.push(`/games/${game.id}`)
-  }
-
   render = () => {
     const { users } = this.props
     return (
       <div style={{ display: `flex` }}>
-        <form name="players" onChange={this.update} onSubmit={this.submit}>
+        <form name="game" onChange={this.update} onSubmit={this.submit}>
           <label>
             Points to win: <select name="score" defaultValue="10000">
               {[`5000`, `7500`, `10000`, `20000`].map(score => <option key={score} value={score}>{score}</option>)}
             </select>
           </label>
           <label>
-            Number of players: <select name="numPlayers" defaultValue="4">
+            Number of players: <select name="numPlayers" defaultValue="2">
               {[2, 3, 4, 5, 6, 7, 8].map(num => <option key={num} value={num}>{num}</option>)}
             </select>
           </label>
@@ -85,8 +78,8 @@ class NewGame extends Component {
 }
 
 const mapState = state => {
-  const { game, dice, users } = state
-  return { game, dice, users }
+  const { users } = state
+  return { users }
 }
 
 const mapDispatch = dispatch => {

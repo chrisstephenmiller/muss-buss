@@ -2,20 +2,9 @@ const db = require('../db')
 const Sequelize = require('sequelize')
 
 const Game = db.define('game', {
-    winScore: {
-        type: Sequelize.INTEGER,
-        defaultValue: 10000,
+    game: {
+        type: Sequelize.JSONB,
         allowNull: false
-    },
-    currentPlayer: {
-        type: Sequelize.INTEGER,
-        defaultValue: 1,
-        allowNull: false,
-    },
-    currentWinner: {
-        type: Sequelize.INTEGER,
-        defaultValue: 1,
-        allowNull: false,
     },
 })
 

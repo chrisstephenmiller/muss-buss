@@ -1,64 +1,93 @@
 import axios from 'axios'
-import { me, newPlayersThunk, getPlayersThunk, newTurnThunk, getTurnThunk, newDiceThunk, getDiceThunk, newCardThunk, getCardThunk } from '../store'
-import socket from '../socket'
 
 const NEW_GAME = `NEW_GAME`
 const GET_GAME = `GET_GAME`
-const NEXT_TURN = `NEXT_TURN`
+const DRAW_CARD = `DRAW_CARD`
+const ROLL_DICE = `ROLL_DICE`
+const HOLD_DICE = `HOLD_DICE`
+const STOP_TURN = `STOP_TURN`
+const PASS_TURN = `PASS_TURN`
 
-const defaultGame = {}
-
-const gameUpdate = gameId => socket.emit(`updateOut`, gameId)
+const defaultGame = {
+  players: [{id: 0, turns: [{cards: [{rolls: [{dice: []}]}]}]}],
+  currentPlayer: 0,
+  winScore: 0,
+  prevTurn: null
+}
 
 export const newGame = game => ({ type: NEW_GAME, game })
 export const getGame = game => ({ type: GET_GAME, game })
-export const nextTurn = game => ({ type: NEXT_TURN, game })
+export const drawCard = game => ({ type: DRAW_CARD, game })
+export const rollDice = game => ({ type: ROLL_DICE, game })
+export const holdDice = game => ({ type: HOLD_DICE, game })
+export const stopTurn = game => ({ type: STOP_TURN, game })
+export const passTurn = game => ({ type: PASS_TURN, game })
 
 export const newGameThunk = (winScore, players) => async dispatch => {
   try {
-    const res = await axios.post(`/api/games`, winScore)
+    const res = await axios.post(`/api/games`, { winScore, players })
     const game = res.data
     await dispatch(newGame(game || defaultGame))
-    await dispatch(newCardThunk(game.id))
-    await dispatch(newPlayersThunk(game.id, players))
-    await dispatch(newTurnThunk(game.id))
-    await dispatch(newDiceThunk(game.id))
-    dispatch(firstTurnThunk(game.id))
   } catch (err) {
     console.error(err)
   }
 }
-
-export const firstTurnThunk = gameId => async dispatch => {
-  try {
-    const res = await axios.patch(`/api/games/${gameId}`,)
-    dispatch(nextTurn(res.data || defaultGame))
-  } catch (err) {
-    console.error(err)
-  }
-}
-
 
 export const getGameThunk = gameId => async dispatch => {
   try {
     const res = await axios.get(`/api/games/${gameId}`)
     const game = res.data
     dispatch(getGame(game || defaultGame))
-    dispatch(getCardThunk(game.id))
-    dispatch(getPlayersThunk(game.id))
-    dispatch(getTurnThunk(game.id))
-    dispatch(getDiceThunk(game.id))
-    dispatch(me())
   } catch (err) {
     console.error(err)
   }
 }
 
-export const nextTurnThunk = gameId => async dispatch => {
+export const drawCardThunk = gameId => async dispatch => {
   try {
-    const res = await axios.put(`/api/games/${gameId}`)
-    dispatch(nextTurn(res.data || defaultGame))
-    gameUpdate()
+    const res = await axios.get(`/api/games/${gameId}/draw`)
+    const game = res.data
+    dispatch(drawCard(game || defaultGame))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const rollDiceThunk = gameId => async dispatch => {
+  try {
+    const res = await axios.get(`/api/games/${gameId}/roll`)
+    const game = res.data
+    dispatch(rollDice(game || defaultGame))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const holdDiceThunk = (gameId, dieId) => async dispatch => {
+  try {
+    const res = await axios.get(`/api/games/${gameId}/hold/${dieId}`)
+    const game = res.data
+    dispatch(holdDice(game || defaultGame))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const stopTurnThunk = gameId => async dispatch => {
+  try {
+    const res = await axios.get(`/api/games/${gameId}/stop`)
+    const game = res.data
+    dispatch(stopTurn(game || defaultGame))
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+export const passTurnThunk = gameId => async dispatch => {
+  try {
+    const res = await axios.get(`/api/games/${gameId}/pass`)
+    const game = res.data
+    dispatch(passTurn(game || defaultGame))
   } catch (err) {
     console.error(err)
   }
@@ -70,7 +99,15 @@ export default function (state = defaultGame, action) {
       return action.game
     case GET_GAME:
       return action.game
-    case NEXT_TURN:
+    case DRAW_CARD:
+      return action.game
+    case STOP_TURN:
+      return action.game
+    case ROLL_DICE:
+      return action.game
+    case HOLD_DICE:
+      return action.game
+    case PASS_TURN:
       return action.game
     default:
       return state

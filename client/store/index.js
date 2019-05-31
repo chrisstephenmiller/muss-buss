@@ -5,12 +5,8 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import user from './user'
 import users from './users'
 import game from './game'
-import turn from './turn'
-import card from './card'
-import dice from './dice'
-import players from './players'
 
-const reducer = combineReducers({ user, users, game, players, turn, dice, card})
+const reducer = combineReducers({ user, users, game})
 const middleware = composeWithDevTools(applyMiddleware(thunkMiddleware, createLogger({ collapsed: true })))
 const store = createStore(reducer, middleware)
 
@@ -18,7 +14,3 @@ export default store
 export * from './user'
 export * from './users'
 export * from './game'
-export * from './dice'
-export * from './players'
-export * from './turn'
-export * from './card'

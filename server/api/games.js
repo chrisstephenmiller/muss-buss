@@ -1,70 +1,59 @@
 const router = require('express').Router()
-const Game = require('../db/models/game')
-const Player = require('../db/models/player')
-const Turn = require('../db/models/turn')
-const Die = require('../db/models/die')
-const Deck = require('../db/models/deck')
+const Game = require('../game')
+const GameDb = require('../db/models/').Game
 
-router.get(`/:gameId`, async (req, res, next) => {
-  try {
-    const gameId = req.game.id
-    const game = await Game.findById(gameId)
-    res.send(game)
-  }
-  catch (err) { next(err) }
-})
-
-router.post(`/`, async (req, res, next) => {
-  try {
-    const { winScore } = req.body
-    const newGame = await Game.create({ winScore })
-    res.send(newGame)
-  }
-  catch (err) { next(err) }
-})
-
-router.patch(`/:gameId`, async (req, res, next) => {
-  try {
-    const { game } = req
-    const { id, players } = game
-    const playerIds = players.map(player => player.id)
-    const firstPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.min(prevPlayer, nextPlayer))
-    await Game.update({ currentPlayer: firstPlayer }, { where: { id } })
-    const putGame = await Game.findById(id)
-    res.send(putGame)
-  }
-  catch (err) { next(err) }
-})
-
-router.put(`/:gameId`, async (req, res, next) => {
-  try {
-    const { game } = req
-    const { id, turn, players } = game
-    const playerIds = players.map(player => player.id)
-    const firstPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.min(prevPlayer, nextPlayer))
-    const lastPlayer = playerIds.reduce((prevPlayer, nextPlayer) => Math.max(prevPlayer, nextPlayer))
-    const currentPlayer = game.currentPlayer === lastPlayer ? firstPlayer : game.currentPlayer + 1
-    const currentWinner = players.reduce((prevPlayer, nextPlayer) => nextPlayer.score > prevPlayer.score ? nextPlayer : prevPlayer).id
-    if (turn.stop && !turn.bust || turn.bust && !turn.stop) await Game.update({ currentPlayer, currentWinner }, { where: { id } })
-    const putGame = await Game.findById(id)
-    res.send(putGame)
-  }
+router.post(`/`, (req, res, next) => {
+  const { winScore, players } = req.body
+  const game = new Game(null, winScore, players)
+  GameDb.create({ game })
+  try { res.send(game) }
   catch (err) { next(err) }
 })
 
 router.param(`gameId`, async (req, res, next, gameId) => {
   try {
-    const game = await Game.findById(gameId, { include: [Turn, Player, Deck, { model: Die, as: `dice` }] })
-    req.game = game.get({ plain: true })
+    req.gameId = gameId
+    const data = await GameDb.findById(gameId, { raw: true })
+    req.game = data.game
     next()
   }
   catch (err) { next(err) }
 })
 
-router.use('/:gameId/players', require('./players'))
-router.use('/:gameId/turn', require('./turn'))
-router.use('/:gameId/dice', require('./dice'))
-router.use('/:gameId/card', require('./card'))
+router.param(`action`, (req, res, next, action) => {
+  try {
+    req.action = action
+    next()
+  }
+  catch (err) { next(err) }
+})
 
+router.get(`/:gameId`, (req, res, next) => {
+  try { res.send(req.game) }
+  catch (err) { next(err) }
+})
+
+router.get(`/:gameId/:action/`, (req, res, next) => {
+  try {
+    const game = new Game(req.game)
+    if (req.action === 'draw') game.drawCard()
+    if (req.action === 'roll') game.rollDice()
+    if (req.action === 'stop') game.stopTurn()
+    if (req.action === 'pass') game.passTurn()
+    GameDb.update({ game }, { where: { id: req.gameId }})
+    res.send(game)
+  }
+  catch (err) { next(err) }
+})
+
+router.get(`/:gameId/hold/:holdId`, (req, res, next) => {
+  try {
+    const game = new Game(req.game)
+    game.holdPointers(Number(req.params.holdId))
+    GameDb.update({ game }, { where: { id: req.gameId }})
+    res.send(game)
+  }
+  catch (err) { next(err) }
+})
 
 module.exports = router
