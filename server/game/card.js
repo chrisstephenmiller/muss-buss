@@ -20,8 +20,8 @@ class Card {
 
     _holdPointers(diceToHold) {
         this._roll()._holdPointers(diceToHold)
-        this._calcScore()
         if (this.fill) this._roll().dice.forEach(die => { die.live = false })
+        this._calcScore()
     }
 
     _calcFillorBust() {

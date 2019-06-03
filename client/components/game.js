@@ -13,21 +13,14 @@ class Game extends Component {
   }
 
   render() {
-    const { game, rollDice, drawCard, stopTurn, passTurn, match } = this.props
-    const { players } = game
-    const currentPlayer = players[game.currentPlayer]
-    const turn = currentPlayer.turns[0]
-    const card = turn && turn.cards[0]
-    const roll = card && card.rolls[0]
-    const dice = roll ? roll.dice : []
+    const { game, match, rollDice, drawCard, stopTurn, passTurn } = this.props
     const gameId = match.params.id
-    const lastPlayer = players[(game.currentPlayer + players.length - 1) % players.length]
-    if (lastPlayer.turns.length > 1 && lastPlayer.turns[1].cards[0].bust && !card) console.log(`PLAYER ${lastPlayer.id} BUSTED`)
+    const { players, dice } = game
     return (
       <div id="game">
         <Scores players={players} />
         <Dice dice={dice} />
-        <h1 onClick={() => rollDice(gameId)}>ROLL</h1>
+        <h1 onClick={() => rollDice(gameId, game)}>ROLL</h1>
         <h1 onClick={() => drawCard(gameId)}>DRAW</h1>
         <h1 onClick={() => stopTurn(gameId)}>STOP</h1>
         <h1 onClick={() => passTurn(gameId)}>PASS</h1>
@@ -43,21 +36,11 @@ const mapState = state => {
 
 const mapDispatch = dispatch => {
   return {
-    getGame: gameId => {
-      dispatch(getGameThunk(gameId))
-    },
-    rollDice: gameId => {
-      dispatch(rollDiceThunk(gameId))
-    },
-    drawCard: gameId => {
-      dispatch(drawCardThunk(gameId))
-    },
-    stopTurn: gameId => {
-      dispatch(stopTurnThunk(gameId))
-    },
-    passTurn: gameId => {
-      dispatch(passTurnThunk(gameId))
-    }
+    getGame: gameId => dispatch(getGameThunk(gameId)),
+    rollDice: (gameId, game) => dispatch(rollDiceThunk(gameId, game)),
+    drawCard: gameId => dispatch(drawCardThunk(gameId)),
+    stopTurn: gameId => dispatch(stopTurnThunk(gameId)),
+    passTurn: gameId => dispatch(passTurnThunk(gameId))
   }
 }
 

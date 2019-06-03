@@ -1,23 +1,25 @@
 const Player = require('./player')
+const Turn = require('./turn')
 
 class Game {
     constructor(game, winTotal, playerNames) {
         if (game) {
             for (const key of Object.keys(game)) this[key] = game[key]
-            this.players[this.currentPlayer] = new Player(this.players[this.currentPlayer])
+            if (this.prevTurn) this.prevTurn = new Turn(this.prevTurn)
+            this.players = this.players.map(player => new Player(player))
         } else {
             this.winTotal = winTotal
             this.currentPlayer = 0
             this.players = playerNames.map((name, idx) => new Player(null, name, idx))
-            this.prevScore = 0
-            this.prevDice = null
+            this.prevTurn = null
         }
     }
 
     drawCard() {
-        if (this._invalidDraw()) console.log('Invalid draw.')
-        else this._player()._drawCard(this.prevScore)
-        this.prevScore = 0
+        if (this.prevTurn && this.prevTurn._card().bust) this.prevTurn._roll().dice = null
+        if (this._invalidDraw()) this.error = ('Invalid draw.')
+        else this._player()._drawCard(this.prevTurn && this.prevTurn.score)
+        if (this.prevTurn) this.prevTurn.score = 0
         return this
     }
 
@@ -29,14 +31,13 @@ class Game {
     }
 
     rollDice() {
-        if (this._invalidRoll()) console.log('Invalid roll.')
+        if (this._invalidRoll()) this.error = 'Invalid roll.'
         else {
-            this._card()._rollDice(this.prevDice)
-            this.prevDice = null
+            this._card()._rollDice(this.prevTurn && this.prevTurn._roll().dice)
+            this.prevTurn = null
             if (this._card().fill) this.holdPointers()
             if (this._card().bust) {
                 this._turn().score = 0
-                this._roll().dice = null
                 this.stopTurn()
             }
         }
@@ -44,7 +45,7 @@ class Game {
     }
 
     _invalidRoll() {
-        return !this._card() || this._card().fill || this._invalidPointers()
+        return !this._card() || this._card().fill || !this._card().bust && this._invalidPointers()
     }
 
     _invalidPointers() {
@@ -55,18 +56,17 @@ class Game {
             const straight = heldDice.length === dice.length
             const heldOffDice = heldDice.filter(die => [2, 3, 4, 6].includes(die.value))
             const heldOffTotals = Array(6).fill(0)
-            heldOffDice.forEach(die => heldOffTotals[die.value - 1]++ )
+            heldOffDice.forEach(die => heldOffTotals[die.value - 1]++)
             const invalidHold = heldOffTotals.some(total => total > 0 && total < 3) && !straight
-            if (invalidHold) console.log('Invalid pointers.')
             return noneHeld || invalidHold
         }
     }
 
     holdPointers(dieId) {
-        if (this._invalidHold()) console.log('Invalid hold.')
+        if (this._invalidHold()) this.error = ('Invalid hold.')
         else {
             const dieValue = dieId >= 0 ? this._roll().dice[dieId].value : null
-            const diceToHold = [1,5].includes(dieValue) ? [dieId] : this._roll().dice.filter(die => die.value === dieValue).map(die => die.id)
+            const diceToHold = [1, 5].includes(dieValue) ? [dieId] : this._roll().dice.filter(die => die.value === dieValue).map(die => die.id)
             this._player()._holdPointers(dieValue ? diceToHold : [])
         }
         return this
@@ -78,10 +78,13 @@ class Game {
     }
 
     stopTurn() {
-        if (this._invalidStop()) console.log('Invalid stop.')
+        if (this._invalidStop()) this.error = ('Invalid stop.')
         else {
-            this.prevScore = this._turn().score
-            this.prevDice = this._roll().dice
+            this._roll().dice.forEach(die => {
+                die.pointer = die.held && !this._card().bust
+                die.live = false
+             })
+            this.prevTurn = this._turn()
             this._player().turns.unshift(null)
             this.currentPlayer = ++this.currentPlayer % this.players.length
             this._calcScores()
@@ -95,16 +98,14 @@ class Game {
     }
 
     passTurn() {
-        if (this._invalidPass()) console.log('Invalid pass.')
-        else {
-            this.prevScore = 0
-            this.prevDice = null
-        }
+        if (this._invalidPass()) this.error = ('Invalid pass.')
+        else this.prevTurn = null
     }
 
     _invalidPass() {
+        const busted = this.prevTurn && this.prevTurn._card().bust
         const drewCard = this._card()
-        return drewCard
+        return drewCard || busted
     }
 
     _player() { return this.players[this.currentPlayer] }

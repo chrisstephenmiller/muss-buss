@@ -9,10 +9,8 @@ const STOP_TURN = `STOP_TURN`
 const PASS_TURN = `PASS_TURN`
 
 const defaultGame = {
-  players: [{id: 0, turns: [{cards: [{rolls: [{dice: []}]}]}]}],
-  currentPlayer: 0,
-  winScore: 0,
-  prevTurn: null
+  players: [],
+  dice: []
 }
 
 export const newGame = game => ({ type: NEW_GAME, game })
@@ -57,7 +55,13 @@ export const rollDiceThunk = gameId => async dispatch => {
   try {
     const res = await axios.get(`/api/games/${gameId}/roll`)
     const game = res.data
-    dispatch(rollDice(game || defaultGame))
+    const rolling = { players: game.players, dice: game.dice.map(die => { 
+      const newDie = {...die}
+      die.held ? newDie.pointer = true  : newDie.value = newDie.pointer = newDie.live = 0
+      return newDie
+    })}
+    dispatch(rollDice(rolling || defaultGame))
+    setTimeout(() => dispatch(getGame(game || defaultGame)), 500)
   } catch (err) {
     console.error(err)
   }
