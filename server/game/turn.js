@@ -12,9 +12,9 @@ class Turn {
         }
     }
 
-    _drawCard(prevScore) {
+    _drawCard(cardType, prevScore) {
         this.inheritance = prevScore
-        this.cards.unshift(new Card)
+        this.cards.unshift(new Card(null, cardType))
         this._calcScore()
     }
 

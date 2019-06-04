@@ -15,11 +15,13 @@ class Game extends Component {
   render() {
     const { game, match, rollDice, drawCard, stopTurn, passTurn } = this.props
     const gameId = match.params.id
-    const { players, dice } = game
+    const { players, dice, card } = game
+    console.log(card)
     return (
       <div id="game">
         <Scores players={players} />
         <Dice dice={dice} />
+        <h1>{card && card.type}</h1>
         <h1 onClick={() => rollDice(gameId, game)}>ROLL</h1>
         <h1 onClick={() => drawCard(gameId)}>DRAW</h1>
         <h1 onClick={() => stopTurn(gameId)}>STOP</h1>

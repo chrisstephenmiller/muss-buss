@@ -55,13 +55,16 @@ export const rollDiceThunk = gameId => async dispatch => {
   try {
     const res = await axios.get(`/api/games/${gameId}/roll`)
     const game = res.data
-    const rolling = { players: game.players, dice: game.dice.map(die => { 
-      const newDie = {...die}
-      die.held ? newDie.pointer = true  : newDie.value = newDie.pointer = newDie.live = 0
-      return newDie
-    })}
+    const rolling = {
+      players: game.players, dice: game.dice.map(die => {
+        const newDie = { ...die }
+        die.held ? newDie.pointer = true : newDie.value = newDie.pointer = newDie.live = 0
+        
+        return newDie
+      })
+    }
     dispatch(rollDice(rolling || defaultGame))
-    setTimeout(() => dispatch(getGame(game || defaultGame)), 500)
+    setTimeout(() => dispatch(getGame(game || defaultGame)), 300)
   } catch (err) {
     console.error(err)
   }

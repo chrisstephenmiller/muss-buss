@@ -10,7 +10,7 @@ const gameState = game => {
   const roll = card && card.rolls[0]
   const prevDice = game.prevTurn && game.prevTurn._roll().dice ? game.prevTurn._roll().dice : []
   const dice = roll ? roll.dice : prevDice
-  return { players, dice }
+  return { players, dice, card }
 }
 
 router.post(`/`, (req, res, next) => {
@@ -52,7 +52,10 @@ router.get(`/:gameId/:action/`, (req, res, next) => {
     if (req.action === 'roll') game.rollDice()
     if (req.action === 'stop') game.stopTurn()
     if (req.action === 'pass') game.passTurn()
-    if (game.error) res.status(403).send(game.error)
+    if (game.error) {
+      console.log(game.error)
+      res.status(403).send(game.error)
+    }
     else {
       GameDb.update({ game }, { where: { id: req.gameId } })
       res.send(gameState(game))
@@ -65,8 +68,14 @@ router.get(`/:gameId/hold/:holdId`, (req, res, next) => {
   try {
     const game = new Game(req.game)
     game.holdPointers(Number(req.params.holdId))
-    GameDb.update({ game }, { where: { id: req.gameId } })
-    res.send(gameState(game))
+    if (game.error) {
+      console.log(game.error)
+      res.status(403).send(game.error)
+    }
+    else {
+      GameDb.update({ game }, { where: { id: req.gameId } })
+      res.send(gameState(game))
+    }
   }
   catch (err) { next(err) }
 })

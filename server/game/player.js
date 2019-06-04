@@ -13,10 +13,10 @@ class Player {
         this._calcScore()
     }
 
-    _drawCard(prevScore) {
+    _drawCard(cardType, prevScore) {
         if (!this._turn()) this.turns.unshift(new Turn)
         this.turns = this.turns.filter(Boolean)
-        this._turn()._drawCard(prevScore)
+        this._turn()._drawCard(cardType, prevScore)
         this._calcScore()
     }
 
