@@ -15,14 +15,13 @@ class Game extends Component {
   render() {
     const { game, match, rollDice, drawCard, stopTurn, passTurn } = this.props
     const gameId = match.params.id
-    const { players, dice, card } = game
-    console.log(card)
+    const { players, dice, card, currentPlayer } = game
     return (
       <div id="game">
-        <Scores players={players} />
+        <Scores players={players} currentPlayer={currentPlayer} />
         <Dice dice={dice} />
-        <h1>{card && card.type}</h1>
-        <h1 onClick={() => rollDice(gameId, game)}>ROLL</h1>
+        <h1>{card ? card.type: 'No Card'} </h1>
+        <h1 onClick={() => rollDice(gameId)}>ROLL</h1>
         <h1 onClick={() => drawCard(gameId)}>DRAW</h1>
         <h1 onClick={() => stopTurn(gameId)}>STOP</h1>
         <h1 onClick={() => passTurn(gameId)}>PASS</h1>
@@ -39,7 +38,7 @@ const mapState = state => {
 const mapDispatch = dispatch => {
   return {
     getGame: gameId => dispatch(getGameThunk(gameId)),
-    rollDice: (gameId, game) => dispatch(rollDiceThunk(gameId, game)),
+    rollDice: gameId => dispatch(rollDiceThunk(gameId)),
     drawCard: gameId => dispatch(drawCardThunk(gameId)),
     stopTurn: gameId => dispatch(stopTurnThunk(gameId)),
     passTurn: gameId => dispatch(passTurnThunk(gameId))

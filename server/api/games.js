@@ -4,13 +4,14 @@ const GameDb = require('../db/models/').Game
 
 const gameState = game => {
   const players = game ? game.players : []
-  const currentPlayer = game.players[game.currentPlayer]
-  const turn = currentPlayer.turns.length && currentPlayer.turns[0]
+  const deck = game ? game.deck : []
+  const currentPlayer = game.currentPlayer
+  const turn = game.players[currentPlayer].turns.length && game.players[currentPlayer].turns[0]
   const card = turn && turn.cards[0]
   const roll = card && card.rolls[0]
   const prevDice = game.prevTurn && game.prevTurn._roll().dice ? game.prevTurn._roll().dice : []
   const dice = roll ? roll.dice : prevDice
-  return { players, dice, card }
+  return { players, dice, card, currentPlayer, deck }
 }
 
 router.post(`/`, (req, res, next) => {

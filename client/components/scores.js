@@ -1,9 +1,12 @@
 import React from 'react'
-
-const Scores = players => {
+const Scores = props => {
+  console.log(props)
   return (
-    <div style={{ display: `flex` }}>
-      <ol>{players.players.map(player => <h1 key={player.id}>{`${player.id}: ${player.score}`}</h1>)}</ol>
+    <div>
+      <ol>{props.players.map(player => {
+        const color = props.currentPlayer === player.id ? {color: 'green', 'textShadow': '2px 2px 2px black'} : {color: 'black'}
+        return <h1 style={color} key={player.id}>{`${player.id}: ${player.score}`}</h1>
+      })}</ol>
     </div>
   )
 }

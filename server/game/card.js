@@ -36,7 +36,7 @@ class Card {
             total += roll.score
             return total
         }, 0)
-        if (this._roll().dice.every(die => die.held)) this.score = this._fill(this.score)
+        if (this._roll().dice.every(die => die.pointer)) this.score = this._fill(this.score)
     }
 
     _fill(score) {
