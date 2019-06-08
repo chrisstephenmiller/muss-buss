@@ -18,14 +18,15 @@ class Card {
         this.rolls.unshift(new Roll(null, this.rolls.length && !this.fill ? this._roll() : null, prevDice))
         this._calcFillorBust()
     }
-
+    
     _holdPointers(diceToHold) {
         this._roll()._holdPointers(diceToHold)
+        this._calcFillorBust()
         this._calcScore()
     }
 
     _calcFillorBust() {
-        this.fill = !this.bust && this._roll().dice.every(die => die.pointer)
+        this.fill = !this.bust && this._roll().dice.every(die => die.pointer && die.held)
         this.bust = !this.fill && !this._roll().dice.some(die => die.pointer && die.live)
     }
 
@@ -36,30 +37,18 @@ class Card {
             total += roll.score
             return total
         }, 0)
-        if (this._roll().dice.every(die => die.pointer)) this.score = this._fill(this.score)
+        if (this._roll().dice.every(die => die.held)) this.score = this._fill(this.score)
     }
 
     _fill(score) {
-        if (this.type === 'bonus300') {
-            return score + 300
-        }
-        if (this.type === 'bonus400') {
-            return score + 400
-        }
-        if (this.type === 'bonus500') {
-            return score + 500
-        }
-        if (this.type === 'fill1000') {
-            return score + 1000
-        }
-        if (this.type === 'mussBuss') {
-            return score
-        }
-        if (this.type === 'vengeance') {
-            return score
-        }
-        if (this.type === 'doubleTrouble') {
-            return score * 2
+        switch (this.type) {
+            case 'bonus300': return score + 300
+            case 'bonus400': return score + 400
+            case 'bonus500': return score + 500
+            case 'fill1000': return score + 1000
+            case 'mussBuss': return score
+            case 'vengeance': return score
+            case 'doubleTrouble': return score * 2
         }
     }
 

@@ -4,7 +4,7 @@ const Turn = require('./turn')
 const Roll = require('./roll')
 
 class Game {
-    constructor(game, winTotal, playerNames) {
+    constructor(game, winTotal, players) {
         if (game) {
             for (const key of Object.keys(game)) this[key] = game[key]
             if (this.prevTurn) this.prevTurn = new Turn(this.prevTurn)
@@ -13,20 +13,25 @@ class Game {
         } else {
             this.winTotal = winTotal
             this.currentPlayer = 0
-            this.players = playerNames.map((name, idx) => new Player(null, name, idx))
+            this.players = players.map(player => new Player(null, player.name, player.id))
             this.deck = new Deck
             this.prevTurn = null
         }
     }
 
     drawCard() {
-        if (this.prevTurn && this.prevTurn._card().bust) this.prevTurn._roll().dice = null
+        if (this.prevTurn && this.prevTurn._card().bust) {
+            this.prevTurn._roll().dice = null
+            this.prevTurn.score = 0
+        }
         if (this._invalidDraw()) this.error = ('Invalid draw.')
         else {
             const draw = this.deck.draw()
             const cardType = draw ? draw : this.deck.shuffle()
+            if (this.prevTurn && this._card() && this._card().fill) this.prevTurn._roll().dice = null
             this._player()._drawCard(cardType, this.prevTurn && this.prevTurn.score)
             if (this._card().type === 'noDice') {
+                console.log('noDice')
                 const noRoll = new Roll
                 noRoll.dice = []
                 this._card().rolls.unshift(noRoll)
@@ -56,10 +61,8 @@ class Game {
                     const leader = this.players.filter((_, idx) => idx !== this.currentPlayer).reduce((prev, current) => current.score <= prev.score ? prev : current)
                     negativeTurn.score = Math.max(-2500, -leader.score)
                     leader.turns.push(negativeTurn)
-                    this.prevTurn = this._turn()
-                    this._player().turns.unshift(null)
                 }
-                this._calcScores()
+                this.prevTurn = this._turn()
             }
             if (this._card() && this._card().bust) {
                 if (this._card().type === 'mussBuss') {
@@ -67,14 +70,18 @@ class Game {
                     extraTurn.score = this._turn().score
                     this._player().turns.push(extraTurn)
                 }
-                this._turn().score = 0
+                this._turn().score = this._turn().impunity
                 this.stopTurn()
             }
         }
         return this
     }
 
-    _invalidRoll() { return !this._card() || this._card().fill && this._card().type !== 'mussBuss' || this._invalidPointers() }
+    _invalidRoll() {
+        const leaderVengeance = this._card() && this._card().type === 'vengeance' && !this.players.some(player => player.score > this._player().score - this._turn().score)
+        const fillNotMussBuss = this._card() && this._card().fill && this._card().type !== 'mussBuss'
+        return !this._card() || this._invalidPointers() ||  leaderVengeance || fillNotMussBuss 
+    }
 
     _invalidPointers() {
         if (this._roll()) {
@@ -123,10 +130,9 @@ class Game {
     }
 
     _invalidCardStop() {
-        const fill1000 = this._card().type === 'fill1000' && (this._card().fill === this._card().bust)
-        const mustFill = ['mussBuss', 'doubleTrouble', 'vengeance'].includes(this._card().type) && !this._card().bust
+        const mustFill = ['mussBuss', 'doubleTrouble', 'vengeance', 'fill1000'].includes(this._card().type) && this._card().fill === this._card().bust
         const noRollNotNoDice = !this._roll() && this._card().type !== 'noDice'
-        return fill1000 || mustFill || noRollNotNoDice
+        return mustFill || noRollNotNoDice
     }
 
     passTurn() {

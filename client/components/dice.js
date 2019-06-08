@@ -15,7 +15,7 @@ const emptyDice = [
 const Dice = props => {
   const { holdDice, dice, match } = props
   const gameId = match.params.id
-  const allDice = dice.length ? dice : emptyDice
+  const allDice = dice ? dice : emptyDice
   return (
     <div style={{ display: `flex` }}>
       {allDice.map((die => {

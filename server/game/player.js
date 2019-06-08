@@ -9,20 +9,18 @@ class Player {
             this.name = name
             this.turns = []
             this.id = id
+            this.score = 0
         }
-        this._calcScore()
     }
 
     _drawCard(cardType, prevScore) {
         if (!this._turn()) this.turns.unshift(new Turn)
         this.turns = this.turns.filter(Boolean)
         this._turn()._drawCard(cardType, prevScore)
-        this._calcScore()
     }
 
     _holdPointers(diceToHold) {
         this._turn()._holdPointers(diceToHold)
-        this._calcScore()
     }
 
     _turn() { return this.turns.length ? this.turns[0] : null }

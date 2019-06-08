@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from '.';
 
 const NEW_GAME = `NEW_GAME`
 const GET_GAME = `GET_GAME`
@@ -10,7 +11,10 @@ const PASS_TURN = `PASS_TURN`
 
 const defaultGame = {
   players: [],
-  dice: []
+  dice: [],
+  turn: {},
+  card: {},
+  currentPlayer: {id: 0}
 }
 
 export const newGame = game => ({ type: NEW_GAME, game })
@@ -52,18 +56,22 @@ export const drawCardThunk = gameId => async dispatch => {
 }
 
 export const rollDiceThunk = gameId => async dispatch => {
+  const state = store.getState().game
+  const {currentPlayer, players, dice} = state
+  console.log(state)
   try {
-    const res = await axios.get(`/api/games/${gameId}/roll`)
-    const game = res.data
     const rolling = {
-      players: game.players, dice: game.dice.map(die => {
+      currentPlayer,
+      players,
+      dice: dice && dice.map(die => {
         const newDie = { ...die }
-        die.held ? newDie.pointer = true : newDie.value = newDie.pointer = newDie.live = 0
-        
+        if (!die.held) newDie.value = newDie.pointer = 0  
         return newDie
       })
     }
     dispatch(rollDice(rolling || defaultGame))
+    const res = await axios.get(`/api/games/${gameId}/roll`)
+    const game = res.data
     setTimeout(() => dispatch(getGame(game || defaultGame)), 300)
   } catch (err) {
     console.error(err)
@@ -72,7 +80,7 @@ export const rollDiceThunk = gameId => async dispatch => {
 
 export const holdDiceThunk = (gameId, dieId) => async dispatch => {
   try {
-    const res = await axios.get(`/api/games/${gameId}/hold/${dieId}`)
+    const res = await axios.get(`/api/games/${gameId}/hold?holdId=${dieId}`)
     const game = res.data
     dispatch(holdDice(game || defaultGame))
   } catch (err) {

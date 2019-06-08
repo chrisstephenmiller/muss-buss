@@ -10,8 +10,9 @@ class NewGame extends Component {
     this.state = {
       winScore: 10000,
       numPlayers: [1, 2],
-      user2: "csmiller4567@gmail.com",
-      user1: "csmiller4567@gmail.com",
+      user3: { name: 'chris', id: 3 },
+      user2: { name: 'peter', id: 2 },
+      user1: { name: 'john', id: 1 }
     }
   }
 
