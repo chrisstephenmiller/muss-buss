@@ -24,18 +24,18 @@ class Game extends Component {
   render() {
     const { game, match, rollDice, drawCard, stopTurn, passTurn, holdAll } = this.props
     const gameId = match.params.id
-    const { players, dice, card, currentPlayer, score, turn } = game
+    const { players, dice, card, currentPlayer, score} = game
     return (
       <div id="game">
         <Scores players={players} currentPlayer={currentPlayer.id || 0} />
         <Dice dice={dice} />
-        <h1>{`${turn ? card.type : 'DRAW'} - ${card.bust ? 'BUST' : score}`} </h1>
+        <h1>{`${card.type || 'DRAW'} - ${card.bust ? 'BUST' : score}`} </h1>
         <div style={{ display: 'flex' }}>
-          <h1 style={{ margin: '0 90px 0 0' }} onClick={() => rollDice(gameId)}>ROLL</h1>
-          <h1 style={{ margin: '0 90px 0 0' }} onClick={() => holdAll(gameId)}>HOLD</h1>
-          <h1 style={{ margin: '0 90px 0 0' }} onClick={() => drawCard(gameId)}>DRAW</h1>
-          <h1 style={{ margin: '0 90px 0 0' }} onClick={() => stopTurn(gameId)}>STOP</h1>
-          <h1 style={{ margin: '0 90px 0 0' }} onClick={() => passTurn(gameId)}>PASS</h1>
+          <h1 style={{ margin: '0 65px 0 0' }} onClick={() => rollDice(gameId)}>[R]OLL</h1>
+          <h1 style={{ margin: '0 65px 0 0' }} onClick={() => holdAll(gameId)}>[H]OLD</h1>
+          <h1 style={{ margin: '0 65px 0 0' }} onClick={() => drawCard(gameId)}>[D]RAW</h1>
+          <h1 style={{ margin: '0 65px 0 0' }} onClick={() => stopTurn(gameId)}>[S]TOP</h1>
+          <h1 style={{ margin: '0 65px 0 0' }} onClick={() => passTurn(gameId)}>[P]ASS</h1>
         </div>
       </div>
     )

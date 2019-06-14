@@ -16,14 +16,7 @@ class Game {
             this.players = players.map(player => new Player(null, player.name, player.id))
             this.playerIndex = 0
             this.deck = new Deck
-            this.winTotal = winTotal
-            while (!(this._roll() && this._card().type === 'doubleTrouble!' && this._roll().dice.every(die => die.pointer))) {
-                this.drawCard()
-                this.rollDice()
-                this.holdPointers()
-                this.error = null
-            }
-            
+            this.winTotal = winTotal            
         }
     }
 
@@ -38,6 +31,7 @@ class Game {
                 leader.turns.push(negativeTurn)
                 leader._calcScore()
             }
+            if (this._card() && this._card().fill) this._turn().inheritance = this._turn().score
             if (this.prevTurn) {
                 if (this.prevTurn._card().fill) this.prevTurn._roll().dice = null
                 if (this.prevTurn._card().bust) this.prevTurn = null

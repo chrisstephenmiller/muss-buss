@@ -9,7 +9,7 @@ const gameState = game => {
   const prevTurn = game.prevTurn
   const prevCard = prevTurn && prevTurn._card()
   const card = turn && turn._card() || prevCard
-  const prevDice = prevCard && prevCard._roll().dice
+  const prevDice = prevCard && prevCard._roll() && prevCard._roll().dice
   const dice = card && card._roll() && card._roll().dice || prevDice
   const prevScore = prevTurn && prevTurn.score
   const score = turn && (turn.score || turn.inheritance) || prevScore

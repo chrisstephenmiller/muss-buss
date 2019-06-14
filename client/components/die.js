@@ -21,8 +21,8 @@ const Die = props => {
       <img src={dieImages[die.value]}
         alt={`die-${die.value}`}
         style={{
-          height: 125,
-          width: 125,
+          height: 120,
+          width: 120,
           margin: `${heldOffset}px 5px 0px`,
           border: `2px solid ${pointerColor}`,
           borderRadius: 22,
