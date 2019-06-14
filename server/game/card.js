@@ -4,7 +4,7 @@ class Card {
     constructor(card, cardType) {
         if (card) {
             for (const key of Object.keys(card)) this[key] = card[key]
-            if (this.rolls.length) this.rolls[0] = new Roll(true, this.rolls[0])
+            if (this._roll()) this.rolls[0] = new Roll(true, this.rolls[0])
         } else {
             this.type = cardType
             this.fill = false
@@ -15,10 +15,10 @@ class Card {
     }
 
     _rollDice(prevDice) {
-        this.rolls.unshift(new Roll(null, this.rolls.length && !this.fill ? this._roll() : null, prevDice))
+        this.rolls.unshift(new Roll(null, this._roll() && !this.fill ? this._roll() : null, prevDice))
         this._calcFillorBust()
     }
-    
+
     _holdPointers(diceToHold) {
         this._roll()._holdPointers(diceToHold)
         this._calcFillorBust()
@@ -28,9 +28,8 @@ class Card {
     _calcFillorBust() {
         this.fill = !this.bust && this._roll().dice.every(die => die.pointer && die.held)
         this.bust = !this.fill && !this._roll().dice.some(die => die.pointer && die.live)
+        if (this.bust) this._roll().dice.forEach(die => die.pointer = false)
     }
-
-    _roll() { return this.rolls.length ? this.rolls[0] : null }
 
     _calcScore() {
         this.score = this.rolls.reduce((total, roll) => {
@@ -48,10 +47,13 @@ class Card {
             case 'fill1000': return score + 1000
             case 'mussBuss': return score
             case 'vengeance': return score
-            case 'doubleTrouble': return score * 2
+            case 'doubleTrouble': return score
+            case 'doubleTrouble!': return score * 2
         }
     }
-
+    
+    _roll() { return this.rolls.length ? this.rolls[0] : null }
+    
 }
 
 module.exports = Card

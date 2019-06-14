@@ -4,7 +4,7 @@ class Turn {
     constructor(turn) {
         if (turn) {
             for (const key of Object.keys(turn)) this[key] = turn[key]
-            if (this.cards.length) this.cards[0] = new Card(this.cards[0])
+            if (this._card()) this.cards[0] = new Card(this.cards[0])
         } else {
             this.inheritance = 0
             this.cards = []
@@ -13,26 +13,33 @@ class Turn {
         }
     }
 
-    _drawCard(cardType, prevScore) {
-        if (!this._card() || !this._card().fill) this.inheritance = prevScore
+    _drawCard(cardType, inheritance) {
+        this.inheritance = inheritance
         this.cards.unshift(new Card(null, cardType))
-        this._calcScore()
+    }
+
+    _rollDice(prevDice) {
+        this._card()._rollDice(prevDice)
+        if (this._card().bust) this.score = this.impunity
     }
 
     _holdPointers(diceToHold) {
         this._card()._holdPointers(diceToHold)
         this._calcScore()
-        if (this._card().type === 'vengeance' && this._roll().dice.every(die => die.held)) this.impunity = this.score
+        const vengeanceOrDoubleTrouble = ['vengeance', 'doubleTrouble!'].includes(this._card().type) && this._roll().dice.every(die => die.held)
+        if (this._card().type === 'mussBuss' || vengeanceOrDoubleTrouble) this.impunity = this.score
+    }
+
+    _calcScore() {
+        this.score = this.cards.reduce((total, card) => {
+            total += card.score
+            return total
+        }, this.inheritance)
     }
 
     _card() { return this.cards.length ? this.cards[0] : null }
 
     _roll() { return this._card() && this._card()._roll() }
-
-    _calcScore() { this.score = this.cards.reduce((total, card) => {
-        total += card.score
-        return total
-    }, this.inheritance) }
 }
 
 module.exports = Turn

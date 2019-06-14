@@ -7,24 +7,36 @@ import { getGameThunk, rollDiceThunk, drawCardThunk, stopTurnThunk, passTurnThun
 class Game extends Component {
 
   componentDidMount() {
-    const { getGame, match } = this.props
-    getGame(match.params.id)
+    const { getGame, match, rollDice, holdAll, drawCard, stopTurn, passTurn } = this.props
+    const gameId = match.params.id
+    getGame(gameId)
+    document.addEventListener('keydown', () => {
+      switch (event.key) {
+        case 'r': return rollDice(gameId)
+        case 'h': return holdAll(gameId)
+        case 'd': return drawCard(gameId)
+        case 's': return stopTurn(gameId)
+        case 'p': return passTurn(gameId)
+      }
+    })
   }
 
   render() {
     const { game, match, rollDice, drawCard, stopTurn, passTurn, holdAll } = this.props
     const gameId = match.params.id
-    const { players, dice, card, currentPlayer, turn } = game
+    const { players, dice, card, currentPlayer, score, turn } = game
     return (
       <div id="game">
-        <Scores players={players} currentPlayer={currentPlayer.id} />
+        <Scores players={players} currentPlayer={currentPlayer.id || 0} />
         <Dice dice={dice} />
-        <h1>{card ? `${card.type} - ${turn.score}` : 'No Card - 0'} </h1>
-        <h1 onClick={() => rollDice(gameId)}>ROLL</h1>
-        <h1 onClick={() => holdAll(gameId)}>HOLD</h1>
-        <h1 onClick={() => drawCard(gameId)}>DRAW</h1>
-        <h1 onClick={() => stopTurn(gameId)}>STOP</h1>
-        <h1 onClick={() => passTurn(gameId)}>PASS</h1>
+        <h1>{`${turn ? card.type : 'DRAW'} - ${card.bust ? 'BUST' : score}`} </h1>
+        <div style={{ display: 'flex' }}>
+          <h1 style={{ margin: '0 90px 0 0' }} onClick={() => rollDice(gameId)}>ROLL</h1>
+          <h1 style={{ margin: '0 90px 0 0' }} onClick={() => holdAll(gameId)}>HOLD</h1>
+          <h1 style={{ margin: '0 90px 0 0' }} onClick={() => drawCard(gameId)}>DRAW</h1>
+          <h1 style={{ margin: '0 90px 0 0' }} onClick={() => stopTurn(gameId)}>STOP</h1>
+          <h1 style={{ margin: '0 90px 0 0' }} onClick={() => passTurn(gameId)}>PASS</h1>
+        </div>
       </div>
     )
   }
