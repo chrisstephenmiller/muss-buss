@@ -31,7 +31,8 @@ class Game {
                 const negativeTurn = new Turn
                 negativeTurn.score = Math.max(-2500, -highScore)
                 leaders.forEach(leader => {
-                    leader.turns.push(negativeTurn)
+                    leader.turns[0] = negativeTurn
+                    leader.turns.unshift(null)
                     leader._calcScore()
                 })
             }

@@ -11,7 +11,7 @@ const PlayerScores = props => {
   return (
     <div className='player-score-list'>
       <h1 className={`player-name ${currentPlayer}`}>{player.name}</h1>
-      {scoringTurnTotals.map((total, index) => { if (total.score > 0) return <h1 className={index === scoringTurnTotals.length - 1 ? 'player-score' : 'past-player-score'} key={player.name + '-' + total.turn}>{total.score}</h1>})}
+      {scoringTurnTotals.map((total, index) => { if (total.score) return <h1 className={index === scoringTurnTotals.length - 1 ? 'player-score' : 'past-player-score'} key={player.name + '-' + total.turn}>{total.score}</h1>})}
     </div>
   )
 }
