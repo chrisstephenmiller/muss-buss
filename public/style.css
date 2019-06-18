@@ -19,3 +19,29 @@ form div {
   margin: 1em;
   display: inline-block;
 }
+
+.player-score-list {
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.past-player-score {
+  text-decoration: line-through;
+  margin: 1px;
+}
+
+.player-score {
+  margin: 1px;
+  color: black
+}
+
+.current-player, .button-hot {
+  color: green;
+  text-shadow: 2px 2px 2px black
+}
+
+.button {
+  margin: 10px;
+}

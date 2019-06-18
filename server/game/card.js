@@ -47,7 +47,7 @@ class Card {
             case 'fill1000': return score + 1000
             case 'mussBuss': return score
             case 'vengeance': return score
-            case 'doubleTrouble': return score
+            case 'doubleTrouble': return score * 2
             case 'doubleTrouble!': return score * 2
         }
     }

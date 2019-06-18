@@ -13,14 +13,16 @@ const gameState = game => {
   const dice = card && card._roll() && card._roll().dice || prevDice
   const prevScore = prevTurn && prevTurn.score
   const score = turn && (turn.score || turn.inheritance) || prevScore
-  return { players, currentPlayer, turn, score: score || 0, card: card || {}, dice: dice || []}
+  const winner = game.winner
+  const actions = game._invalidActions()
+  return { players, currentPlayer, turn, score: score || 0, card: card || {}, dice: dice || [], winner, actions }
 }
 
 router.post(`/`, (req, res, next) => {
   const { winScore, players } = req.body
   const game = new Game(null, winScore, players)
   GameDb.create({ game })
-  try { res.send(gameState(game)) }
+  try { res.status(201).send(gameState(game)) }
   catch (err) { next(err) }
 })
 
@@ -64,10 +66,7 @@ router.get(`/:gameId/:action/`, (req, res, next) => {
         break
       case 'hold': game.holdPointers(Number(req.query.holdId))
     }
-    if (game.error) {
-      console.log(game.error)
-      res.status(403).send(game.error)
-    }
+    if (game.error) res.status(403).send(game.error)
     else {
       GameDb.update({ game }, { where: { id: req.gameId } })
       res.send(gameState(game))

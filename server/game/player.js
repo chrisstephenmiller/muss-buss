@@ -10,6 +10,7 @@ class Player {
             this.turns = []
             this.id = id
             this.score = 0
+            this.winner = false
         }
     }
 

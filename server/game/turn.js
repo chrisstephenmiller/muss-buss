@@ -14,7 +14,7 @@ class Turn {
     }
 
     _drawCard(cardType, inheritance) {
-        this.inheritance = inheritance
+        this.inheritance = this.inheritance || inheritance || 0
         this.cards.unshift(new Card(null, cardType))
     }
 
@@ -25,16 +25,20 @@ class Turn {
 
     _holdPointers(diceToHold) {
         this._card()._holdPointers(diceToHold)
+        if (this._card().fill) {
+            if (this._card().type === 'doubleTrouble') this._drawCard('doubleTrouble!')
+            if (this._card().type === 'doubleTrouble!') this.inheritance = this.inheritance * 2
+        }
         this._calcScore()
-        const vengeanceOrDoubleTrouble = ['vengeance', 'doubleTrouble!'].includes(this._card().type) && this._roll().dice.every(die => die.held)
-        if (this._card().type === 'mussBuss' || vengeanceOrDoubleTrouble) this.impunity = this.score
+        const earnedImpunity = this._card().fill && ['vengeance', 'doubleTrouble!'].includes(this._card().type)
+        if (earnedImpunity || this._card().type === 'mussBuss') this.impunity = this.score
     }
 
     _calcScore() {
         this.score = this.cards.reduce((total, card) => {
             total += card.score
             return total
-        }, this.inheritance)
+        }, this.inheritance )
     }
 
     _card() { return this.cards.length ? this.cards[0] : null }

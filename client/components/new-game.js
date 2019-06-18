@@ -9,7 +9,7 @@ class NewGame extends Component {
 
     this.state = {
       winScore: 10000,
-      numPlayers: [1, 2],
+      numPlayers: [1, 2, 3],
       user3: { name: 'chris', id: 3 },
       user2: { name: 'peter', id: 2 },
       user1: { name: 'john', id: 1 }
@@ -56,7 +56,7 @@ class NewGame extends Component {
             </select>
           </label>
           <label>
-            Number of players: <select name="numPlayers" defaultValue="2">
+            Number of players: <select name="numPlayers" defaultValue="3">
               {[2, 3, 4, 5, 6, 7, 8].map(num => <option key={num} value={num}>{num}</option>)}
             </select>
           </label>

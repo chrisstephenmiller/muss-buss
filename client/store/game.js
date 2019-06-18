@@ -17,6 +17,7 @@ const defaultGame = {
   card: {},
   dice: [],
   score: 0,
+  actions: {invalidDraw: true, invalidRoll: true, invalidHold: true, invalidStop: true, invalidPass: true}
 }
 
 export const newGame = game => ({ type: NEW_GAME, game })
@@ -34,7 +35,7 @@ export const newGameThunk = (winScore, players) => async dispatch => {
     const game = res.data
     await dispatch(newGame(game || defaultGame))
   } catch (err) {
-    console.error(err)
+    console.error(err.response.data)
   }
 }
 
@@ -44,7 +45,7 @@ export const getGameThunk = gameId => async dispatch => {
     const game = res.data
     dispatch(getGame(game || defaultGame))
   } catch (err) {
-    console.error(err)
+    console.error(err.response.data)
   }
 }
 
@@ -54,7 +55,7 @@ export const drawCardThunk = gameId => async dispatch => {
     const game = res.data
     dispatch(drawCard(game || defaultGame))
   } catch (err) {
-    console.error(err)
+    console.error(err.response.data)
   }
 }
 
@@ -71,7 +72,7 @@ export const rollDiceThunk = gameId => async dispatch => {
     dispatch(shakeDice({...state} || defaultGame))
     setTimeout(() => dispatch(rollDice(game || defaultGame)), 300)
   } catch (err) {
-    console.error(err)
+    console.error(err.response.data)
   }
 }
 
@@ -81,7 +82,7 @@ export const holdDiceThunk = (gameId, dieId) => async dispatch => {
     const game = res.data
     dispatch(holdDice(game || defaultGame))
   } catch (err) {
-    console.error(err)
+    console.error(err.response.data)
   }
 }
 
@@ -91,7 +92,7 @@ export const stopTurnThunk = gameId => async dispatch => {
     const game = res.data
     dispatch(stopTurn(game || defaultGame))
   } catch (err) {
-    console.error(err)
+    console.error(err.response.data)
   }
 }
 
@@ -101,7 +102,7 @@ export const passTurnThunk = gameId => async dispatch => {
     const game = res.data
     dispatch(passTurn(game || defaultGame))
   } catch (err) {
-    console.error(err)
+    console.error(err.response.data)
   }
 }
 

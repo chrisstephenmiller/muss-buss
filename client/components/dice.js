@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Die } from '../components'
-import { holdDiceThunk } from '../store';
+import { holdDiceThunk } from '../store'
 
 const emptyDice = [
   { "id": 0, "held": false, "live": true, "value": 0, "pointer": false },
