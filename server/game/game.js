@@ -17,14 +17,6 @@ class Game {
             this.playerIndex = 0
             this.deck = new Deck
             this.winTotal = winTotal
-            // while (!(this._card() && !this._card().bust && this._card().type === 'doubleTrouble!' && this._turn().inheritance)) {
-            while (!(this._card() && !this._card().bust && this._card().type === 'doubleTrouble!' && this._turn().inheritance)) {
-                if (!this._invalidActions().invalidDraw) this.drawCard()
-                if (!this._invalidActions().invalidRoll) this.rollDice()
-                if (!this._invalidActions().invalidHold) this.holdPointers()
-                if (!this._invalidActions().invalidStop) this.stopTurn()
-                this.error = null
-            }
         }
     }
 
