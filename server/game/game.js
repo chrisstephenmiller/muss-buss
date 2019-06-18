@@ -17,14 +17,14 @@ class Game {
             this.playerIndex = 0
             this.deck = new Deck
             this.winTotal = winTotal
-            // while (!(this._card() && this._card().type === 'doubleTrouble!' && this._turn().inheritance)) {
-            //         this.drawCard()
-            //         this.rollDice()
-            //         this.holdPointers()
-            //         if (this._turn() && this._turn().score > 400) this.stopTurn()
-            //         console.log(this._turn() && this._turn().inheritance)
-            // }
-            // this.error = null
+            // while (!(this._card() && !this._card().bust && this._card().type === 'doubleTrouble!' && this._turn().inheritance)) {
+            while (!(this._card() && !this._card().bust && this._card().type === 'doubleTrouble!' && this._turn().inheritance)) {
+                if (!this._invalidActions().invalidDraw) this.drawCard()
+                if (!this._invalidActions().invalidRoll) this.rollDice()
+                if (!this._invalidActions().invalidHold) this.holdPointers()
+                if (!this._invalidActions().invalidStop) this.stopTurn()
+                this.error = null
+            }
         }
     }
 
@@ -43,7 +43,6 @@ class Game {
                     leader._calcScore()
                 })
             }
-            // if (this._card() && this._card().fill) this._turn().inheritance = this._turn().score
             if (this.prevTurn) {
                 if (this.prevTurn._card().fill) this.prevTurn._roll().dice = null
                 if (this.prevTurn._card().bust) this.prevTurn = null
@@ -87,7 +86,7 @@ class Game {
 
     _invalidRoll() {
         const leaderVengeance = this._card() && this._card().type === 'vengeance' && !this.players.some(player => player.score > this._player().score - this._turn().score)
-        const fillNotMussBussOrDoubleTrouble = this._card() && this._card().fill && !['mussBuss', 'doubleTrouble!'].includes(this._card().type)
+        const fillNotMussBussOrDoubleTrouble = this._card() && this._card().fill && !['mussBuss', 'doubleTrouble'].includes(this._card().type)
         return !this._card() || this._invalidPointers() || leaderVengeance || fillNotMussBussOrDoubleTrouble
     }
 
@@ -110,13 +109,13 @@ class Game {
         else {
             const dieValue = dieId >= 0 && dieId < 6 ? this._roll().dice[dieId].value : null
             const diceToHold = [1, 5].includes(dieValue) ? [dieId] : this._roll().dice.filter(die => die.value === dieValue).map(die => die.id)
-            this._player()._holdPointers(dieValue ? diceToHold : [])
+            this._turn()._holdPointers(dieValue ? diceToHold : [])
         }
         return this
     }
 
     _invalidHold(dieId) {
-        const allHeld = dieId === 6 && this._roll() && this._roll().dice.every(die => die.held || !die.pointer) 
+        const allHeld = dieId === 6 && this._roll() && this._roll().dice.every(die => die.held || !die.pointer)
         return !this._card() || !this._roll() || allHeld
     }
 
@@ -164,7 +163,7 @@ class Game {
     }
 
     _invalidPass() {
-        const noInheritance = this._card() || !this.prevTurn || !this.prevTurn.score
+        const noInheritance = this._card() || !this.prevTurn || !this.prevTurn.score || this.prevTurn._card().type === 'mussBuss'
         return noInheritance
     }
 

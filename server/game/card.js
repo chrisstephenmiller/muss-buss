@@ -31,12 +31,13 @@ class Card {
         if (this.bust) this._roll().dice.forEach(die => die.pointer = false)
     }
 
-    _calcScore() {
+    _calcScore(doubleTrouble) {
         this.score = this.rolls.reduce((total, roll) => {
             total += roll.score
             return total
         }, 0)
         if (this._roll().dice.every(die => die.held)) this.score = this._fill(this.score)
+        if (doubleTrouble) this.score += doubleTrouble
     }
 
     _fill(score) {
@@ -45,10 +46,7 @@ class Card {
             case 'bonus400': return score + 400
             case 'bonus500': return score + 500
             case 'fill1000': return score + 1000
-            case 'mussBuss': return score
-            case 'vengeance': return score
-            case 'doubleTrouble': return score * 2
-            case 'doubleTrouble!': return score * 2
+            default: return score
         }
     }
     

@@ -20,10 +20,6 @@ class Player {
         this._turn()._drawCard(cardType, inhertitance)
     }
 
-    _holdPointers(diceToHold) {
-        this._turn()._holdPointers(diceToHold)
-    }
-
     _calcScore() {
         this.score = this.turns.reduce((total, turn) => {
             if (turn) total += turn.score

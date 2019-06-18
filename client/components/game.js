@@ -7,7 +7,7 @@ import { getGameThunk, rollDiceThunk, drawCardThunk, stopTurnThunk, passTurnThun
 class Game extends Component {
 
   componentDidMount() {
-    const { getGame, match, rollDice, holdAll, drawCard, stopTurn, passTurn } = this.props
+    const { getGame, match, rollDice, holdAll, drawCard, stopTurn, passTurn, game } = this.props
     const gameId = match.params.id
     getGame(gameId)
     document.addEventListener('keydown', () => {
