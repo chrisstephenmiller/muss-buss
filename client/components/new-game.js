@@ -9,10 +9,8 @@ class NewGame extends Component {
 
     this.state = {
       winScore: 10000,
-      numPlayers: [1, 2, 3],
-      user3: { name: 'chris', id: 3 },
-      user2: { name: 'peter', id: 2 },
-      user1: { name: 'john', id: 1 }
+      numPlayers: [1, 2],
+      players: ['chris', 'nick']
     }
   }
 
@@ -29,7 +27,7 @@ class NewGame extends Component {
       this.setState({ numPlayers })
     } else {
       const { id, text } = childNodes[value - 1]
-      await this.setState({ [`${name}${id}`]: { name: text, id: value } })
+      await this.setState({ [`${name}${id}`]: { email: text, id: value } })
     }
   }
 
@@ -56,7 +54,7 @@ class NewGame extends Component {
             </select>
           </label>
           <label>
-            Number of players: <select name="numPlayers" defaultValue="3">
+            Number of players: <select name="numPlayers" defaultValue="2">
               {[2, 3, 4, 5, 6, 7, 8].map(num => <option key={num} value={num}>{num}</option>)}
             </select>
           </label>

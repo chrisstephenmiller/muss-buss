@@ -32,7 +32,7 @@ class Turn {
             this._calcScore()
         }
         const earnedImpunity = this._card().fill && ['vengeance', 'doubleTrouble!'].includes(this._card().type)
-        this.impunity = earnedImpunity || this._card().type === 'mussBuss' ? this.score : 0
+        this.impunity = earnedImpunity || this._card().type === 'mussBuss' ? this.score : this.impunity || 0
     }
 
     _calcScore() {

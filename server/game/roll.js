@@ -20,7 +20,7 @@ class Roll {
                 die.live = false
                 return die.held ? die : new Die(idx)
             })
-        } else { this.dice = Array(6).fill(null).map((die, idx) => new Die(idx)) }
+        } else { this.dice = Array(6).fill(null).map((_, idx) => new Die(idx)) }
         this._calcPointers()
     }
 

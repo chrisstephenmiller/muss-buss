@@ -1,4 +1,6 @@
 const db = require('./db')
-require('./models')
+const { Game, User, Player } = require('./models')
+
+User.belongsToMany(Game, { through: Player })
 
 module.exports = db

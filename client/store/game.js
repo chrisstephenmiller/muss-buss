@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '.';
+import socket from '../socket'
 
 const NEW_GAME = `NEW_GAME`
 const GET_GAME = `GET_GAME`
@@ -22,20 +23,46 @@ const defaultGame = {
 
 export const newGame = game => ({ type: NEW_GAME, game })
 export const getGame = game => ({ type: GET_GAME, game })
-export const drawCard = game => ({ type: DRAW_CARD, game })
-export const shakeDice = game => ({ type: SHAKE_DICE, game })
-export const rollDice = game => ({ type: ROLL_DICE, game })
-export const holdDice = game => ({ type: HOLD_DICE, game })
-export const stopTurn = game => ({ type: STOP_TURN, game })
-export const passTurn = game => ({ type: PASS_TURN, game })
+
+export const drawCard = game => {
+  const gameId = +window.location.pathname.split('/')[2]
+  socket.emit('updateOut', gameId)
+  return ({ type: DRAW_CARD, game })
+}
+export const shakeDice = game => {
+  const gameId = +window.location.pathname.split('/')[2]
+  socket.emit('updateOut', gameId)
+  return ({ type: SHAKE_DICE, game })
+}
+export const rollDice = game => {
+  const gameId = +window.location.pathname.split('/')[2]
+  socket.emit('updateOut', gameId)
+  return ({ type: ROLL_DICE, game })
+}
+export const holdDice = game => {
+  const gameId = +window.location.pathname.split('/')[2]
+  socket.emit('updateOut', gameId)
+  return ({ type: HOLD_DICE, game })
+}
+export const stopTurn = game => {
+  const gameId = +window.location.pathname.split('/')[2]
+  socket.emit('updateOut', gameId)
+  return ({ type: STOP_TURN, game })
+}
+export const passTurn = game => {
+  const gameId = +window.location.pathname.split('/')[2]
+  socket.emit('updateOut', gameId)
+  return ({ type: PASS_TURN, game })
+}
 
 export const newGameThunk = (winScore, players) => async dispatch => {
   try {
     const res = await axios.post(`/api/games`, { winScore, players })
     const game = res.data
     await dispatch(newGame(game || defaultGame))
+    window.location.href = `../games/${game.id}`
   } catch (err) {
-    console.error(err.response.data)
+    console.error(err)
   }
 }
 
@@ -45,7 +72,7 @@ export const getGameThunk = gameId => async dispatch => {
     const game = res.data
     dispatch(getGame(game || defaultGame))
   } catch (err) {
-    console.error(err.response.data)
+    console.error(err)
   }
 }
 
@@ -55,7 +82,7 @@ export const drawCardThunk = gameId => async dispatch => {
     const game = res.data
     dispatch(drawCard(game || defaultGame))
   } catch (err) {
-    console.error(err.response.data)
+    console.error(err)
   }
 }
 
@@ -64,15 +91,33 @@ export const rollDiceThunk = gameId => async dispatch => {
     const res = await axios.get(`/api/games/${gameId}/roll`)
     const game = res.data
     const state = store.getState().game
-    state.dice = state.dice.map(die => {
+    if (state.dice.length) {
+      state.dice = state.dice.map(die => {
+        const newDie = { ...die }
+        newDie.live = false
+        return die.held ? newDie : die
+      })
+      dispatch(shakeDice({...state} || defaultGame))
+    }
+    else state.dice = Array(6).fill(null).map((_, i) => { return { id: i + 1 } })
+    const rollState = () => {
+     state.dice = state.dice.map(die => {
       const newDie = { ...die }
-      if (!die.held) newDie.value = newDie.pointer = 0
+      if (!die.held) {
+        newDie.pointer = false
+        newDie.value = Math.ceil(Math.random() * 6)
+      }
       return newDie
     })
-    dispatch(shakeDice({...state} || defaultGame))
-    setTimeout(() => dispatch(rollDice(game || defaultGame)), 300)
+    return state
+  }
+    setTimeout(() => dispatch(shakeDice({...rollState()} || defaultGame)), 100)
+    setTimeout(() => dispatch(shakeDice({...rollState()} || defaultGame)), 200)
+    setTimeout(() => dispatch(shakeDice({...rollState()} || defaultGame)), 300)
+    setTimeout(() => dispatch(shakeDice({...rollState()} || defaultGame)), 400)
+    setTimeout(() => dispatch(rollDice(game || defaultGame)), 500)
   } catch (err) {
-    console.error(err.response.data)
+    console.error(err)
   }
 }
 
@@ -82,7 +127,7 @@ export const holdDiceThunk = (gameId, dieId) => async dispatch => {
     const game = res.data
     dispatch(holdDice(game || defaultGame))
   } catch (err) {
-    console.error(err.response.data)
+    console.error(err)
   }
 }
 
@@ -92,7 +137,7 @@ export const stopTurnThunk = gameId => async dispatch => {
     const game = res.data
     dispatch(stopTurn(game || defaultGame))
   } catch (err) {
-    console.error(err.response.data)
+    console.error(err)
   }
 }
 
@@ -102,7 +147,7 @@ export const passTurnThunk = gameId => async dispatch => {
     const game = res.data
     dispatch(passTurn(game || defaultGame))
   } catch (err) {
-    console.error(err.response.data)
+    console.error(err)
   }
 }
 

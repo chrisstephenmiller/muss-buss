@@ -13,7 +13,7 @@ class Game {
                 else this[key] = game[key]
             }
         } else {
-            this.players = players.map(player => new Player(null, player.name, player.id))
+            this.players = players.map(player => new Player(null, player.name || player.email.slice(0, player.email.indexOf('@')), player.id))
             this.playerIndex = 0
             this.deck = new Deck
             this.winTotal = winTotal
@@ -78,7 +78,7 @@ class Game {
     }
 
     _invalidRoll() {
-        const leaderVengeance = this._card() && this._card().type === 'vengeance' && !this.players.some(player => player.score > this._player().score - this._turn().score)
+        const leaderVengeance = this._card() && this._card().type === 'vengeance' && !this.players.some(player => player.score > this._player().score)
         const fillNotMussBussOrDoubleTrouble = this._card() && this._card().fill && !['mussBuss', 'doubleTrouble'].includes(this._card().type)
         return !this._card() || this._invalidPointers() || leaderVengeance || fillNotMussBussOrDoubleTrouble
     }
@@ -161,12 +161,7 @@ class Game {
     }
 
     _calcScores() {
-        this.players.forEach(player => {
-            player.score = player.turns.reduce((total, turn) => {
-                if (turn) total += turn.score
-                return total
-            }, 0)
-        })
+        this.players.forEach(player => player._calcScore())
     }
 
     _invalidActions() {
