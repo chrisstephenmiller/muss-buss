@@ -10,7 +10,10 @@ const REMOVE_USER = 'REMOVE_USER'
 /**
  * INITIAL STATE
  */
-const defaultUser = {}
+const defaultUser = {
+  email: '',
+  games: []
+}
 
 /**
  * ACTION CREATORS

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Dice, PlayerScores } from '../components'
+import { Dice, PlayerScores, Card } from '../components'
 import { getGameThunk, rollDiceThunk, drawCardThunk, stopTurnThunk, passTurnThunk, holdDiceThunk } from '../store'
 import socket from '../socket'
 
@@ -29,10 +29,12 @@ class Game extends Component {
     const gameId = match.params.id
     const isCurrentPlayer = user.id === currentPlayer.id
     if (winner) setTimeout(() => alert(game.winner), 100)
+    card && console.log(card)
     return (
       <div id="game">
+        <Card card={card} />
         <Dice dice={dice} />
-        <h1>{`${card.type || 'DRAW'} - ${card.bust ? 'BUST' : score}`} </h1>
+        <h1>{`${card.type ? (card.bust ? 'BUST' : score) : 'DRAW'}`} </h1>
         <div style={{ display: 'flex' }}>
           <h1 className={`button ${actions.invalidDraw || !isCurrentPlayer ? '' : 'button-hot'}`} onClick={() => drawCard(gameId)}>[D]RAW</h1>
           <h1 className={`button ${actions.invalidRoll || !isCurrentPlayer ? '' : 'button-hot'}`} onClick={() => rollDice(gameId)}>[R]OLL</h1>

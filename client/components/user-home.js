@@ -7,8 +7,11 @@ import {Link} from 'react-router-dom'
  * COMPONENT
  */
 export const UserHome = props => {
-  const {email} = props
-
+  const {email, games} = props
+  console.log(games)
+  // games.forEach(game => {
+  //   console.log(game.id)
+  // })
   return (
     <div>
       <h3>Welcome, {email}</h3>
@@ -21,8 +24,10 @@ export const UserHome = props => {
  * CONTAINER
  */
 const mapState = state => {
+  const { user } = state
   return {
-    email: state.user.email
+    email: user.email,
+    games: user
   }
 }
 
