@@ -5,7 +5,7 @@ const UserDb = require('../db/models/').User
 const Promise = require('bluebird')
 
 const gameState = (game, id) => {
-  const actions = game._invalidActions()
+  const invalidActions = game._invalidActions()
   const { players, winner, prevTurn } = game
   const currentPlayer = game._player()
   const turn = currentPlayer._turn()
@@ -13,10 +13,10 @@ const gameState = (game, id) => {
   const card = turn && turn._card() || prevCard
   const prevDice = prevCard && prevCard._roll() && prevCard._roll().dice
   const dice = card && card._roll() && card._roll().dice || prevDice
-  if (dice && dice.every(die => die.held || !die.pointer)) actions.invalidHold = true
+  if (dice && dice.every(die => die.held || !die.pointer)) invalidActions.invalidHold = true
   const prevScore = prevTurn && prevTurn.score
   const score = turn && (turn.score || turn.inheritance) || prevScore
-  return { players, currentPlayer, turn, score: score || 0, card: card || {}, dice: dice || [], winner, actions, id }
+  return { players, currentPlayer, turn, score: score || 0, card: card || {}, dice: dice || [], winner, invalidActions, id }
 }
 
 router.post(`/`, async (req, res, next) => {

@@ -156,7 +156,7 @@ class Game {
     }
 
     _invalidPass() {
-        const noInheritance = this._card() || !this.prevTurn || !this.prevTurn.score || this.prevTurn._card().type === 'mussBuss'
+        const noInheritance = !!this._card() || !this.prevTurn || !this.prevTurn.score || this.prevTurn._card().type === 'mussBuss'
         return noInheritance
     }
 

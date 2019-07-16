@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Dice, PlayerScores, Card } from '../components'
+import { Dice, PlayerScores, Card, Button } from '../components'
 import { getGameThunk, rollDiceThunk, drawCardThunk, stopTurnThunk, passTurnThunk, holdDiceThunk } from '../store'
 import socket from '../socket'
 
@@ -25,22 +25,23 @@ class Game extends Component {
 
   render() {
     const { game, match, rollDice, drawCard, stopTurn, passTurn, holdAll, user } = this.props
-    const { players, dice, card, currentPlayer, score, actions, winner } = game
+    const { players, dice, card, currentPlayer, score, invalidActions, winner } = game
     const gameId = match.params.id
     const isCurrentPlayer = user.id === currentPlayer.id
+    console.log(invalidActions)
+    for (const a in invalidActions) invalidActions[a] = invalidActions[a] || isCurrentPlayer
     if (winner) setTimeout(() => alert(game.winner), 100)
-    card && console.log(card)
     return (
       <div id="game">
         <Card card={card} />
         <Dice dice={dice} />
         <h1>{`${card.type ? (card.bust ? 'BUST' : score) : 'DRAW'}`} </h1>
         <div style={{ display: 'flex' }}>
-          <h1 className={`button ${actions.invalidDraw || !isCurrentPlayer ? '' : 'button-hot'}`} onClick={() => drawCard(gameId)}>[D]RAW</h1>
-          <h1 className={`button ${actions.invalidRoll || !isCurrentPlayer ? '' : 'button-hot'}`} onClick={() => rollDice(gameId)}>[R]OLL</h1>
-          <h1 className={`button ${actions.invalidHold || !isCurrentPlayer ? '' : 'button-hot'}`} onClick={() => holdAll(gameId)}>[H]OLD</h1>
-          <h1 className={`button ${actions.invalidStop || !isCurrentPlayer ? '' : 'button-hot'}`} onClick={() => stopTurn(gameId)}>[S]TOP</h1>
-          <h1 className={`button ${actions.invalidPass || !isCurrentPlayer ? '' : 'button-hot'}`} onClick={() => passTurn(gameId)}>[P]ASS</h1>
+          <Button text={`[D]RAW`} action={invalidActions.invalidDraw} onClick={() => drawCard(gameId)}/>
+          <Button text={`[R]OLL`} action={invalidActions.invalidRoll} onClick={() => rollDice(gameId)}/>
+          <Button text={`[H]OLD`} action={invalidActions.invalidHold} onClick={() => holdAll(gameId)}/>
+          <Button text={`[S]TOP`} action={invalidActions.invalidStop} onClick={() => stopTurn(gameId)}/>
+          <Button text={`[P]ASS`} action={invalidActions.invalidPass} onClick={() => passTurn(gameId)}/>
         </div>
         <div style={{display: 'flex'}}>
         {players.map((player, i) => <PlayerScores
