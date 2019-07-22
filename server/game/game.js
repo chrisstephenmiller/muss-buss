@@ -155,6 +155,7 @@ class Game {
         else {
             this.prevTurn._roll().dice = null
             this.prevTurn.score = null
+            this.drawCard()
         }
     }
 
