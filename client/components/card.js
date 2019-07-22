@@ -8,25 +8,21 @@ import mussBuss from '../../assets/MussBuss.png'
 import noDice from '../../assets/NoDice.png'
 import vengeance from '../../assets/Vengeance.png'
 import doubleTrouble from '../../assets/DoubleTrouble.png'
+import bust from '../../assets/Bust.png'
 
 class Card extends Component {
 
   render() {
-    const cardImages = { bonus300, bonus400, bonus500, fill1000, mussBuss, noDice, vengeance, doubleTrouble }
-    const { card } = this.props
+    const cardImages = { bonus300, bonus400, bonus500, fill1000, mussBuss, noDice, vengeance, doubleTrouble, 'doubleTrouble!': doubleTrouble }
+    const { card, turn, drawCard } = this.props
+    const notNoDice = card.type !== 'noDice'
+    const bustOpacity = card.bust && notNoDice ? '' : 'no-bust'
+    const cardOpacity = !turn ? 'no-card' : ''
+    const turnOpacity = !turn ? 'no-turn' : ''
     return (
-      <div key={card.type}
-        style={{ display: `flex`, flexDirection: `column`, textAlign: `center`, height: 350, width: 250, marginTop: 5 }}>
-        <img src={cardImages[card.type]}
-          alt={`card-${card.type}`}
-          style={{
-            height: 350,
-            width: 250,
-            margin: `0px 5px 0px`,
-            border: `2px solid black`,
-            borderRadius: 10,
-          }}
-        />
+      <div className={`card card-container ${turnOpacity}`} onClick={drawCard}>
+        <img src={cardImages[card.type]} className={`card ${cardOpacity}`} alt={`card-${card.type}`}/>
+        <img src={bust} className={`card ${bustOpacity}`} alt={`card-bust-overlay`}/>
       </div>
     )
   }

@@ -15,13 +15,14 @@ const gameState = (game, id) => {
   const dice = card && card._roll() && card._roll().dice || prevDice
   if (dice && dice.every(die => die.held || !die.pointer)) invalidActions.invalidHold = true
   const prevScore = prevTurn && prevTurn.score
-  const score = turn && (turn.score || turn.inheritance) || prevScore
+  const score = card && card.bust ? 0 : turn && (turn.score || turn.inheritance) || prevScore
   return { players, currentPlayer, turn, score: score || 0, card: card || {}, dice: dice || [], winner, invalidActions, id }
 }
 
 router.post(`/`, async (req, res, next) => {
   try {
     const { winScore, players } = req.body
+    console.log(players)
     const users = await Promise.map(players, player => UserDb.findOrCreate({ where: { ...player } }))
     const game = new Game(null, winScore, users.map(player => player[0].dataValues))
     const gameDb = await GameDb.create({ game })

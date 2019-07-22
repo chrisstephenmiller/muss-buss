@@ -9,8 +9,8 @@ class NewGame extends Component {
 
     this.state = {
       winScore: 10000,
-      numPlayers: [1, 2],
-      players: ['chris', 'nick']
+      numPlayers: [1, 2, 3, 4, 5],
+      players: ['lee', 'susan', 'peter', 'chris', 'john']
     }
   }
 
@@ -35,8 +35,11 @@ class NewGame extends Component {
     event.preventDefault()
     const { newGame } = this.props
     const players = []
-    for (const key in this.state) { if (key.slice(0, 4) === `user`) players.push(this.state[key]) }
-    newGame(this.state.winScore, players)
+    for (const key in this.state) { 
+      console.log(key, this.state[key], key.slice(0, 4))
+      if (key.slice(0, 4) === `Players`) players.push(this.state[key]) 
+    }
+    newGame(10000, [{name: 'lee'}, {name: 'susan'}, {name: 'peter'}, {name: 'chris'}, {name: 'john'}])
   }
 
   componentDidMount = () => {
@@ -54,7 +57,7 @@ class NewGame extends Component {
             </select>
           </label>
           <label>
-            Number of players: <select name="numPlayers" defaultValue="2">
+            Number of players: <select name="numPlayers" defaultValue="5">
               {[2, 3, 4, 5, 6, 7, 8].map(num => <option key={num} value={num}>{num}</option>)}
             </select>
           </label>
@@ -62,7 +65,7 @@ class NewGame extends Component {
             return (
               <label key={num}>
                 Player: <select name="user">
-                  {users.map(user => <option key={user.id} id={num} value={user.id}>{user.email}</option>)}
+                  {users.map(user => <option key={user.id} id={num} value={user.id}>{user.name}</option>)}
                 </select>
               </label>
             )

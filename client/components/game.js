@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Dice, PlayerScores, Card, Button } from '../components'
+import { Dice, Score, Scores, Card, Button } from '../components'
 import { getGameThunk, rollDiceThunk, drawCardThunk, stopTurnThunk, passTurnThunk, holdDiceThunk } from '../store'
 import socket from '../socket'
 
@@ -25,30 +25,26 @@ class Game extends Component {
 
   render() {
     const { game, match, rollDice, drawCard, stopTurn, passTurn, holdAll, user } = this.props
-    const { players, dice, card, currentPlayer, score, invalidActions, winner } = game
+    const { players, dice, card, currentPlayer, score, invalidActions, winner, turn } = game
     const gameId = match.params.id
     const isCurrentPlayer = user.id === currentPlayer.id
-    console.log(invalidActions)
     for (const a in invalidActions) invalidActions[a] = invalidActions[a] || isCurrentPlayer
     if (winner) setTimeout(() => alert(game.winner), 100)
     return (
       <div id="game">
-        <Card card={card} />
-        <Dice dice={dice} />
-        <h1>{`${card.type ? (card.bust ? 'BUST' : score) : 'DRAW'}`} </h1>
-        <div style={{ display: 'flex' }}>
-          <Button text={`[D]RAW`} action={invalidActions.invalidDraw} onClick={() => drawCard(gameId)}/>
-          <Button text={`[R]OLL`} action={invalidActions.invalidRoll} onClick={() => rollDice(gameId)}/>
-          <Button text={`[H]OLD`} action={invalidActions.invalidHold} onClick={() => holdAll(gameId)}/>
-          <Button text={`[S]TOP`} action={invalidActions.invalidStop} onClick={() => stopTurn(gameId)}/>
-          <Button text={`[P]ASS`} action={invalidActions.invalidPass} onClick={() => passTurn(gameId)}/>
-        </div>
-        <div style={{display: 'flex'}}>
-        {players.map((player, i) => <PlayerScores
-          key={player.id}
-          player={player}
-          currentPlayerId={currentPlayer.id || 0}
-        />)}
+        <div className='game-container'>
+          <div className='section'>
+            <Card turn={turn} card={card} drawCard={() => drawCard(gameId)} />
+            <Score score={score} turn={turn} onClick={() => passTurn(gameId)}/>
+          </div>
+          <div className='section'>
+            <div className='button-container'>
+              <Button text={`[R]OLL`} invalidAction={invalidActions.invalidRoll} onClick={() => rollDice(gameId)} />
+              <Button text={`[S]TOP`} invalidAction={invalidActions.invalidStop} onClick={() => stopTurn(gameId)} />
+            </div>
+            <Dice dice={dice} />
+            <Scores players={players} currentPlayerId={currentPlayer.id || 0} />
+          </div>
         </div>
       </div>
     )
@@ -57,7 +53,7 @@ class Game extends Component {
 
 const mapState = state => {
   const { game, user } = state
-  return { game, user , user}
+  return { game, user, user }
 }
 
 const mapDispatch = dispatch => {

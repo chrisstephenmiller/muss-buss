@@ -18,7 +18,7 @@ const defaultGame = {
   card: {},
   dice: [],
   score: 0,
-  invalidActions: {invalidDraw: true, invalidRoll: true, invalidHold: true, invalidStop: true, invalidPass: true}
+  invalidActions: { invalidDraw: true, invalidRoll: true, invalidHold: true, invalidStop: true, invalidPass: true }
 }
 
 export const newGame = game => ({ type: NEW_GAME, game })
@@ -97,24 +97,24 @@ export const rollDiceThunk = gameId => async dispatch => {
         newDie.live = false
         return die.held ? newDie : die
       })
-      dispatch(shakeDice({...state} || defaultGame))
+      dispatch(shakeDice({ ...state } || defaultGame))
     }
     else state.dice = Array(6).fill(null).map((_, i) => { return { id: i + 1 } })
     const rollState = () => {
-     state.dice = state.dice.map(die => {
-      const newDie = { ...die }
-      if (!die.held) {
-        newDie.pointer = false
-        newDie.value = Math.ceil(Math.random() * 6)
-      }
-      return newDie
-    })
-    return state
-  }
-    setTimeout(() => dispatch(shakeDice({...rollState()} || defaultGame)), 100)
-    setTimeout(() => dispatch(shakeDice({...rollState()} || defaultGame)), 200)
-    setTimeout(() => dispatch(shakeDice({...rollState()} || defaultGame)), 300)
-    setTimeout(() => dispatch(shakeDice({...rollState()} || defaultGame)), 400)
+      state.dice = state.dice.map(die => {
+        const newDie = { ...die }
+        if (!die.held) {
+          newDie.pointer = false
+          newDie.value = Math.ceil(Math.random() * 6)
+        }
+        return newDie
+      })
+      return state
+    }
+    setTimeout(() => dispatch(shakeDice({ ...rollState() } || defaultGame)), 100)
+    setTimeout(() => dispatch(shakeDice({ ...rollState() } || defaultGame)), 200)
+    setTimeout(() => dispatch(shakeDice({ ...rollState() } || defaultGame)), 300)
+    setTimeout(() => dispatch(shakeDice({ ...rollState() } || defaultGame)), 400)
     setTimeout(() => dispatch(rollDice(game || defaultGame)), 500)
   } catch (err) {
     console.error(err)

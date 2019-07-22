@@ -122,7 +122,7 @@ class Game {
                 const leaders = this.players.filter(player => player.score === highScore)
                 const negativeTurn = new Turn
                 negativeTurn.score = Math.max(-2500, -highScore)
-                leaders.forEach(leader => leader.turns.push(negativeTurn))
+                leaders.forEach(leader => leader.turns.splice(1, 0, negativeTurn))
             }
             this._roll().dice.forEach(die => die.live = false)
             this._calcScores()
@@ -152,7 +152,10 @@ class Game {
 
     passTurn() {
         if (this._invalidPass()) this.error = ('Invalid pass.')
-        else this.prevTurn = null
+        else {
+            this.prevTurn._roll().dice = null
+            this.prevTurn.score = null
+        }
     }
 
     _invalidPass() {

@@ -20,28 +20,143 @@ form div {
   display: inline-block;
 }
 
+.game-container {
+  display: inline-flex;
+  border: 5px solid black;
+  border-radius: 15px;
+  margin: 5px;
+}
+
+span {
+  font-weight: bold;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  margin: 5px;
+  justify-content: space-between;  
+}
+
+.turn-score {
+  font-size: 80px;
+  text-align: center;
+}
+
+.inheritance {
+  color: rgb(0, 180, 0);
+  text-shadow: 2px 2px 2px black
+}
+
+.scores {
+  margin: 5px;
+  display: flex;
+  height: 420px;
+  justify-content: space-around;
+  border: 5px solid black;
+  border-radius: 25px;
+  font-size: 32px;
+}
+
 .player-score-list {
-  margin: 10px;
+  width: 130px;
+  margin: 0px 10px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  text-align: center;
 }
 
 .past-player-score {
   text-decoration: line-through;
-  margin: 1px;
+  margin: 0px;
+}
+
+.player-name {
+  text-decoration: underline;
+  color: black;
+  margin-bottom: 6px; 
+  font-size: 36px;
 }
 
 .player-score {
-  margin: 1px;
   color: black
 }
 
-.current-player, .button-hot {
-  color: green;
-  text-shadow: 2px 2px 2px black
+.card {
+  height: 525px;
+  width: 375px;
+  border-radius: 10px;
+  position: absolute;
+}
+
+.card-container {
+  border: 5px solid black;
+  border-radius: 15px;
+  margin: 5px;
+  margin-right: 0px;
+  position: relative;
+}
+
+.no-bust {
+  opacity: 0
+}
+
+.no-turn {
+  border: 5px solid rgb(0, 180, 0);
+}
+
+.no-card {
+  opacity: .75;
+}
+
+.die {
+  height: 98px;
+  width: 98px;
+  margin: 1px 5px;
+  border: 5px solid black;
+  border-radius: 23px;
+  opacity: .75;
+}
+
+.die-container {
+  display: flex;
+  flex-direction: column;
+  height: 140px;
+}
+
+.held {
+  margin: 25px 5px 0px;
+}
+
+.pointer {
+  opacity: 1;
+  border: 5px solid rgb(0, 180, 0);
+}
+
+.live {
+  box-shadow: 2px 3px 3px 2px black;
+}
+
+.dice-container {
+  display: flex;
+  justify-content: center;
 }
 
 .button {
-  margin: 10px;
+  font-size: 36px;
+  opacity: .75;
+  margin: 10px 5px;
+}
+
+.current-player, .button-hot {
+  color: rgb(0, 180, 0);
+  opacity: 1;
+  text-shadow: 2px 2px 2px black
+}
+
+.button-container {
+  margin: 0px 5px;
+  display: flex;
+  justify-content: space-around;
 }

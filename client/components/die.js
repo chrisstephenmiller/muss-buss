@@ -9,27 +9,19 @@ import d5 from '../../assets/d5.png'
 import d6 from '../../assets/d6.png'
 
 class Die extends Component {
-  
+
   render() {
     const dieImages = [d0, d1, d2, d3, d4, d5, d6]
     const { die, holdDice } = this.props
-    const heldOffset = die.held ? 0 : 25
-    const pointerColor = (die.pointer) ? `green` : `red`
-    const lpShadow = die.live && die.pointer ? 3 : 0
+    const held = die.held ? 'held' : ''
+    const pointer = die.pointer ? 'pointer' : ''
+    const live = die.live && die.pointer ? 'live' : ''
     return (
-      <div key={die.id}
-        onClick={holdDice}
-        style={{ display: `flex`, flexDirection: `column`, textAlign: `center`, height: 160, marginTop: 5 }}>
+      <div className='die-container'>
         <img src={dieImages[die.value]}
+          className={`die ${held} ${pointer} ${live}`}
           alt={`die-${die.value}`}
-          style={{
-            height: 120,
-            width: 120,
-            margin: `${heldOffset}px 5px 0px`,
-            border: `2px solid ${pointerColor}`,
-            borderRadius: 22,
-            boxShadow: `${lpShadow}px ${lpShadow}px ${lpShadow}px black`
-          }}
+          onClick={holdDice}
         />
       </div>
     )
