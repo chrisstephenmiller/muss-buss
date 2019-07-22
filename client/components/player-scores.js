@@ -4,11 +4,12 @@ const PlayerScores = props => {
   const { player, currentPlayerId } = props
   const showImpunity = player.turns[0] && player.turns[0].impunity
   const scoringTurns = player.turns.slice(showImpunity ? 0 : 1).filter(turn => turn.score).reverse()
+  const numVisible = 9
   let tempScore = 0
   const scoringTurnTotals = scoringTurns.map((turn, index) => {
     tempScore += turn.score
     return { score: tempScore, turn: index }
-  }).splice(-10)
+  }).splice(-numVisible)
   const currentPlayer = currentPlayerId === player.id ? 'current-player' : ''
   return (
     <div className='player-score-list'>

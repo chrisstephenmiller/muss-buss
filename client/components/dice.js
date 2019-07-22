@@ -13,13 +13,15 @@ const emptyDice = [
   { "id": 5, "held": false, "live": true, "value": 0, "pointer": false }]
 
 const Dice = props => {
-  const { holdDice, dice, match } = props
+  const { holdDice, dice, card, turn, match } = props
   const gameId = match.params.id
   const allDice = dice.length ? dice : emptyDice
   return (
     <div className='dice-container'>
       {allDice.map((die => {
         return <Die key={die.id}
+          card={card}
+          turn={turn}
           holdDice={() => holdDice(gameId, die.id)}
           die={die} />
       }))}

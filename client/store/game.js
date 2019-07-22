@@ -103,7 +103,7 @@ export const rollDiceThunk = gameId => async dispatch => {
     const rollState = () => {
       state.dice = state.dice.map(die => {
         const newDie = { ...die }
-        if (!die.held) {
+        if (!die.held || state.card.fill) {
           newDie.pointer = false
           newDie.value = Math.ceil(Math.random() * 6)
         }

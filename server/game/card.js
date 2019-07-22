@@ -15,6 +15,7 @@ class Card {
     }
 
     _rollDice(prevDice) {
+        if (this.type === 'mussBuss' && this.fill) prevDice = null
         this.rolls.unshift(new Roll(null, this._roll() && !this.fill ? this._roll() : null, prevDice))
         this._calcFillorBust()
     }

@@ -14,13 +14,12 @@ class Card extends Component {
 
   render() {
     const cardImages = { bonus300, bonus400, bonus500, fill1000, mussBuss, noDice, vengeance, doubleTrouble, 'doubleTrouble!': doubleTrouble }
-    const { card, turn, drawCard } = this.props
-    const notNoDice = card.type !== 'noDice'
-    const bustOpacity = card.bust && notNoDice ? '' : 'no-bust'
+    const { card, turn, drawCard, invalidDraw } = this.props
+    const bustOpacity = card.bust && card.type !== 'noDice' ? '' : 'no-bust'
     const cardOpacity = !turn ? 'no-card' : ''
-    const turnOpacity = !turn ? 'no-turn' : ''
+    const drawBorder = !invalidDraw ? 'draw' : ''
     return (
-      <div className={`card card-container ${turnOpacity}`} onClick={drawCard}>
+      <div className={`card card-container ${drawBorder}`} onClick={drawCard}>
         <img src={cardImages[card.type]} className={`card ${cardOpacity}`} alt={`card-${card.type}`}/>
         <img src={bust} className={`card ${bustOpacity}`} alt={`card-bust-overlay`}/>
       </div>

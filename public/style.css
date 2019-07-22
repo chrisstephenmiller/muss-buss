@@ -25,6 +25,7 @@ form div {
   border: 5px solid black;
   border-radius: 15px;
   margin: 5px;
+  background-color: rgb(180, 180, 180);
 }
 
 span {
@@ -35,11 +36,12 @@ span {
   display: flex;
   flex-direction: column;
   margin: 5px;
-  justify-content: space-between;  
+  justify-content: space-between;
 }
 
 .turn-score {
-  font-size: 80px;
+  font-size: 88px;
+  margin-top: 5px;
   text-align: center;
 }
 
@@ -49,21 +51,21 @@ span {
 }
 
 .scores {
-  margin: 5px;
+  margin: 5px ;
   display: flex;
-  height: 420px;
+  height: 385px;
   justify-content: space-around;
   border: 5px solid black;
   border-radius: 25px;
   font-size: 32px;
+  background-color: white;
 }
 
 .player-score-list {
-  width: 130px;
-  margin: 0px 10px;
+  width: 124px;
+  margin: 0px 5px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   text-align: center;
 }
 
@@ -84,8 +86,8 @@ span {
 }
 
 .card {
-  height: 525px;
-  width: 375px;
+  height: 450px;
+  width: 300px;
   border-radius: 10px;
   position: absolute;
 }
@@ -93,8 +95,7 @@ span {
 .card-container {
   border: 5px solid black;
   border-radius: 15px;
-  margin: 5px;
-  margin-right: 0px;
+  margin: 5px 0px 50px 5px;
   position: relative;
 }
 
@@ -102,7 +103,7 @@ span {
   opacity: 0
 }
 
-.no-turn {
+.draw {
   border: 5px solid rgb(0, 180, 0);
 }
 
@@ -111,8 +112,8 @@ span {
 }
 
 .die {
-  height: 98px;
-  width: 98px;
+  height: 100px;
+  width: 100px;
   margin: 1px 5px;
   border: 5px solid black;
   border-radius: 23px;
@@ -130,12 +131,15 @@ span {
 }
 
 .pointer {
-  opacity: 1;
   border: 5px solid rgb(0, 180, 0);
 }
 
 .live {
-  box-shadow: 2px 3px 3px 2px black;
+  opacity: 1;
+}
+
+.live.pointer {
+  box-shadow: -2px 3px 3px 2px black;
 }
 
 .dice-container {
@@ -152,7 +156,7 @@ span {
 .current-player, .button-hot {
   color: rgb(0, 180, 0);
   opacity: 1;
-  text-shadow: 2px 2px 2px black
+  /* box-shadow: -2px 2px 2px rgb(0, 180, 0);; */
 }
 
 .button-container {

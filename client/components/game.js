@@ -34,15 +34,15 @@ class Game extends Component {
       <div id="game">
         <div className='game-container'>
           <div className='section'>
-            <Card turn={turn} card={card} drawCard={() => drawCard(gameId)} />
             <Score score={score} turn={turn} onClick={() => passTurn(gameId)}/>
+            <Card turn={turn} card={card} invalidDraw={invalidActions.invalidDraw} drawCard={() => drawCard(gameId)} />
           </div>
           <div className='section'>
             <div className='button-container'>
               <Button text={`[R]OLL`} invalidAction={invalidActions.invalidRoll} onClick={() => rollDice(gameId)} />
               <Button text={`[S]TOP`} invalidAction={invalidActions.invalidStop} onClick={() => stopTurn(gameId)} />
             </div>
-            <Dice dice={dice} />
+            <Dice dice={dice} card={card} turn={turn} />
             <Scores players={players} currentPlayerId={currentPlayer.id || 0} />
           </div>
         </div>

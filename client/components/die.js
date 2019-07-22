@@ -12,10 +12,13 @@ class Die extends Component {
 
   render() {
     const dieImages = [d0, d1, d2, d3, d4, d5, d6]
-    const { die, holdDice } = this.props
+    const { die, card, turn, holdDice } = this.props
     const held = die.held ? 'held' : ''
     const pointer = die.pointer ? 'pointer' : ''
-    const live = die.live && die.pointer ? 'live' : ''
+    console.log(die)
+    const isOrtoBeLive = die.live || (!card.rolls.length && !die.held)
+    const inheritableNonPointers = !die.live && !die.pointer & !card.bust
+    const live = (turn ? isOrtoBeLive : inheritableNonPointers) ? 'live' : ''
     return (
       <div className='die-container'>
         <img src={dieImages[die.value]}
