@@ -1,12 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 
-class Button extends Component {
-
-  render() {
-    const { text, invalidAction, onClick } = this.props
-    const hotOrCold = invalidAction ? '' : `button-hot`
-    return <span className={`button ${hotOrCold}`} onClick={onClick}>{text}</span>
-  }
+const Button = props => {
+  const { text, invalidAction, onClickFunc, gameId } = props
+  const hotOrCold = invalidAction ? '' : `button-hot`
+  return <span className={`button ${hotOrCold}`} onClick={() => onClickFunc(gameId)}>{text}</span>
 }
 
 export default Button

@@ -1,45 +1,26 @@
 import React from 'react'
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 import { Die } from '../components'
-import { holdDiceThunk } from '../store'
 
-const emptyDice = [
-  { "id": 0, "held": false, "live": true, "value": 0, "pointer": false },
-  { "id": 1, "held": false, "live": true, "value": 0, "pointer": false },
-  { "id": 2, "held": false, "live": true, "value": 0, "pointer": false },
-  { "id": 3, "held": false, "live": true, "value": 0, "pointer": false },
-  { "id": 4, "held": false, "live": true, "value": 0, "pointer": false },
-  { "id": 5, "held": false, "live": true, "value": 0, "pointer": false }]
+const die = i => { return { "id": i, "held": false, "live": true, "value": 0, "pointer": false } }
+const emptyDice = Array(6).fill(null).map((_, i) => die(i))
 
 const Dice = props => {
-  const { holdDice, dice, card, turn, match } = props
-  const gameId = match.params.id
+  const { dice, card, turn, holdDie, gameId } = props
   const allDice = dice.length ? dice : emptyDice
   return (
     <div className='dice-container'>
       {allDice.map((die => {
-        return <Die key={die.id}
-          card={card}
-          turn={turn}
-          holdDice={() => holdDice(gameId, die.id)}
-          die={die} />
+        return (
+          <Die key={die.id}
+            card={card}
+            turn={turn}
+            die={die}
+            holdDie={holdDie}
+            gameId={gameId} />
+        )
       }))}
     </div>
   )
 }
 
-const mapState = state => {
-  const { game } = state
-  return { game }
-}
-
-const mapDispatch = dispatch => {
-  return {
-    holdDice: (gameId, dieId) => {
-      dispatch(holdDiceThunk(gameId, dieId))
-    }
-  }
-}
-
-export default withRouter(connect(mapState, mapDispatch)(Dice))
+export default Dice

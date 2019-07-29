@@ -6,7 +6,8 @@ const Promise = require('bluebird')
 
 const gameState = (game, id) => {
   const invalidActions = game._invalidActions()
-  const { players, winner, prevTurn } = game
+  const { players, winner, prevTurn, deck } = game
+  const deckSize = deck && Object.values(deck).reduce((prev, current) => prev += current.length, 0)
   const currentPlayer = game._player()
   const turn = currentPlayer._turn()
   const prevCard = prevTurn && prevTurn._card()
@@ -16,13 +17,12 @@ const gameState = (game, id) => {
   if (dice && dice.every(die => die.held || !die.pointer)) invalidActions.invalidHold = true
   const prevScore = prevTurn && prevTurn.score
   const score = card && card.bust ? 0 : turn && (turn.score || turn.inheritance) || prevScore
-  return { players, currentPlayer, turn, score: score || 0, card: card || {}, dice: dice || [], winner, invalidActions, id }
+  return { players, deckSize, currentPlayer, turn, score: score || 0, card: card || {}, dice: dice || {}, winner, invalidActions, id }
 }
 
 router.post(`/`, async (req, res, next) => {
   try {
     const { winScore, players } = req.body
-    console.log(players)
     const users = await Promise.map(players, player => UserDb.findOrCreate({ where: { ...player } }))
     const game = new Game(null, winScore, users.map(player => player[0].dataValues))
     const gameDb = await GameDb.create({ game })

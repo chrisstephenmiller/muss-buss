@@ -4,7 +4,7 @@ const PlayerScores = props => {
   const { player, currentPlayerId } = props
   const showImpunity = player.turns[0] && player.turns[0].impunity
   const scoringTurns = player.turns.slice(showImpunity ? 0 : 1).filter(turn => turn.score).reverse()
-  const numVisible = 9
+  const numVisible = 15
   let tempScore = 0
   const scoringTurnTotals = scoringTurns.map((turn, index) => {
     tempScore += turn.score

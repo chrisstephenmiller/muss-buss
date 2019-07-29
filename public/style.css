@@ -35,6 +35,7 @@ span {
 .section {
   display: flex;
   flex-direction: column;
+  padding: 5px;
   margin: 5px;
   justify-content: space-between;
 }
@@ -53,7 +54,7 @@ span {
 .scores {
   margin: 5px ;
   display: flex;
-  height: 385px;
+  height: 100%;
   justify-content: space-around;
   border: 5px solid black;
   border-radius: 25px;
@@ -62,7 +63,7 @@ span {
 }
 
 .player-score-list {
-  width: 124px;
+  width: 100px;
   margin: 0px 5px;
   display: flex;
   flex-direction: column;
@@ -77,7 +78,7 @@ span {
 .player-name {
   text-decoration: underline;
   color: black;
-  margin-bottom: 6px; 
+  margin: 10px 0px; 
   font-size: 36px;
 }
 
@@ -92,10 +93,15 @@ span {
   position: absolute;
 }
 
+.cards-container {
+  display: flex;
+  justify-content: space-around;
+  margin: 25px 10px;
+}
+
 .card-container {
   border: 5px solid black;
   border-radius: 15px;
-  margin: 5px 0px 50px 5px;
   position: relative;
 }
 
@@ -107,8 +113,12 @@ span {
   border: 5px solid rgb(0, 180, 0);
 }
 
+.no-draw {
+  opacity: .25;
+}
+
 .no-card {
-  opacity: .75;
+  opacity: .6;
 }
 
 .die {
@@ -117,7 +127,7 @@ span {
   margin: 1px 5px;
   border: 5px solid black;
   border-radius: 23px;
-  opacity: .75;
+  opacity: .6;
 }
 
 .die-container {
@@ -139,7 +149,7 @@ span {
 }
 
 .live.pointer {
-  box-shadow: -2px 3px 3px 2px black;
+  box-shadow: 2px 3px 3px 2px black;
 }
 
 .dice-container {
@@ -149,18 +159,26 @@ span {
 
 .button {
   font-size: 36px;
-  opacity: .75;
+  opacity: .6;
   margin: 10px 5px;
+  padding: 5px;
+  border: 5px solid black;
+  border-radius: 15px;
 }
 
-.current-player, .button-hot {
-  color: rgb(0, 180, 0);
+.current-player {
   opacity: 1;
-  /* box-shadow: -2px 2px 2px rgb(0, 180, 0);; */
+  color: rgb(0, 180, 0);
+}
+
+.button-hot {
+  opacity: 1;
+  border: 5px solid rgb(0, 180, 0);
+  box-shadow: 2px 3px 3px black;
 }
 
 .button-container {
-  margin: 0px 5px;
+  margin: 5px;
   display: flex;
   justify-content: space-around;
 }
