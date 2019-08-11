@@ -8,7 +8,6 @@ import {Link} from 'react-router-dom'
  */
 export const UserHome = props => {
   const {email, games} = props
-  console.log(games)
   // games.forEach(game => {
   //   console.log(game.id)
   // })

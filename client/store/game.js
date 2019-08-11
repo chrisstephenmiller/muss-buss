@@ -14,9 +14,8 @@ const defaultGame = {
   invalidActions: { invalidDraw: true, invalidRoll: true, invalidHold: true, invalidStop: true, invalidPass: true }
 }
 
-export const getGame = game => {
-  const gameId = +window.location.pathname.split('/')[2]
-  socket.emit('updateOut', gameId)
+export const getGame = (game, gameId) => {
+  if (gameId) socket.emit('updateOut', gameId)
   return { type: GET_GAME, game }
 }
 
@@ -45,7 +44,7 @@ export const drawCardThunk = gameId => async dispatch => {
   try {
     const res = await axios.get(`/api/games/${gameId}/draw`)
     const game = res.data
-    dispatch(getGame(game || defaultGame))
+    dispatch(getGame(game || defaultGame, gameId))
   } catch (err) {
     console.error(err)
   }
@@ -54,43 +53,41 @@ export const drawCardThunk = gameId => async dispatch => {
 export const rollDiceThunk = gameId => async dispatch => {
   try {
     const res = await axios.get(`/api/games/${gameId}/roll`)
+    socket.emit('updateOut', gameId, 'roll')
     const game = res.data
-    const state = store.getState().game
-    if (state.dice.length) {
-      state.dice = state.dice.map(die => {
-        const newDie = { ...die }
-        newDie.live = false
-        return die.held ? newDie : die
-      })
-      dispatch(getGame({ ...state } || defaultGame))
-    }
-    else state.dice = Array(6).fill(null).map((_, i) => { return { id: i + 1 } })
-    const rollState = () => {
-      state.dice = state.dice.map(die => {
-        const newDie = { ...die }
-        if (!die.held || state.card.fill) {
-          newDie.pointer = false
-          newDie.value = Math.ceil(Math.random() * 6)
-        }
-        return newDie
-      })
-      return state
-    }
-    await setTimeout(() => dispatch(getGame({ ...rollState() } || defaultGame)), 100)
-    await setTimeout(() => dispatch(getGame({ ...rollState() } || defaultGame)), 200)
-    await setTimeout(() => dispatch(getGame({ ...rollState() } || defaultGame)), 300)
-    await setTimeout(() => dispatch(getGame({ ...rollState() } || defaultGame)), 400)
-    await setTimeout(() => dispatch(getGame(game || defaultGame)), 500)
+    const lastRoll = await dispatch(rollingAnimation())
+    await setTimeout(() => dispatch(getGame(game || defaultGame, gameId)), lastRoll)
   } catch (err) {
     console.error(err)
   }
+}
+
+export const rollingAnimation = () => async dispatch => {
+  const state = store.getState().game
+    if (!state.dice.length) state.dice = Array(6).fill(null).map((_, i) => { return { id: i + 1 } })
+    const rollState = () => {
+      state.dice = state.dice.map(die => {
+        if (die.held && !state.card.fill) die.live = false
+        else {
+          die.live = true
+          die.pointer = false
+          die.value = Math.ceil(Math.random() * 6)
+        }
+        return die
+      })
+      return state
+    }
+  const numRolls = 7
+  const rollLength = 100
+  for (let t = 1; t < numRolls; t += 1) setTimeout(() => dispatch(getGame({ ...rollState() } || defaultGame)), t * rollLength)
+  return numRolls * rollLength
 }
 
 export const holdDiceThunk = (gameId, dieId) => async dispatch => {
   try {
     const res = await axios.get(`/api/games/${gameId}/hold?holdId=${dieId}`)
     const game = res.data
-    dispatch(getGame(game || defaultGame))
+    dispatch(getGame(game || defaultGame, gameId))
   } catch (err) {
     console.error(err)
   }
@@ -100,7 +97,7 @@ export const stopTurnThunk = gameId => async dispatch => {
   try {
     const res = await axios.get(`/api/games/${gameId}/stop`)
     const game = res.data
-    dispatch(getGame(game || defaultGame))
+    dispatch(getGame(game || defaultGame, gameId))
   } catch (err) {
     console.error(err)
   }
@@ -110,11 +107,21 @@ export const passTurnThunk = gameId => async dispatch => {
   try {
     const res = await axios.get(`/api/games/${gameId}/pass`)
     const game = res.data
-    dispatch(getGame(game || defaultGame))
+    dispatch(getGame(game || defaultGame, gameId))
   } catch (err) {
     console.error(err)
   }
 }
+
+// export const takeActionThunk = (action, gameId, dieId) => async dispatch => {
+//   try {
+//     const res = await axios.get(`/api/games/${gameId}/${action}`)
+//     const game = res.data
+//     dispatch(getGame(game || defaultGame))
+//   } catch (err) {
+//     console.error(err)
+//   }
+// }
 
 export default function (state = defaultGame, action) {
   switch (action.type) {

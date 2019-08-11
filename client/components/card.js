@@ -14,12 +14,11 @@ import blank from '../../assets/Blank.png'
 const cardImages = { bonus300, bonus400, bonus500, fill1000, mussBuss, noDice, vengeance, doubleTrouble, 'doubleTrouble!': doubleTrouble }
 
 const Card = props => {
-  const { card, turn, deckSize } = props
+  const { card, turn, cardShadow } = props
   const bustOpacity = card.bust && card.type !== 'noDice' ? '' : 'no-bust'
   const cardOpacity = !turn ? 'no-card' : ''
-  const cardShadow = `${(54 - deckSize) / 3}px ${(54 - deckSize) / 3}px 10px black`
   return (
-    <div style={{ boxShadow: cardShadow }} className={`card card-container`}>
+    <div id='card' style={{ boxShadow: cardShadow }} className={`card card-container`}>
       <img src={cardImages[card.type] || blank} className={`card ${cardOpacity}`} alt={`card-${card.type}`}/>
       <img src={bust} className={`card ${bustOpacity}`} alt={`card-bust-overlay`}/>
     </div>

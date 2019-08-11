@@ -24,18 +24,7 @@ class Game {
         if (this._invalidDraw()) this.error = ('Invalid draw.')
         else {
             const postVengeance = this._roll() && this._card().type === 'vengeance'
-            if (postVengeance) {
-                const scores = this.players.filter(player => player.id !== this._player().id).map(player => player.score)
-                const highScore = Math.max(...scores)
-                const leaders = this.players.filter(player => player.score === highScore)
-                const negativeTurn = new Turn
-                negativeTurn.score = Math.max(-2500, -highScore)
-                leaders.forEach(leader => {
-                    leader.turns[0] = negativeTurn
-                    leader.turns.unshift(null)
-                    leader._calcScore()
-                })
-            }
+            if (postVengeance) this._postVengeance()
             if (this.prevTurn) {
                 if (this.prevTurn._card().fill) this.prevTurn._roll().dice = null
                 if (this.prevTurn._card().bust) this.prevTurn = null
@@ -71,6 +60,7 @@ class Game {
             if (this.prevTurn) this.prevTurn = null
             if (this._card().bust) {
                 if (this._card().type === 'mussBuss') this._turn()._calcScore()
+                this._roll().dice.forEach(die => die.live = false)
                 this.stopTurn()
             }
         }
@@ -118,27 +108,32 @@ class Game {
     stopTurn() {
         if (this._invalidStop()) this.error = ('Invalid stop.')
         else {
-            const postVengeance = !this._card().bust && this._card().type === 'vengeance'
-            if (postVengeance) {
-                const scores = this.players.filter(player => player.id !== this._player().id).map(player => player.score)
-                const highScore = Math.max(...scores)
-                const leaders = this.players.filter(player => player.score === highScore)
-                const negativeTurn = new Turn
-                negativeTurn.score = Math.max(-2500, -highScore)
-                leaders.forEach(leader => leader.turns.splice(1, 0, negativeTurn))
-            }
-            this._roll().dice.forEach(die => die.live = false)
+            if (!this._card().bust && this._card().type === 'vengeance') this._postVengeance()
+            this._roll().dice.forEach(die => { if (die.held) die.live = false })
             this._calcScores()
-            if (this.players.some(player => player.winner) ? this._player().score > this.winTotal : this._player().score >= this.winTotal) {
-                this.players.forEach(player => player.winner = player.id === this._player().id)
-                this.winTotal = this._player().score
-            }
-            this.prevTurn = this._turn()
-            this._player().turns.unshift(null)
-            this.playerIndex = ++this.playerIndex % this.players.length
-            if (this._player().winner) this.winner = this._player().name + ' won!'
+            this._nextPlayer()
+            this._checkWinner()
         }
         return this
+    }
+
+    _postVengeance() { 
+        const scores = this.players.filter(player => player.id !== this._player().id).map(player => player.score)
+        const highScore = Math.max(...scores)
+        const leaders = this.players.filter(player => player.score === highScore)
+        const negativeTurn = new Turn
+        negativeTurn.score = Math.max(-2500, -highScore)
+        leaders.forEach(leader => {
+            leader.turns[0] = negativeTurn
+            leader.turns.unshift(null)
+            leader._calcScore()
+        })
+    }
+
+    _nextPlayer() {
+        this.prevTurn = this._turn()
+        this._player().turns.unshift(null)
+        this.playerIndex = ++this.playerIndex % this.players.length
     }
 
     _invalidStop() {
@@ -151,6 +146,13 @@ class Game {
         const mustFill = ['vengeance', 'fill1000', 'doubleTrouble!'].includes(this._card().type) && this._card().fill === this._card().bust
         const noRollNotNoDice = !this._roll() && this._card().type !== 'noDice'
         return mustFill || noRollNotNoDice || cantStop
+    }
+
+    _checkWinner() {
+        const winTotal = Math.max(this.winTotal, ...this.players.map(player => player.score))
+        this.players.forEach(player => player.winner = player.score === winTotal)
+        if (this._player().score === winTotal && this._player().winner) this.winner = this._player().name
+        else this._player().winner = false 
     }
 
     passTurn() {

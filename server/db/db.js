@@ -3,7 +3,7 @@ const pkg = require('../../package.json')
 
 const databaseName = pkg.name + (process.env.NODE_ENV === 'test' ? '-test' : '')
 const db = new Sequelize(databaseName, process.env.DATABASE_USERNAME, process.env.DATABASE_PASSWORD, {
-    host: process.env.DATABASE_URL || 'localhost',
+    host: process.env.DATABASE_HOST || 'localhost',
     port: 5432,
     dialect: 'postgres',
     logging: false

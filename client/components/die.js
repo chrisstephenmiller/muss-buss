@@ -10,12 +10,10 @@ import d6 from '../../assets/d6.png'
 
 const Die = props => {
   const dieImages = [d0, d1, d2, d3, d4, d5, d6]
-  const { die, card, turn, holdDie, gameId } = props
+  const { die, holdDie, gameId } = props
   const held = die.held ? 'held' : ''
   const pointer = die.pointer ? 'pointer' : ''
-  const isOrtoBeLive = die.live || (!card.rolls.length && !die.held)
-  const inheritableNonPointers = !die.live && !die.pointer & !card.bust
-  const live = (turn ? isOrtoBeLive : inheritableNonPointers) ? 'live' : ''
+  const live = die.live ? 'live' : ''
   const dieStates = `${held} ${pointer} ${live}`
   return (
     <div className='die-container'>

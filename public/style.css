@@ -93,6 +93,14 @@ span {
   position: absolute;
 }
 
+.draw-hover {
+  opacity: 0
+}
+
+.draw.draw-hover:hover {
+  opacity: 1
+}
+
 .cards-container {
   display: flex;
   justify-content: space-around;
@@ -100,7 +108,7 @@ span {
 }
 
 .card-container {
-  border: 5px solid black;
+  border: 5px solid white;
   border-radius: 15px;
   position: relative;
 }
@@ -109,11 +117,11 @@ span {
   opacity: 0
 }
 
-.draw {
+.draw.draw-border {
   border: 5px solid rgb(0, 180, 0);
 }
 
-.no-draw {
+.shuffle {
   opacity: .25;
 }
 
@@ -148,13 +156,18 @@ span {
   opacity: 1;
 }
 
-.live.pointer {
-  box-shadow: 2px 3px 3px 2px black;
-}
-
 .dice-container {
   display: flex;
   justify-content: center;
+}
+
+.live.pointer.die:hover {
+  box-shadow: 1px 4px 7px 2px black;
+}
+
+.current-player {
+  opacity: 1;
+  color: rgb(0, 180, 0);
 }
 
 .button {
@@ -166,15 +179,13 @@ span {
   border-radius: 15px;
 }
 
-.current-player {
-  opacity: 1;
-  color: rgb(0, 180, 0);
+.button-hot:hover {
+  box-shadow: 1px 4px 7px 2px black;
 }
 
 .button-hot {
   opacity: 1;
   border: 5px solid rgb(0, 180, 0);
-  box-shadow: 2px 3px 3px black;
 }
 
 .button-container {

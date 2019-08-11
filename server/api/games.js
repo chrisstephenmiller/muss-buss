@@ -9,7 +9,7 @@ const gameState = (game, id) => {
   const { players, winner, prevTurn, deck } = game
   const deckSize = deck && Object.values(deck).reduce((prev, current) => prev += current.length, 0)
   const currentPlayer = game._player()
-  const turn = currentPlayer._turn()
+  const turn = currentPlayer._turn() 
   const prevCard = prevTurn && prevTurn._card()
   const card = turn && turn._card() || prevCard
   const prevDice = prevCard && prevCard._roll() && prevCard._roll().dice
@@ -17,7 +17,7 @@ const gameState = (game, id) => {
   if (dice && dice.every(die => die.held || !die.pointer)) invalidActions.invalidHold = true
   const prevScore = prevTurn && prevTurn.score
   const score = card && card.bust ? 0 : turn && (turn.score || turn.inheritance) || prevScore
-  return { players, deckSize, currentPlayer, turn, score: score || 0, card: card || {}, dice: dice || {}, winner, invalidActions, id }
+  return { players, deckSize, currentPlayer, turn, score: score || 0, card: card || {}, dice: dice || [], winner, invalidActions, id }
 }
 
 router.post(`/`, async (req, res, next) => {
@@ -59,8 +59,8 @@ router.get(`/:gameId`, (req, res, next) => {
 router.get(`/:gameId/:action/`, (req, res, next) => {
   try {
     const game = new Game(req.game)
-    // if (game.players[game.playerIndex].id !== req.user.id) game.error = 'Invalid user.'
-    // else
+    if (game.players[game.playerIndex].id !== req.user.id) game.error = 'Invalid user.'
+    else
     switch (req.action) {
       case 'draw': game.drawCard()
         break

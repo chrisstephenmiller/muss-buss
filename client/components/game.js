@@ -2,16 +2,16 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Dice, Score, Scores, Card, Button, Draw } from '../components'
-import { getGameThunk, rollDiceThunk, drawCardThunk, stopTurnThunk, passTurnThunk, holdDiceThunk } from '../store'
+import { getGameThunk, rollDiceThunk, drawCardThunk, stopTurnThunk, passTurnThunk, holdDiceThunk, rollingAnimation } from '../store'
 import socket from '../socket'
 
 class Game extends Component {
 
-  componentDidMount() {
-    const { getGame, match, rollDice, holdDie, drawCard, stopTurn, passTurn } = this.props
+  constructor(props) {
+    super(props)
+    const { rollDice, holdDie, drawCard, stopTurn, passTurn, match } = this.props
     const gameId = match.params.id
-    getGame(gameId)
-    document.addEventListener('keydown', () => {
+    this.keyListeners = () => {
       switch (event.key) {
         case 'r': return rollDice(gameId)
         case 'h': return holdDie(gameId, 6)
@@ -19,21 +19,31 @@ class Game extends Component {
         case 's': return stopTurn(gameId)
         case 'p': return passTurn(gameId)
       }
+    }
+  }
+
+  componentDidMount() {
+    const { getGame, match, animateRoll } = this.props
+    const gameId = match.params.id
+    getGame(gameId)
+    socket.on('updateIn', async (game, roll) => { 
+      if (game === gameId) roll ? animateRoll() : getGame(gameId)
     })
-    socket.on('updateIn', () => getGame(gameId))
+    document.addEventListener('keydown', this.keyListeners)
   }
 
   componentWillUnmount() {
-    console.log('unmount')
+    document.removeEventListener('keydown', this.keyListeners)
   }
 
   render() {
     const { game, drawCard, rollDice, holdDie, stopTurn, passTurn, user, match } = this.props
-    const { players, dice, card, currentPlayer, score, invalidActions, winner, turn, deckSize } = game
+    const { players, dice, card, currentPlayer, score, invalidActions, winner, turn, deckSize } = game  
     const gameId = match.params.id
     const isCurrentPlayer = user.id === currentPlayer.id
-    for (const a in invalidActions) invalidActions[a] = invalidActions[a] || isCurrentPlayer
+    for (const a in invalidActions) invalidActions[a] = invalidActions[a] || !isCurrentPlayer
     if (winner) setTimeout(() => alert(game.winner), 100)
+    const shadowMaker = deckSize =>`${deckSize / 4}px ${deckSize / 3.5}px ${deckSize / 8}px ${deckSize / 12}px black`
     return (
       <div id="game">
         <div className='game-container'>
@@ -42,10 +52,10 @@ class Game extends Component {
                 <Button text={`[R]OLL`} onClickFunc={rollDice} invalidAction={invalidActions.invalidRoll} gameId={gameId} />
                 <Button text={`[S]TOP`} onClickFunc={stopTurn} invalidAction={invalidActions.invalidStop} gameId={gameId} />
               </div>
-              <Dice dice={dice} card={card} turn={turn} holdDie={holdDie} gameId={gameId} />
+              <Dice dice={dice} holdDie={holdDie} gameId={gameId} />
             <div className='cards-container'>
-              <Draw deckSize={deckSize} drawCard={drawCard} invalidDraw={invalidActions.invalidDraw} gameId={gameId} />
-              <Card turn={turn} deckSize={deckSize} card={card} gameId={gameId} />
+              <Draw drawShadow={shadowMaker(deckSize)} deckSize={deckSize} drawCard={drawCard} invalidDraw={invalidActions.invalidDraw} gameId={gameId} />
+              <Card turn={turn} cardShadow={shadowMaker(54 - deckSize)} card={card} gameId={gameId} />
             </div>
           </div>
           <div className='section'>
@@ -70,7 +80,8 @@ const mapDispatch = dispatch => {
     rollDice: gameId => dispatch(rollDiceThunk(gameId)),
     holdDie: (gameId, dieId) => dispatch(holdDiceThunk(gameId, dieId)),
     stopTurn: gameId => dispatch(stopTurnThunk(gameId)),
-    passTurn: gameId => dispatch(passTurnThunk(gameId))
+    passTurn: gameId => dispatch(passTurnThunk(gameId)),
+    animateRoll: () => dispatch(rollingAnimation())
   }
 }
 
