@@ -6,7 +6,7 @@ const User = db.define('user', {
   email: {
     type: Sequelize.STRING,
     unique: true,
-    allowNull: true
+    allowNull: true,
   },
   name: {
     type: Sequelize.STRING,
@@ -69,5 +69,10 @@ const setSaltAndPassword = user => {
   }
 }
 
+const emailIsName = user => {
+  user.name = user.email
+}
+
 User.beforeCreate(setSaltAndPassword)
 User.beforeUpdate(setSaltAndPassword)
+User.beforeCreate(emailIsName)
