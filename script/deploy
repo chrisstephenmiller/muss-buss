@@ -16,7 +16,7 @@ git checkout -b deploy
 webpack -p
 
 # remove unnecessary files
-git rm webpack.config.js docker-compose.yml Dockerfile
+git rm webpack.config.js docker-compose.yml Dockerfile LICENSE 
 git rm -r assets script
 
 # "force" add the otherwise gitignored build files
