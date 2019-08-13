@@ -32,7 +32,7 @@
       "git add"
     ]
   },
-  "author": "Fullstack Academy of Code",
+  "author": "Chris Miller",
   "license": "MIT",
   "dependencies": {
     "ajv": "^6.10.0",
