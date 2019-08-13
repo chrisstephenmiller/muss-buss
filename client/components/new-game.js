@@ -38,7 +38,7 @@ class NewGame extends Component {
     for (const key in this.state) { 
       if (key.slice(0, 4) === `Players`) players.push(this.state[key]) 
     }
-    newGame(5000, [{name: 'peter'}, {name: 'chris'}, {name: 'john'}])
+    newGame(1000, [{name: 'peter'}, {name: 'chris'}, {name: 'john'}])
   }
 
   componentDidMount = () => {

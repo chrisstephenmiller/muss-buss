@@ -33,8 +33,9 @@ if (process.env.NODE_ENV !== 'production') require('../secrets')
 passport.serializeUser((user, done) => done(null, user.id))
 
 passport.deserializeUser(async (id, done) => {
+  const { Game } = require('./db/models')
   try {
-    const user = await db.models.user.findById(id)
+    const user = await db.models.user.findById(id, { include: Game })
     done(null, user)
   } catch (err) {
     done(err)
