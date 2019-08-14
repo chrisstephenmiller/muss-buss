@@ -15,10 +15,6 @@ git checkout -b deploy
 # webpack will run in "production mode"
 webpack -p
 
-# remove unnecessary files
-git rm webpack.config.js docker-compose.yml Dockerfile LICENSE 
-git rm -r assets script
-
 # "force" add the otherwise gitignored build files
 git add -f public/bundle.js public/bundle.js.map public/assets
 
@@ -26,4 +22,4 @@ git add -f public/bundle.js public/bundle.js.map public/assets
 git commit --allow-empty -m 'Deploying'
 
 # push your local "deploy" branch to the "master" branch on heroku
-git push --force heroku deploy:master
+eb deploy muss-buss-dev

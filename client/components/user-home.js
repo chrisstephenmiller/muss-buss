@@ -33,7 +33,7 @@ const mapState = state => {
   const { user } = state
   return {
     name: user.name,
-    games: user.games.filter(game => !game.game.winner)
+    games: user.games && user.games.filter(game => !game.game.winner)
   }
 }
 
