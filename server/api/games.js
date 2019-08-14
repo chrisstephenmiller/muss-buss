@@ -11,13 +11,13 @@ const gameState = (game, id) => {
   const currentPlayer = game._player()
   const turn = currentPlayer._turn()
   const prevCard = prevTurn && prevTurn._card()
-  const card = turn && turn._card() || prevCard
+  const card = turn && turn._card()
   const prevDice = prevCard && prevCard._roll() && prevCard._roll().dice
-  const dice = card && card._roll() && card._roll().dice || prevDice
+  const dice = card && card._roll() && card._roll().dice
   if (dice && dice.every(die => die.held || !die.pointer)) invalidActions.invalidHold = true
   const prevScore = prevTurn && prevTurn.score
   const score = card && card.bust ? 0 : turn && (turn.score || turn.inheritance) || prevScore
-  return { players, deckSize, currentPlayer, turn, score: score || 0, card: card || {}, dice: dice || [], winner, invalidActions, id }
+  return { players, deckSize, currentPlayer, turn, score: score || 0, card: card || {}, prevCard: prevCard || {}, dice: dice || [], prevDice: prevDice || [], winner, invalidActions, id }
 }
 
 router.post(`/`, async (req, res, next) => {
@@ -72,9 +72,9 @@ router.get(`/:gameId/:action/`, (req, res, next) => {
         break
       case 'hold': game.holdPointers(Number(req.query.holdId))
         break
-      default: return res.status(404)
+      default: game.error = 'Invalid action.'
     }
-    if (game.error) res.status(403).send(game.error)
+    if (game.error) res.status(403).send(game)
     else {
       GameDb.update({ game }, { where: { id: req.gameId } })
       res.json(gameState(game))

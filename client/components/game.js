@@ -38,7 +38,7 @@ class Game extends Component {
 
   render() {
     const { game, drawCard, rollDice, holdDie, stopTurn, passTurn, user, match } = this.props
-    const { players, dice, card, currentPlayer, score, invalidActions, winner, turn, deckSize } = game  
+    const { players, dice, prevDice, card, prevCard, currentPlayer, score, invalidActions, winner, turn, deckSize } = game  
     const gameId = match.params.id
     const isCurrentPlayer = user.id === currentPlayer.id
     for (const a in invalidActions) invalidActions[a] = invalidActions[a] || !isCurrentPlayer
