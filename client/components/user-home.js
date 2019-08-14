@@ -29,9 +29,6 @@ class UserHome extends Component {
   }
 }
 
-/**
- * CONTAINER
- */
 const mapState = state => {
   const { user } = state
   return {
@@ -49,9 +46,6 @@ const mapDispatch = dispatch => {
 
 export default connect(mapState, mapDispatch)(UserHome)
 
-/**
- * PROP TYPES
- */
 UserHome.propTypes = {
   name: PropTypes.string
 }

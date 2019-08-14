@@ -9,7 +9,7 @@ const gameState = (game, id) => {
   const { players, winner, prevTurn, deck } = game
   const deckSize = deck && Object.values(deck).reduce((prev, current) => prev += current.length, 0)
   const currentPlayer = game._player()
-  const turn = currentPlayer._turn() 
+  const turn = currentPlayer._turn()
   const prevCard = prevTurn && prevTurn._card()
   const card = turn && turn._card() || prevCard
   const prevDice = prevCard && prevCard._roll() && prevCard._roll().dice
@@ -71,6 +71,8 @@ router.get(`/:gameId/:action/`, (req, res, next) => {
       case 'pass': game.passTurn()
         break
       case 'hold': game.holdPointers(Number(req.query.holdId))
+        break
+      default: return res.status(404)
     }
     if (game.error) res.status(403).send(game.error)
     else {
