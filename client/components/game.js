@@ -38,7 +38,7 @@ class Game extends Component {
 
   render() {
     const { game, drawCard, rollDice, holdDie, stopTurn, passTurn, user, match } = this.props
-    const { players, dice, prevDice, card, prevCard, currentPlayer, score, invalidActions, winner, turn, deckSize } = game  
+    const { players, dice, prevDice, card, prevCard, currentPlayer, score, invalidActions, winner, turn, deckSize } = game
     const gameId = match.params.id
     const isCurrentPlayer = user.id === currentPlayer.id
     for (const a in invalidActions) invalidActions[a] = invalidActions[a] || !isCurrentPlayer
@@ -52,10 +52,10 @@ class Game extends Component {
                 <Button text={`[R]OLL`} onClickFunc={rollDice} invalidAction={invalidActions.invalidRoll} gameId={gameId} />
                 <Button text={`[S]TOP`} onClickFunc={stopTurn} invalidAction={invalidActions.invalidStop} gameId={gameId} />
               </div>
-              <Dice dice={dice} holdDie={holdDie} gameId={gameId} />
+              <Dice dice={dice || prevDice || []} holdDie={holdDie} gameId={gameId} />
             <div className='cards-container'>
               <Draw drawShadow={shadowMaker(deckSize)} deckSize={deckSize} drawCard={drawCard} invalidDraw={invalidActions.invalidDraw} gameId={gameId} />
-              <Card turn={turn} cardShadow={shadowMaker(54 - deckSize)} card={card} gameId={gameId} />
+              <Card turn={turn} cardShadow={shadowMaker(54 - deckSize)} card={card || prevCard || {}} gameId={gameId} />
             </div>
           </div>
           <div className='section'>

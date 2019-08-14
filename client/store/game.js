@@ -64,7 +64,7 @@ export const rollDiceThunk = gameId => async dispatch => {
 
 export const rollingAnimation = () => async dispatch => {
   const state = store.getState().game
-    if (!state.dice.length) state.dice = Array(6).fill(null).map((_, i) => { return { id: i + 1 } })
+    if (!state.dice) state.dice = Array(6).fill(null).map((_, i) => { return { id: i + 1 } })
     const rollState = () => {
       state.dice = state.dice.map(die => {
         if (die.held && !state.card.fill) die.live = false
@@ -112,16 +112,6 @@ export const passTurnThunk = gameId => async dispatch => {
     console.error(err)
   }
 }
-
-// export const takeActionThunk = (action, gameId, dieId) => async dispatch => {
-//   try {
-//     const res = await axios.get(`/api/games/${gameId}/${action}`)
-//     const game = res.data
-//     dispatch(getGame(game || defaultGame))
-//   } catch (err) {
-//     console.error(err)
-//   }
-// }
 
 export default function (state = defaultGame, action) {
   switch (action.type) {
