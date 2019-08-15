@@ -3,7 +3,7 @@ const { User, Game } = require('../db/models/')
 module.exports = router
 
 router.post('/login', async (req, res, next) => {
-  const user = await User.findOne({ where: { email: req.body.email } })
+  const user = await User.findOne({ where: { email: req.body.email }, include: Game })
   if (!user) {
     console.log('No such user found:', req.body.email)
     res.status(401).send('Wrong username and/or password')
