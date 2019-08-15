@@ -64,7 +64,7 @@ export const rollDiceThunk = gameId => async dispatch => {
 
 export const rollingAnimation = () => async dispatch => {
   const state = store.getState().game
-    if (!state.dice) state.dice = Array(6).fill(null).map((_, i) => { return { id: i + 1 } })
+    if (!state.dice) state.dice = state.prevDice || Array(6).fill(null).map((_, i) => { return { id: i + 1 } })
     const rollState = () => {
       state.dice = state.dice.map(die => {
         if (die.held && !state.card.fill) die.live = false
