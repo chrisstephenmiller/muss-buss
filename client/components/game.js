@@ -26,7 +26,7 @@ class Game extends Component {
     const { getGame, match, animateRoll } = this.props
     const gameId = match.params.id
     getGame(gameId)
-    socket.on('updateIn', async (game, roll) => { 
+    socket.on('updateIn', async (game, roll) => {
       if (game === gameId) roll ? animateRoll() : getGame(gameId)
     })
     document.addEventListener('keydown', this.keyListeners)
@@ -40,30 +40,33 @@ class Game extends Component {
     const { game, drawCard, rollDice, holdDie, stopTurn, passTurn, user, match } = this.props
     const { players, dice, prevDice, card, prevCard, currentPlayer, score, invalidActions, winner, turn, deckSize } = game
     const gameId = match.params.id
+    const holdAll = gameId => { holdDie(gameId, 6) }
     const isCurrentPlayer = user.id === currentPlayer.id
-    for (const a in invalidActions) invalidActions[a] = invalidActions[a] || !isCurrentPlayer
-    if (winner) setTimeout(() => alert(game.winner), 100)
-    const shadowMaker = deckSize =>`${deckSize / 4}px ${deckSize / 3.5}px ${deckSize / 8}px ${deckSize / 12}px black`
+    for (const a in invalidActions) {
+      if (a === 'invalidHolds') invalidActions[a] = invalidActions[a].map(die => die || !isCurrentPlayer)
+      else invalidActions[a] = invalidActions[a] || !isCurrentPlayer
+    }
+    if (winner) setTimeout(() => alert(game.winner + 'won!'), 100)
+    const shadowMaker = deckSize => `${deckSize / 5}px ${deckSize / 3.5}px ${deckSize / 8}px ${deckSize / 12}px black`
+    const scoreProps = {score, passTurn, invalidPass: invalidActions.invalidPass, gameId}
     return (
-      <div id="game">
         <div className='game-container'>
           <div className='section'>
-              <div className='button-container'>
-                <Button text={`[R]OLL`} onClickFunc={rollDice} invalidAction={invalidActions.invalidRoll} gameId={gameId} />
-                <Button text={`[S]TOP`} onClickFunc={stopTurn} invalidAction={invalidActions.invalidStop} gameId={gameId} />
-              </div>
-              <Dice dice={dice || prevDice || []} holdDie={holdDie} gameId={gameId} />
+            <div className='button-container'>
+              <Button text={`[R]OLL`} onClickFunc={rollDice} invalidAction={invalidActions.invalidRoll} gameId={gameId} />
+              <Button text={`[H]OLD`} onClickFunc={holdAll} invalidAction={invalidActions.invalidHolds[6]} gameId={gameId} />
+              <Button text={`[S]TOP`} onClickFunc={stopTurn} invalidAction={invalidActions.invalidStop} gameId={gameId} />
+            </div>
+            <Dice dice={dice || prevDice || []} holdDie={holdDie} gameId={gameId} isCurrentPlayer={isCurrentPlayer} />
             <div className='cards-container'>
               <Draw drawShadow={shadowMaker(deckSize)} deckSize={deckSize} drawCard={drawCard} invalidDraw={invalidActions.invalidDraw} gameId={gameId} />
               <Card turn={turn} cardShadow={shadowMaker(54 - deckSize)} card={card || prevCard || {}} gameId={gameId} />
             </div>
           </div>
           <div className='section'>
-            <Score score={score} passTurn={passTurn} invalidPass={invalidActions.invalidPass} gameId={gameId} />
-            <Scores players={players} currentPlayerId={currentPlayer.id || 0} />
+            <Scores scoreProps={scoreProps} players={players} currentPlayerId={currentPlayer.id || 0} />
           </div>
         </div>
-      </div>
     )
   }
 }

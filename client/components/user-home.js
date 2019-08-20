@@ -15,7 +15,7 @@ class UserHome extends Component {
     const liveGameIds = games.map(game => game.id).sort((a, b) => b - a)
     return (
       <div>
-        <h3>Welcome, {name}!</h3>
+        <h3 id='touch-test' onClick={() => document.getElementById('touch-test').classList.toggle('touched')}>Welcome, {name}!</h3>
         <Link to="/games/new">New Game</Link>
         {liveGameIds.map(gameId => {
           return (

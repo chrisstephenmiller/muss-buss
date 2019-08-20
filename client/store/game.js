@@ -11,7 +11,7 @@ const defaultGame = {
   card: {},
   dice: [],
   score: 0,
-  invalidActions: { invalidDraw: true, invalidRoll: true, invalidHold: true, invalidStop: true, invalidPass: true }
+  invalidActions: { invalidDraw: true, invalidRoll: true, invalidHolds: [], invalidStop: true, invalidPass: true }
 }
 
 export const getGame = (game, gameId) => {

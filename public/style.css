@@ -1,5 +1,13 @@
-body {
+html {
+  /* height: 100%; */
+  /* width: 100%; */
+}
+
+  body {
   font-family: sans-serif;
+  /* height: calc(100% - 20px); */
+  /* width: 100%; */
+  /* margin: 0px; */
 }
 
 a {
@@ -12,7 +20,7 @@ label {
 
 nav a {
   display: inline-block;
-  margin: 1em;
+  margin: 10px;
 }
 
 form div {
@@ -20,16 +28,41 @@ form div {
   display: inline-block;
 }
 
-.game-container {
-  display: inline-flex;
-  border: 5px solid black;
-  border-radius: 15px;
-  margin: 5px;
-  background-color: rgb(180, 180, 180);
-}
-
 span {
   font-weight: bold;
+}
+
+.navbar {
+  background-color: #f83c4b;
+  border: 5px solid black;
+}
+
+.app-name { 
+  border-top: 10px solid #f83c4b;
+  border-left: 10px solid #f83c4b;
+  margin: 0px;
+  color: white;
+}
+
+#app {  
+  /* height: 100%;` */
+  /* width: 100%; */
+  /* min-width: 1460px; */
+  background-size: contain;
+  background-repeat: repeat-x;
+  background-image: url('Table.jpg');
+  border-bottom: 10px solid black;
+}
+
+#app-container {  
+  /* height: 100%; */
+  /* min-width: 1460px; */
+}
+
+.game-container {
+  /* min-width: 1450px; */
+  margin-right: 10px;
+  display: inline-flex;
 }
 
 .section {
@@ -42,8 +75,13 @@ span {
 
 .turn-score {
   font-size: 88px;
-  margin-top: 5px;
   text-align: center;
+}
+
+.turn-score-container {
+  margin: 5px 5px 5px;
+  text-align: center;
+  border: 5px solid black;
 }
 
 .inheritance {
@@ -51,19 +89,24 @@ span {
   text-shadow: 2px 2px 2px black
 }
 
-.scores {
-  margin: 5px ;
-  display: flex;
+.all-scores {
   height: 100%;
-  justify-content: space-around;
+  background-image: url('Paper.jpg');
+  box-shadow: 2px 3px 5px 1px black;
+}
+
+.past-scores {
   border: 5px solid black;
-  border-radius: 25px;
+  min-width: 660px;
+  height: calc(100% - 136px);
+  margin: 5px;
+  display: flex;
+  justify-content: space-around;
   font-size: 32px;
-  background-color: white;
 }
 
 .player-score-list {
-  width: 100px;
+  max-width: 100px;
   margin: 0px 5px;
   display: flex;
   flex-direction: column;
@@ -104,7 +147,7 @@ span {
 .cards-container {
   display: flex;
   justify-content: space-around;
-  margin: 25px 10px;
+  margin: 25px 10px 50px;
 }
 
 .card-container {
@@ -161,7 +204,7 @@ span {
   justify-content: center;
 }
 
-.live.pointer.die:hover {
+.live.pointer.die.roller:hover {
   box-shadow: 1px 4px 7px 2px black;
 }
 
@@ -177,6 +220,7 @@ span {
   padding: 5px;
   border: 5px solid black;
   border-radius: 15px;
+  padding-bottom: 8px;
 }
 
 .button-hot:hover {
@@ -186,10 +230,24 @@ span {
 .button-hot {
   opacity: 1;
   border: 5px solid rgb(0, 180, 0);
+  text-shadow: 1px 3px 3px black;
+  color: rgb(0, 180, 0);
 }
 
 .button-container {
   margin: 5px;
   display: flex;
   justify-content: space-around;
+}
+
+@media (hover: none) {
+  .live.pointer.die:hover {
+    box-shadow: none;
+  } 
+  .button-hot:hover {
+    box-shadow: none;
+  } 
+  .draw.draw-hover:hover {
+    opacity: 0
+  }
 }

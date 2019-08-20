@@ -10,11 +10,12 @@ import d6 from '../../assets/d6.png'
 
 const Die = props => {
   const dieImages = [d0, d1, d2, d3, d4, d5, d6]
-  const { die, holdDie, gameId } = props
+  const { die, holdDie, gameId, isCurrentPlayer} = props
   const held = die.held ? 'held' : ''
   const pointer = die.pointer ? 'pointer' : ''
   const live = die.live ? 'live' : ''
-  const dieStates = `${held} ${pointer} ${live}`
+  const currentPlayer = isCurrentPlayer ? 'roller' : ''
+  const dieStates = `${held} ${pointer} ${live} ${currentPlayer}`
   return (
     <div className='die-container'>
       <img src={dieImages[die.value]} className={`die ${dieStates}`} alt={`die-${die.value}`} onClick={() => holdDie(gameId, die.id)}/>
