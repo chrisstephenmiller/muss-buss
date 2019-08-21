@@ -26,9 +26,7 @@ class Game extends Component {
     const { getGame, match, animateRoll } = this.props
     const gameId = match.params.id
     getGame(gameId)
-    socket.on('updateIn', async (game, roll) => {
-      if (game === gameId) roll ? animateRoll() : getGame(gameId)
-    })
+    socket.on('updateIn', async (game, roll) => { if (game === gameId) roll ? animateRoll() : getGame(gameId) })
     document.addEventListener('keydown', this.keyListeners)
   }
 

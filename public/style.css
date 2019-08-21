@@ -1,13 +1,11 @@
 html {
-  /* height: 100%; */
-  /* width: 100%; */
+  height: 100%;
+  width: 100%;
+  min-width: 1460px;
 }
 
   body {
   font-family: sans-serif;
-  /* height: calc(100% - 20px); */
-  /* width: 100%; */
-  /* margin: 0px; */
 }
 
 a {
@@ -34,99 +32,42 @@ span {
 
 .navbar {
   background-color: #f83c4b;
-  border: 5px solid black;
+  border-bottom: 5px solid black;
 }
 
-.app-name { 
-  border-top: 10px solid #f83c4b;
-  border-left: 10px solid #f83c4b;
+.app-name {
   margin: 0px;
+  padding: 10px 0px 0px 10px;
   color: white;
 }
 
-#app {  
-  /* height: 100%;` */
-  /* width: 100%; */
-  /* min-width: 1460px; */
-  background-size: contain;
-  background-repeat: repeat-x;
-  background-image: url('Table.jpg');
-  border-bottom: 10px solid black;
-}
-
-#app-container {  
-  /* height: 100%; */
-  /* min-width: 1460px; */
+#app-container {
+  height: 855px;
+  border: 5px solid black;
 }
 
 .game-container {
-  /* min-width: 1450px; */
-  margin-right: 10px;
+  width: 100%;
+  height: calc(100% - 90px);
+  background-size: contain;
+  background-repeat: repeat-x;
+  background-image: url('Table.jpg');
   display: inline-flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 .section {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 5px;
-  margin: 5px;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
-.turn-score {
-  font-size: 88px;
-  text-align: center;
-}
-
-.turn-score-container {
-  margin: 5px 5px 5px;
-  text-align: center;
-  border: 5px solid black;
-}
-
-.inheritance {
-  color: rgb(0, 180, 0);
-  text-shadow: 2px 2px 2px black
-}
-
-.all-scores {
-  height: 100%;
-  background-image: url('Paper.jpg');
-  box-shadow: 2px 3px 5px 1px black;
-}
-
-.past-scores {
-  border: 5px solid black;
-  min-width: 660px;
-  height: calc(100% - 136px);
-  margin: 5px;
+.cards-container {
   display: flex;
   justify-content: space-around;
-  font-size: 32px;
-}
-
-.player-score-list {
-  max-width: 100px;
-  margin: 0px 5px;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-
-.past-player-score {
-  text-decoration: line-through;
-  margin: 0px;
-}
-
-.player-name {
-  text-decoration: underline;
-  color: black;
-  margin: 10px 0px; 
-  font-size: 36px;
-}
-
-.player-score {
-  color: black
+  margin: 20px 10px 30px;
 }
 
 .card {
@@ -144,11 +85,6 @@ span {
   opacity: 1
 }
 
-.cards-container {
-  display: flex;
-  justify-content: space-around;
-  margin: 25px 10px 50px;
-}
 
 .card-container {
   border: 5px solid white;
@@ -208,11 +144,6 @@ span {
   box-shadow: 1px 4px 7px 2px black;
 }
 
-.current-player {
-  opacity: 1;
-  color: rgb(0, 180, 0);
-}
-
 .button {
   font-size: 36px;
   opacity: .6;
@@ -238,6 +169,73 @@ span {
   margin: 5px;
   display: flex;
   justify-content: space-around;
+}
+
+.current-player {
+  opacity: 1;
+  color: rgb(0, 180, 0);
+}
+
+.all-scores {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin: 10px 5px;
+  background-image: url('Paper.jpg');
+  box-shadow: 2px 3px 5px 1px black;
+}
+
+.turn-score-container {
+  margin: 5px 5px 5px;
+  text-align: center;
+  border: 5px solid black;
+}
+
+.turn-score {
+  font-size: 88px;
+  text-align: center;
+}
+
+.inheritance {
+  color: rgb(0, 180, 0);
+  text-shadow: 2px 2px 2px black
+}
+
+
+.past-scores {
+  border: 5px solid black;
+  min-width: 660px;
+  margin: 5px;
+  margin-top: 0px;
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-around;
+  font-size: 32px;
+}
+
+
+.player-name {
+  text-decoration: underline;
+  color: black;
+  margin: 10px 0px; 
+  font-size: 36px;
+}
+
+.player-score-list {
+  max-width: 100px;
+  margin: 0px 5px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.past-player-score {
+  text-decoration: line-through;
+  margin: 0px;
+}
+
+.player-score {
+  color: black
 }
 
 @media (hover: none) {
