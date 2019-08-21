@@ -99,11 +99,15 @@ class Game {
 
     _invalidHold(dieId) {
         const allHeld = dieId === 6 && this._roll() && this._roll().dice.every(die => die.held || !die.pointer)
-        const dieNotPointer = dieId !== 6 && this._roll() && !this._roll().dice[dieId].pointer 
-        return !this._card() || !this._roll() || allHeld || dieNotPointer
+        const dieNotPointerOrLive = dieId !== 6 && this._roll() && (!this._roll().dice[dieId].pointer || !this._roll().dice[dieId].live)
+        return !this._card() || !this._roll() || allHeld || dieNotPointerOrLive
     }
 
-    _invalidHolds() { return Array(6).fill(null).map((_, i) => this._invalidHold(i)) }
+    _invalidHolds() { 
+        const invalidHolds = Array(6).fill(null).map((_, i) => this._invalidHold(i))
+        invalidHolds.push(!this._roll() || this._roll().dice.every(die => die.held && die.pointer || !die.held && !die.pointer))
+        return invalidHolds
+    }
 
     stopTurn() {
         if (this._invalidStop()) this.error = ('Invalid stop.')

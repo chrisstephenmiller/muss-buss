@@ -1,4 +1,10 @@
-body {
+html {
+  height: 100%;
+  width: 100%;
+  min-width: 1460px;
+}
+
+  body {
   font-family: sans-serif;
 }
 
@@ -12,7 +18,7 @@ label {
 
 nav a {
   display: inline-block;
-  margin: 1em;
+  margin: 10px;
 }
 
 form div {
@@ -20,70 +26,48 @@ form div {
   display: inline-block;
 }
 
-.game-container {
-  display: inline-flex;
-  border: 5px solid black;
-  border-radius: 15px;
-  margin: 5px;
-  background-color: rgb(180, 180, 180);
-}
-
 span {
   font-weight: bold;
 }
 
-.section {
-  display: flex;
-  flex-direction: column;
-  padding: 5px;
-  margin: 5px;
-  justify-content: space-between;
+.navbar {
+  background-color: #f83c4b;
+  border-bottom: 5px solid black;
 }
 
-.turn-score {
-  font-size: 88px;
-  margin-top: 5px;
-  text-align: center;
-}
-
-.inheritance {
-  color: rgb(0, 180, 0);
-  text-shadow: 2px 2px 2px black
-}
-
-.scores {
-  margin: 5px ;
-  display: flex;
-  height: 100%;
-  justify-content: space-around;
-  border: 5px solid black;
-  border-radius: 25px;
-  font-size: 32px;
-  background-color: white;
-}
-
-.player-score-list {
-  width: 100px;
-  margin: 0px 5px;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-
-.past-player-score {
-  text-decoration: line-through;
+.app-name {
   margin: 0px;
+  padding: 10px 0px 0px 10px;
+  color: white;
 }
 
-.player-name {
-  text-decoration: underline;
-  color: black;
-  margin: 10px 0px; 
-  font-size: 36px;
+#app-container {
+  height: 855px;
+  border: 5px solid black;
 }
 
-.player-score {
-  color: black
+.game-container {
+  width: 100%;
+  height: calc(100% - 90px);
+  background-size: contain;
+  background-repeat: repeat-x;
+  background-image: url('Table.jpg');
+  display: inline-flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.section {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 10px 30px;
 }
 
 .card {
@@ -101,11 +85,6 @@ span {
   opacity: 1
 }
 
-.cards-container {
-  display: flex;
-  justify-content: space-around;
-  margin: 25px 10px;
-}
 
 .card-container {
   border: 5px solid white;
@@ -161,13 +140,8 @@ span {
   justify-content: center;
 }
 
-.live.pointer.die:hover {
+.live.pointer.die.roller:hover {
   box-shadow: 1px 4px 7px 2px black;
-}
-
-.current-player {
-  opacity: 1;
-  color: rgb(0, 180, 0);
 }
 
 .button {
@@ -177,6 +151,7 @@ span {
   padding: 5px;
   border: 5px solid black;
   border-radius: 15px;
+  padding-bottom: 8px;
 }
 
 .button-hot:hover {
@@ -186,10 +161,91 @@ span {
 .button-hot {
   opacity: 1;
   border: 5px solid rgb(0, 180, 0);
+  text-shadow: 1px 3px 3px black;
+  color: rgb(0, 180, 0);
 }
 
 .button-container {
   margin: 5px;
   display: flex;
   justify-content: space-around;
+}
+
+.current-player {
+  opacity: 1;
+  color: rgb(0, 180, 0);
+}
+
+.all-scores {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin: 10px 5px;
+  background-image: url('Paper.jpg');
+  box-shadow: 2px 3px 5px 1px black;
+}
+
+.turn-score-container {
+  margin: 5px 5px 5px;
+  text-align: center;
+  border: 5px solid black;
+}
+
+.turn-score {
+  font-size: 88px;
+  text-align: center;
+}
+
+.inheritance {
+  color: rgb(0, 180, 0);
+  text-shadow: 2px 2px 2px black
+}
+
+
+.past-scores {
+  border: 5px solid black;
+  min-width: 660px;
+  margin: 5px;
+  margin-top: 0px;
+  display: flex;
+  flex-grow: 1;
+  justify-content: space-around;
+  font-size: 32px;
+}
+
+
+.player-name {
+  text-decoration: underline;
+  color: black;
+  margin: 10px 0px; 
+  font-size: 36px;
+}
+
+.player-score-list {
+  max-width: 100px;
+  margin: 0px 5px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.past-player-score {
+  text-decoration: line-through;
+  margin: 0px;
+}
+
+.player-score {
+  color: black
+}
+
+@media (hover: none) {
+  .live.pointer.die:hover {
+    box-shadow: none;
+  } 
+  .button-hot:hover {
+    box-shadow: none;
+  } 
+  .draw.draw-hover:hover {
+    opacity: 0
+  }
 }
