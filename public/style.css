@@ -217,7 +217,7 @@ span {
 .player-name {
   text-decoration: underline;
   color: black;
-  margin: 10px 0px; 
+  margin-bottom: 5px; 
   font-size: 36px;
 }
 
