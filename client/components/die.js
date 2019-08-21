@@ -14,8 +14,8 @@ const Die = props => {
   const held = die.held ? 'held' : ''
   const pointer = die.pointer ? 'pointer' : ''
   const live = die.live ? 'live' : ''
-  const currentPlayer = isCurrentPlayer ? 'roller' : ''
-  const dieStates = `${held} ${pointer} ${live} ${currentPlayer}`
+  const roller = isCurrentPlayer ? 'roller' : ''
+  const dieStates = `${held} ${pointer} ${live} ${roller}`
   return (
     <div className='die-container'>
       <img src={dieImages[die.value]} className={`die ${dieStates}`} alt={`die-${die.value}`} onClick={() => holdDie(gameId, die.id)}/>
