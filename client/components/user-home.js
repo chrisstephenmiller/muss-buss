@@ -12,18 +12,21 @@ class UserHome extends Component {
 
   render() {
     const { name, games } = this.props
-    const liveGameIds = games.map(game => game.id).sort((a, b) => b - a)
+    const liveGames = games.sort((a, b) => b.id - a.id)
     return (
-      <div>
-        <h3 id='touch-test' onClick={() => document.getElementById('touch-test').classList.toggle('touched')}>Welcome, {name}!</h3>
-        <Link to="/games/new">New Game</Link>
-        {liveGameIds.map(gameId => {
-          return (
-            <p key={`game-${gameId}`}>
-              <Link to={`/games/${gameId}`}>{`Game ${gameId}`}</Link>
-            </p>
-          )
-        })}
+      <div id='user-home'>
+        <h3>Welcome, {name}!</h3>
+        <div id='user-games'>
+          <Link to="/games/new">New Game</Link>
+          {liveGames.map(liveGame => {
+            const { game, id } = liveGame
+            return (
+              <p key={`game-${id}`}>
+                <Link to={`/games/${id}`}>{`Game ${id} - ${game.players.map((player, i) => `${i === game.playerIndex ?`*`:''}${player.name}: ${player.score}`).join(', ')}`}</Link>
+              </p>
+            )
+          })}
+        </div>
       </div>
     )
   }

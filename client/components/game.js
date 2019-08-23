@@ -44,16 +44,16 @@ class Game extends Component {
       if (a === 'invalidHolds') invalidActions[a] = invalidActions[a].map(die => die || !isCurrentPlayer)
       else invalidActions[a] = invalidActions[a] || !isCurrentPlayer
     }
-    if (winner) setTimeout(() => alert(game.winner + 'won!'), 100)
+    if (winner) setTimeout(() => alert(game.winner + ' won!'), 100)
     const shadowMaker = deckSize => `${deckSize / 5}px ${deckSize / 3.5}px ${deckSize / 8}px ${deckSize / 12}px black`
     const scoreProps = {score, passTurn, invalidPass: invalidActions.invalidPass, gameId}
     return (
-        <div className='game-container'>
+        <div id='game-container'>
           <div className='section'>
             <div className='button-container'>
-              <Button text={`[R]OLL`} onClickFunc={rollDice} invalidAction={invalidActions.invalidRoll} gameId={gameId} />
-              <Button text={`[H]OLD`} onClickFunc={holdAll} invalidAction={invalidActions.invalidHolds[6]} gameId={gameId} />
-              <Button text={`[S]TOP`} onClickFunc={stopTurn} invalidAction={invalidActions.invalidStop} gameId={gameId} />
+              <Button text={`ROLL`} onClickFunc={rollDice} invalidAction={invalidActions.invalidRoll} gameId={gameId} />
+              <Button text={`HOLD`} onClickFunc={holdAll} invalidAction={invalidActions.invalidHolds[6]} gameId={gameId} />
+              <Button text={`STOP`} onClickFunc={stopTurn} invalidAction={invalidActions.invalidStop} gameId={gameId} />
             </div>
             <Dice dice={dice || prevDice || []} holdDie={holdDie} gameId={gameId} isCurrentPlayer={isCurrentPlayer} />
             <div className='cards-container'>

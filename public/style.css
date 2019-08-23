@@ -4,12 +4,15 @@ html {
   min-width: 1460px;
 }
 
-  body {
+body {
   font-family: sans-serif;
+  font-family: 'Itim', cursive;
+  line-height: 1.2
 }
 
 a {
   text-decoration: none;
+  font-size: 20px;
 }
 
 label {
@@ -18,6 +21,7 @@ label {
 
 nav a {
   display: inline-block;
+  color: black;
   margin: 10px;
 }
 
@@ -30,29 +34,38 @@ span {
   font-weight: bold;
 }
 
-.navbar {
+#navbar {
   background-color: #f83c4b;
   border-bottom: 5px solid black;
 }
 
-.app-name {
+#user-home, #new-game {
+  margin: 10px;
+}
+
+#app-name {
   margin: 0px;
-  padding: 10px 0px 0px 10px;
+  padding: 5px 0px 0px 5px;
   color: white;
 }
 
+#app {
+  display: flex;
+  flex-direction: column;
+}
+
 #app-container {
-  height: 855px;
+  display: flex;
+  flex-direction: column;
   border: 5px solid black;
 }
 
-.game-container {
-  width: 100%;
-  height: calc(100% - 90px);
-  background-size: contain;
-  background-repeat: repeat-x;
-  background-image: url('Table.jpg');
+#game-container {
   display: inline-flex;
+  flex-grow: 1;
+  width: 100%;
+  background-size: contain;
+  background-image: url('Table.jpg');
   justify-content: space-around;
   align-items: center;
 }
@@ -145,24 +158,24 @@ span {
 }
 
 .button {
-  font-size: 36px;
+  font-size: 42px;
   opacity: .6;
   margin: 10px 5px;
   padding: 5px;
   border: 5px solid black;
   border-radius: 15px;
-  padding-bottom: 8px;
-}
-
-.button-hot:hover {
-  box-shadow: 1px 4px 7px 2px black;
 }
 
 .button-hot {
   opacity: 1;
+  background-color: rgba(255, 255, 255, 0.5);
   border: 5px solid rgb(0, 180, 0);
-  text-shadow: 1px 3px 3px black;
+  /* text-shadow: 1px 3px 3px black; */
   color: rgb(0, 180, 0);
+}
+
+.button-hot:hover {
+  box-shadow: 1px 4px 7px 2px black;
 }
 
 .button-container {
@@ -179,28 +192,42 @@ span {
 .all-scores {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
-  margin: 10px 5px;
+  margin: 20px 5px;
   background-image: url('Paper.jpg');
   box-shadow: 2px 3px 5px 1px black;
+  height: 758px;
+  letter-spacing: 2px;
 }
 
 .turn-score-container {
   margin: 5px 5px 5px;
-  text-align: center;
   border: 5px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .turn-score {
   font-size: 88px;
+  padding-left: 8px;
   text-align: center;
 }
 
 .inheritance {
   color: rgb(0, 180, 0);
-  text-shadow: 2px 2px 2px black
 }
 
+.inheritance:hover {
+  text-shadow: 1px 4px 3px black;
+}
+
+.player-name {
+  margin-top: 3px;
+  padding-bottom: 2px;
+  border-bottom: 3px solid black;
+  margin-bottom: 2px; 
+  font-size: 32px;
+}
 
 .past-scores {
   border: 5px solid black;
@@ -213,16 +240,8 @@ span {
   font-size: 32px;
 }
 
-
-.player-name {
-  text-decoration: underline;
-  color: black;
-  margin-bottom: 5px; 
-  font-size: 36px;
-}
-
 .player-score-list {
-  max-width: 100px;
+  width: 100px;
   margin: 0px 5px;
   display: flex;
   flex-direction: column;
@@ -231,20 +250,21 @@ span {
 
 .past-player-score {
   text-decoration: line-through;
-  margin: 0px;
-}
-
-.player-score {
-  color: black
 }
 
 @media (hover: none) {
+  #app-container {
+    margin-bottom: 8px;
+  }
   .live.pointer.die:hover {
     box-shadow: none;
   } 
   .button-hot:hover {
     box-shadow: none;
   } 
+  .inheritance:hover {
+    text-shadow: none;
+  }
   .draw.draw-hover:hover {
     opacity: 0
   }

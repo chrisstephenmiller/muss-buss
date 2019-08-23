@@ -22,14 +22,14 @@ class Deck {
 
     deck(card) {
         switch (card) {
-            case 'noDice': return Array(8).fill('noDice')
+            // case 'noDice': return Array(8).fill('noDice')
             case 'bonus300': return Array(12).fill('bonus300')
             case 'bonus400': return Array(10).fill('bonus400')
             case 'bonus500': return Array(8).fill('bonus500')
-            case 'fill1000': return Array(6).fill('fill1000')
-            case 'mussBuss': return Array(4).fill('mussBuss')
-            case 'vengeance': return Array(4).fill('vengeance')
-            case 'doubleTrouble': return Array(2).fill('doubleTrouble')
+            // case 'fill1000': return Array(6).fill('fill1000')
+            // case 'mussBuss': return Array(4).fill('mussBuss')
+            // case 'vengeance': return Array(4).fill('vengeance')
+            // case 'doubleTrouble': return Array(2).fill('doubleTrouble')
             default: return []
         }
     }

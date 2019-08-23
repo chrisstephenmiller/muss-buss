@@ -13,7 +13,7 @@ class Game {
                 else this[key] = game[key]
             }
         } else {
-            this.players = players.map(player => new Player(null, player.name || player.email.slice(0, player.email.indexOf('@')), player.id))
+            this.players = players.map(player => new Player(null, player.name, player.id))
             this.playerIndex = 0
             this.deck = new Deck
             this.winTotal = winTotal
