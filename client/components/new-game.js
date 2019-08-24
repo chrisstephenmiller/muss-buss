@@ -23,14 +23,13 @@ class NewGame extends Component {
     }
     else if (name.slice(0, 6) === 'player') players[name] = value
     this.setState({ players })
-    console.log(this.state.players)
   }
 
   submit = event => {
     event.preventDefault()
     const { newGame } = this.props
     const players = Object.values(this.state.players)
-    if (players.length !== this.state.numPlayers) console.log('Not enough players.')
+    if (players.length !== this.state.numPlayers) alert('Choose all player names or reduce number of players.')
     else newGame(this.state.winScore, players)
   }
 
