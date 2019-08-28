@@ -23,7 +23,6 @@ const gameState = (game, id) => {
 router.post(`/`, async (req, res, next) => {
   try {
     const { winScore, players } = req.body
-    console.log(players)
     const users = await Promise.map(players, id => UserDb.findOrCreate({ where: { id } }))
     const game = new Game(null, winScore, users.map(player => player[0].dataValues))
     const gameDb = await GameDb.create({ game })
