@@ -5,8 +5,8 @@ html {
 }
 
 body {
-  font-family: sans-serif;
   font-family: 'Itim', cursive;
+  font-family: sans-serif;
   line-height: 1.2
 }
 
@@ -65,7 +65,7 @@ span {
   flex-grow: 1;
   width: 100%;
   background-size: contain;
-  background-image: url('Table.jpg');
+  background-image: url('../css-images/Table.jpg');
   justify-content: space-around;
   align-items: center;
 }
@@ -168,14 +168,13 @@ span {
 
 .button-hot {
   opacity: 1;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.6);
   border: 5px solid rgb(0, 180, 0);
   /* text-shadow: 1px 3px 3px black; */
   color: rgb(0, 180, 0);
 }
 
 .button-hot:hover {
-  background-color: rgba(255, 255, 255, 0.6);
   box-shadow: 1px 4px 7px 2px black;
 }
 
@@ -194,7 +193,7 @@ span {
   display: flex;
   flex-direction: column;
   margin: 20px 5px;
-  background-image: url('Paper.jpg');
+  background-image: url('../css-images/Paper.jpg');
   box-shadow: 2px 3px 5px 1px black;
   height: 758px;
   letter-spacing: 2px;

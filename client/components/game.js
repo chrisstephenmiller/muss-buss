@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { Dice, Score, Scores, Card, Button, Draw } from '../components'
+import { Dice, Scores, Card, Button, Draw } from '../components'
 import { getGameThunk, rollDiceThunk, drawCardThunk, stopTurnThunk, passTurnThunk, holdDiceThunk, rollingAnimation } from '../store'
 import socket from '../socket'
+
+const deckShadow = deckSize => `${deckSize / 5}px ${deckSize / 3.5}px ${deckSize / 8}px ${deckSize / 12}px black`
 
 class Game extends Component {
 
@@ -36,35 +38,32 @@ class Game extends Component {
 
   render() {
     const { game, drawCard, rollDice, holdDie, stopTurn, passTurn, user, match } = this.props
-    const { players, dice, prevDice, card, prevCard, currentPlayer, score, invalidActions, winner, turn, deckSize } = game
+    const { currentPlayer, invalidActions, players, dice, prevDice, card, prevCard, score, turn, deckSize, winner } = game
     const gameId = match.params.id
-    const holdAll = gameId => { holdDie(gameId, 6) }
     const isCurrentPlayer = user.id === currentPlayer.id
-    for (const a in invalidActions) {
-      if (a === 'invalidHolds') invalidActions[a] = invalidActions[a].map(die => die || !isCurrentPlayer)
-      else invalidActions[a] = invalidActions[a] || !isCurrentPlayer
-    }
+    const holdAll = gameId => { holdDie(gameId, 6) }
+    for (const a in invalidActions) invalidActions[a] = invalidActions[a] || !isCurrentPlayer
+    const { invalidDraw, invalidRoll, invalidHolds, invalidStop, invalidPass } = invalidActions
+    const scoreProps = { score, passTurn, invalidPass, gameId }
     if (winner) setTimeout(() => alert(game.winner + ' won!'), 100)
-    const shadowMaker = deckSize => `${deckSize / 5}px ${deckSize / 3.5}px ${deckSize / 8}px ${deckSize / 12}px black`
-    const scoreProps = {score, passTurn, invalidPass: invalidActions.invalidPass, gameId}
     return (
-        <div id='game-container'>
-          <div className='section'>
-            <div className='button-container'>
-              <Button text={`ROLL`} onClickFunc={rollDice} invalidAction={invalidActions.invalidRoll} gameId={gameId} />
-              <Button text={`HOLD`} onClickFunc={holdAll} invalidAction={invalidActions.invalidHolds[6]} gameId={gameId} />
-              <Button text={`STOP`} onClickFunc={stopTurn} invalidAction={invalidActions.invalidStop} gameId={gameId} />
-            </div>
-            <Dice dice={dice || prevDice || []} holdDie={holdDie} gameId={gameId} isCurrentPlayer={isCurrentPlayer} />
-            <div className='cards-container'>
-              <Draw drawShadow={shadowMaker(deckSize)} deckSize={deckSize} drawCard={drawCard} invalidDraw={invalidActions.invalidDraw} gameId={gameId} />
-              <Card turn={turn} cardShadow={shadowMaker(54 - deckSize)} card={card || prevCard || {}} gameId={gameId} />
-            </div>
+      <div id='game-container'>
+        <div className='section'>
+          <div className='button-container'>
+            <Button text={`ROLL`} onClickFunc={rollDice} invalidAction={invalidRoll} gameId={gameId} />
+            <Button text={`HOLD`} onClickFunc={holdAll} invalidAction={invalidHolds} gameId={gameId} />
+            <Button text={`STOP`} onClickFunc={stopTurn} invalidAction={invalidStop} gameId={gameId} />
           </div>
-          <div className='section'>
-            <Scores scoreProps={scoreProps} players={players} currentPlayerId={currentPlayer.id || 0} />
+          <Dice dice={dice || prevDice || []} holdDie={holdDie} gameId={gameId} isCurrentPlayer={isCurrentPlayer} />
+          <div className='cards-container'>
+            <Draw boxShadow={deckShadow(deckSize)} deckSize={deckSize} drawCard={drawCard} invalidDraw={invalidDraw} gameId={gameId} />
+            <Card turn={turn} boxShadow={deckShadow(54 - deckSize)} card={card || prevCard || {}} gameId={gameId} />
           </div>
         </div>
+        <div className='section'>
+          <Scores scoreProps={scoreProps} players={players} currentPlayerId={currentPlayer.id || 0} />
+        </div>
+      </div>
     )
   }
 }

@@ -104,9 +104,7 @@ class Game {
     }
 
     _invalidHolds() { 
-        const invalidHolds = Array(6).fill(null).map((_, i) => this._invalidHold(i))
-        invalidHolds.push(!this._roll() || this._roll().dice.every(die => die.held && die.pointer || !die.held && !die.pointer))
-        return invalidHolds
+        return !this._roll() || this._roll().dice.every(die => die.held && die.pointer || !die.held && !die.pointer)
     }
 
     stopTurn() {
