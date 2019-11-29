@@ -59,8 +59,10 @@ router.get(`/:gameId`, (req, res, next) => {
 router.get(`/:gameId/:action/`, (req, res, next) => {
   try {
     const game = new Game(req.game)
-    // if (game.players[game.playerIndex].id !== req.user.id) game.error = 'Invalid user.'
-    // else
+    const invalidPlayer = game.players[game.playerIndex].id !== req.user.id
+    const production = process.env.ENVIRONMENT === 'prod'
+    if (production && invalidPlayer) game.error = 'Invalid user.'
+    else
     switch (req.action) {
       case 'draw': game.drawCard()
         break

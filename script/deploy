@@ -22,4 +22,4 @@ git add -f public/bundle.js public/bundle.js.map public/assets
 git commit --allow-empty -m 'Deploying'
 
 # deploy to elastic beanstalk
-eb deploy muss-buss-dev
+eb deploy muss-buss-env
